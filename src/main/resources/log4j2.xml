@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <Property name="patternLayout">%d{yyyy-MM-dd HH:mm:ssa} %-5level %logger{36}:%L : %msg%n</Property>
+        <Property name="maxSize">50 MB</Property>
+        <Property name="maxFile">10</Property>
+        <Property name="logPath">D:\logs</Property>
+    </Properties>
+    <Appenders>
+        <RollingFile name="LogLogin" fileName="${logPath}/login.log"
+                     filePattern="${logPath}/$${date:yyyy-MM}/%d{dd}/login.%i.log">
+            <PatternLayout pattern="${patternLayout}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="${maxSize}"/>
+            </Policies>
+            <DefaultRolloverStrategy max="${maxFile}"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="com.ltweb_servlet_ecommerce.controller.web.shared.LoginController" level="info" additivity="false">
+            <AppenderRef ref="LogLogin"/>
+        </Logger>
+    </Loggers>
+</Configuration>
