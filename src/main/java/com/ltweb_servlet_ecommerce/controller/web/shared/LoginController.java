@@ -9,8 +9,6 @@ import com.ltweb_servlet_ecommerce.utils.CartUtil;
 import com.ltweb_servlet_ecommerce.utils.FormUtil;
 import com.ltweb_servlet_ecommerce.utils.NotifyUtil;
 import com.ltweb_servlet_ecommerce.utils.SessionUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
 import javax.servlet.RequestDispatcher;
@@ -33,7 +31,6 @@ public class LoginController extends HttpServlet {
     @Inject
     IOrderDetailsService orderDetailsService;
 
-    private static final Logger LOGGER = LogManager.getLogger(LoginController.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -64,16 +61,13 @@ public class LoginController extends HttpServlet {
                     userService.update(updateUserLogged);
                     resp.sendRedirect(req.getContextPath() + "/home");
                     // Logging successful login
-                    LOGGER.info("User logged in successfully: {}", userModel.getEmail());
                 } else {
                     resp.sendRedirect(req.getContextPath() + "/sign-in?message=username_password_invalid&toast=danger");
                     // Logging login error
-                    LOGGER.warn("Failed login attempt for user: {}", userModel.getEmail());
                 }
             } else {
                 resp.sendRedirect(req.getContextPath() + "/sign-in?message=fill_all_fields&toast=danger");
                 // Logging requires filling out complete information
-                LOGGER.warn("User tried to login with incomplete information");
             }
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | SQLException e) {
             throw new RuntimeException(e);

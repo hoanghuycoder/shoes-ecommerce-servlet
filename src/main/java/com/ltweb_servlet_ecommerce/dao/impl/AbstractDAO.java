@@ -5,6 +5,7 @@ import com.ltweb_servlet_ecommerce.dao.GenericDAO;
 import com.ltweb_servlet_ecommerce.mapper.RowMapper;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.subquery.SubQuery;
+import com.ltweb_servlet_ecommerce.utils.JDBCUtil;
 import com.ltweb_servlet_ecommerce.utils.SqlPagebleUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -14,19 +15,8 @@ import java.sql.*;
 import java.util.*;
 
 public class AbstractDAO<T> implements GenericDAO<T> {
-    public Connection getConnection() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-//            Lưu trong /bin/setenv.bat của tomcat
-            ResourceBundle resourceBundle = ResourceBundle.getBundle("env");
-            return DriverManager.getConnection(resourceBundle.getString("DB_URL"), resourceBundle.getString("DB_USERNAME"), resourceBundle.getString("DB_PASSWORD"));
-        } catch (ClassNotFoundException | SQLException e) {
-            System.out.println(e);
-            return null;
-        }
-
-    }
     private String getInClauseParameters(int size) {
+        
         StringBuilder parameters = new StringBuilder();
         for (int i = 0; i < size; i++) {
             parameters.append("?");
@@ -39,12 +29,11 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 
     @Override
     public Map<String, Object> queryCustom(String sql, List<Object> parameters) throws SQLException {
-        List<T> results = new ArrayList<>();
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
-            connection = getConnection();
+            connection = JDBCUtil.getConnection();
             preparedStatement = connection.prepareStatement(sql);
 
             if (parameters != null) {
@@ -65,11 +54,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
         } catch (Exception e) {
             return null;
         } finally {
-            connection.close();
-            if (results != null && preparedStatement != null) {
-                preparedStatement.close();
-                resultSet.close();
-            }
+            JDBCUtil.closeConnection(connection, preparedStatement, resultSet);
         }
     }
 
@@ -81,7 +66,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
         ResultSet resultSet = null;
         String sql = "";
         try {
-            connection = getConnection();
+            connection = JDBCUtil.getConnection();
             List<Object> parameters = new ArrayList<>();
             for (SubQuery subQuery : subQueryList) {
                 sqlBuilder.append(" and "+subQuery.getColumnName()+" "+subQuery.getType()+" ("+getInClauseParameters(subQuery.getDatasQuery().size())+")");
@@ -104,11 +89,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
         } catch (Exception e) {
             return null;
         } finally {
-            connection.close();
-            if (results != null && preparedStatement != null) {
-                preparedStatement.close();
-                resultSet.close();
-            }
+            JDBCUtil.closeConnection(connection, preparedStatement, resultSet);
         }
     }
 
@@ -119,7 +100,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         try {
-            connection = getConnection();
+            connection = JDBCUtil.getConnection();
             preparedStatement = connection.prepareStatement(sql);
             if (parameters != null) {
                 setParameter(preparedStatement, parameters);
@@ -132,11 +113,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
         } catch (Exception e) {
             return null;
         } finally {
-            connection.close();
-            if (results != null && preparedStatement != null) {
-                preparedStatement.close();
-                resultSet.close();
-            }
+            JDBCUtil.closeConnection(connection, preparedStatement, resultSet);
         }
 
     }
@@ -147,7 +124,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
         ResultSet rs = null;
         PreparedStatement preparedStatement = null;
         try {
-            connection = getConnection();
+            connection = JDBCUtil.getConnection();
             connection.setAutoCommit(false);
             preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             setParameter(preparedStatement, parameters);
@@ -163,11 +140,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
             }
             return null;
         } finally {
-            connection.close();
-            if (rs != null && preparedStatement != null) {
-                preparedStatement.close();
-                rs.close();
-            }
+            JDBCUtil.closeConnection(connection, preparedStatement, null);
         }
         return null;
     }
@@ -178,7 +151,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
         PreparedStatement preparedStatement = null;
 
         try {
-            connection = getConnection();
+            connection = JDBCUtil.getConnection();
             connection.setAutoCommit(false);
             preparedStatement = connection.prepareStatement(sql);
             setParameter(preparedStatement, parameters);
@@ -189,11 +162,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
                 connection.rollback();
             }
         } finally {
-            connection.close();
-            if (preparedStatement != null) {
-                preparedStatement.close();
-
-            }
+            JDBCUtil.closeConnection(connection, preparedStatement, null);
         }
     }
 
