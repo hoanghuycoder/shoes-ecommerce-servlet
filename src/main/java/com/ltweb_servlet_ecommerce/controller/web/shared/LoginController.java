@@ -1,14 +1,14 @@
 package com.ltweb_servlet_ecommerce.controller.web.shared;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import com.ltweb_servlet_ecommerce.constant.SystemConstant;
+import com.ltweb_servlet_ecommerce.log.LoggerHelper;
 import com.ltweb_servlet_ecommerce.model.UserModel;
 import com.ltweb_servlet_ecommerce.service.ICartService;
 import com.ltweb_servlet_ecommerce.service.IOrderDetailsService;
 import com.ltweb_servlet_ecommerce.service.IUserService;
-import com.ltweb_servlet_ecommerce.utils.CartUtil;
-import com.ltweb_servlet_ecommerce.utils.FormUtil;
-import com.ltweb_servlet_ecommerce.utils.NotifyUtil;
-import com.ltweb_servlet_ecommerce.utils.SessionUtil;
+import com.ltweb_servlet_ecommerce.utils.*;
+import org.json.JSONObject;
 
 import javax.inject.Inject;
 import javax.servlet.RequestDispatcher;
@@ -25,11 +25,11 @@ import java.sql.Timestamp;
 @WebServlet(urlPatterns = {"/sign-in", "/sign-out"})
 public class LoginController extends HttpServlet {
     @Inject
-    IUserService userService;
+    private IUserService userService;
     @Inject
-    ICartService cartService;
+    private ICartService cartService;
     @Inject
-    IOrderDetailsService orderDetailsService;
+    private IOrderDetailsService orderDetailsService;
 
 
     @Override
@@ -46,6 +46,7 @@ public class LoginController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String ipAddress = IPAddressHolder.getIPAddress();
         try {
             UserModel userModel = FormUtil.toModel(UserModel.class, req);
             if (userModel.getPassword() != null && userModel.getEmail() != null) {
@@ -59,15 +60,30 @@ public class LoginController extends HttpServlet {
                     updateUserLogged.setLastLogged(new Timestamp(System.currentTimeMillis()));
                     updateUserLogged.setId(tmpUser.getId());
                     userService.update(updateUserLogged);
-                    resp.sendRedirect(req.getContextPath() + "/home");
+
                     // Logging successful login
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put(SystemConstant.STATUS_LOG, "Authentication successful");
+                    jsonObject.put(SystemConstant.VALUE_LOG, new JSONObject().put("email", tmpUser.getEmail()).put("id", tmpUser.getId()));
+                    LoggerHelper.log(ipAddress, SystemConstant.WARN_LEVEL, "login", jsonObject);
+
+                    resp.sendRedirect(req.getContextPath() + "/home");
                 } else {
-                    resp.sendRedirect(req.getContextPath() + "/sign-in?message=username_password_invalid&toast=danger");
                     // Logging login error
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put(SystemConstant.STATUS_LOG, "Authentication Failure. Email or password is invalid");
+                    jsonObject.put(SystemConstant.VALUE_LOG, new JSONObject().put("email", userModel.getEmail()));
+                    LoggerHelper.log(ipAddress, SystemConstant.WARN_LEVEL, "login", jsonObject);
+
+                    resp.sendRedirect(req.getContextPath() + "/sign-in?message=username_password_invalid&toast=danger");
                 }
             } else {
-                resp.sendRedirect(req.getContextPath() + "/sign-in?message=fill_all_fields&toast=danger");
                 // Logging requires filling out complete information
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put(SystemConstant.STATUS_LOG, "Authentication Failure. Email or password is null");
+                LoggerHelper.log(ipAddress, SystemConstant.WARN_LEVEL, "login", jsonObject);
+
+                resp.sendRedirect(req.getContextPath() + "/sign-in?message=fill_all_fields&toast=danger");
             }
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | SQLException e) {
             throw new RuntimeException(e);

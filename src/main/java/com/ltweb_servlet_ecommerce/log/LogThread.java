@@ -1,5 +1,6 @@
 package com.ltweb_servlet_ecommerce.log;
 
+import com.google.gson.Gson;
 import com.ltweb_servlet_ecommerce.model.LogModel;
 import com.ltweb_servlet_ecommerce.utils.JDBCUtil;
 
@@ -29,12 +30,13 @@ public class LogThread extends Task<LogModel> {
 
     /**
      * Saves the list of log items to the database.
+     *
      * @param logs The list of log items to save.
      */
     public void save(List<LogModel> logs) throws SQLException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        String sql = "INSERT INTO logs(ip, level, address, preValue, value) VALUES(?,?,?,?,?)";
+        String sql = "INSERT INTO logs(ip, level, resource, preValue, value) VALUES(?,?,?,?,?)";
         try {
             connection = JDBCUtil.getConnection();
             connection.setAutoCommit(false);
@@ -43,14 +45,13 @@ public class LogThread extends Task<LogModel> {
             for (LogModel log : logs) {
                 preparedStatement.setString(1, log.getIp());
                 preparedStatement.setString(2, log.getLevel());
-                preparedStatement.setString(3, log.getAddress());
-                // Check if preValue is null before setting it to the PreparedStatement
+                preparedStatement.setString(3, log.getResource());
                 if (log.getPreValue() != null) {
-                    preparedStatement.setString(4, log.getPreValue());
+                    preparedStatement.setString(4, log.getPreValue().toString());
                 } else {
                     preparedStatement.setNull(4, Types.VARCHAR);
                 }
-                preparedStatement.setString(5, log.getValue());
+                preparedStatement.setString(5, log.getValue().toString());
                 preparedStatement.executeUpdate();
             }
             connection.commit();
