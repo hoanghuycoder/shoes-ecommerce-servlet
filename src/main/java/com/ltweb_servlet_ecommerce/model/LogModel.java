@@ -3,8 +3,9 @@ package com.ltweb_servlet_ecommerce.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.NoArgsConstructor;\
 import org.json.JSONObject;
+
 
 import java.sql.Timestamp;
 
@@ -20,6 +21,7 @@ public class LogModel{
     private String resource;
     private JSONObject preValue;
     private JSONObject value;
+
     private Timestamp createdAt;
     private Timestamp updatedAt;
 }

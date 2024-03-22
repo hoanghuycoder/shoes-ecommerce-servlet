@@ -108,7 +108,9 @@ public abstract class ThreadManager {
     /**
      * Starts listening for new items to process from the queue.
      */
+
     protected synchronized void listen() {
+
         if (!listening) {
             mainThread.start();
             listening = true;
