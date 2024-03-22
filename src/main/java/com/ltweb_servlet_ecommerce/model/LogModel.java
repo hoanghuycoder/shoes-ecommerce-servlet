@@ -12,10 +12,11 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LogModel {
+public class LogModel{
     private long id;
     private String ip;
     private String level;
+    private String action;
     private String resource;
     private JSONObject preValue;
     private JSONObject value;

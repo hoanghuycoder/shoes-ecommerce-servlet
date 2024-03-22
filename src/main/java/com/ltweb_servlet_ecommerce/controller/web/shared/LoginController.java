@@ -46,7 +46,6 @@ public class LoginController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String ipAddress = IPAddressHolder.getIPAddress();
         try {
             UserModel userModel = FormUtil.toModel(UserModel.class, req);
             if (userModel.getPassword() != null && userModel.getEmail() != null) {
@@ -62,10 +61,10 @@ public class LoginController extends HttpServlet {
                     userService.update(updateUserLogged);
 
                     // Logging successful login
-                    JSONObject jsonObject = new JSONObject();
-                    jsonObject.put(SystemConstant.STATUS_LOG, "Authentication successful");
-                    jsonObject.put(SystemConstant.VALUE_LOG, new JSONObject().put("email", tmpUser.getEmail()).put("id", tmpUser.getId()));
-                    LoggerHelper.log(ipAddress, SystemConstant.WARN_LEVEL, "login", jsonObject);
+                    JSONObject logValue = new JSONObject();
+                    logValue.put(SystemConstant.STATUS_LOG, "Authentication successful");
+                    logValue.put(SystemConstant.VALUE_LOG, new JSONObject().put("email", tmpUser.getEmail()).put("id", tmpUser.getId()));
+                    LoggerHelper.log(SystemConstant.INFO_LEVEL, "SELECT", RuntimeInfo.getCallerClassNameAndLineNumber(), logValue);
 
                     resp.sendRedirect(req.getContextPath() + "/home");
                 } else {
@@ -73,15 +72,15 @@ public class LoginController extends HttpServlet {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put(SystemConstant.STATUS_LOG, "Authentication Failure. Email or password is invalid");
                     jsonObject.put(SystemConstant.VALUE_LOG, new JSONObject().put("email", userModel.getEmail()));
-                    LoggerHelper.log(ipAddress, SystemConstant.WARN_LEVEL, "login", jsonObject);
+                    LoggerHelper.log(SystemConstant.WARN_LEVEL, "SELECT", RuntimeInfo.getCallerClassNameAndLineNumber(), jsonObject);
 
                     resp.sendRedirect(req.getContextPath() + "/sign-in?message=username_password_invalid&toast=danger");
                 }
             } else {
                 // Logging requires filling out complete information
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put(SystemConstant.STATUS_LOG, "Authentication Failure. Email or password is null");
-                LoggerHelper.log(ipAddress, SystemConstant.WARN_LEVEL, "login", jsonObject);
+                JSONObject logValue = new JSONObject();
+                logValue.put(SystemConstant.STATUS_LOG, "Authentication Failure. Email or password is null");
+                LoggerHelper.log(SystemConstant.WARN_LEVEL, "SELECT", RuntimeInfo.getCallerClassNameAndLineNumber(), logValue);
 
                 resp.sendRedirect(req.getContextPath() + "/sign-in?message=fill_all_fields&toast=danger");
             }

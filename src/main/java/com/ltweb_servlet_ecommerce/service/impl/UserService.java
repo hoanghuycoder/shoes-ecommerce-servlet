@@ -7,8 +7,8 @@ import com.ltweb_servlet_ecommerce.model.UserModel;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.service.IUserService;
 import com.ltweb_servlet_ecommerce.subquery.SubQuery;
-import com.ltweb_servlet_ecommerce.utils.IPAddressHolder;
 import com.ltweb_servlet_ecommerce.utils.JSONObjectUtil;
+import com.ltweb_servlet_ecommerce.utils.RuntimeInfo;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
@@ -60,7 +60,7 @@ public class UserService implements IUserService {
         JSONObjectUtil.removeKeys(valueObject, List.of("password","userName"));
         value.put(SystemConstant.VALUE_LOG, valueObject);
 
-        LoggerHelper.log(IPAddressHolder.getIPAddress(), SystemConstant.WARN_LEVEL, "login.update", preValue, value);
+        LoggerHelper.log(SystemConstant.WARN_LEVEL, "UPDATE", RuntimeInfo.getCallerClassNameAndLineNumber(), preValue, value);
         return newModel;
     }
 
