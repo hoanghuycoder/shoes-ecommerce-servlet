@@ -8,5 +8,10 @@ public class SystemConstant {
     public static final String ABOUT_TAB = "About us";
     public static final String SERVICES_TAB = "Services";
     public static final String CONTACT_TAB = "Contact us";
-
+    public static final String DANGER_LEVEL = "DANGER";
+    public static final String ERORR_LEVEL = "ERORR";
+    public static final String INFO_LEVEL = "INFO";
+    public static final String WARN_LEVEL = "WARN";
+    public static final String VALUE_LOG = "value";
+    public static final String STATUS_LOG = "status";
 }

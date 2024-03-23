@@ -108,13 +108,28 @@ public abstract class ThreadManager {
     /**
      * Starts listening for new items to process from the queue.
      */
-    public synchronized void listen() {
+
+    protected synchronized void listen() {
+
         if (!listening) {
             mainThread.start();
             listening = true;
         }
     }
 
+    /**
+     * Stop thread
+     */
+    public void stop() {
+        this.shouldWork.set(false);
+        try {
+            mainThread.join(); // Chờ cho mainThread kết thúc
+        } catch (InterruptedException e) {
+            // Xử lý ngoại lệ
+            Thread.currentThread().interrupt(); // Khôi phục interrupted status
+        }
+        executorService.shutdown(); // Dừng executorService
+    }
 
     /**
      * Submits an item to the queue for processing.

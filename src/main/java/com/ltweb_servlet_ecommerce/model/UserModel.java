@@ -1,8 +1,15 @@
 package com.ltweb_servlet_ecommerce.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.sql.Timestamp;
 import java.util.Date;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserModel extends AbstractModel<UserModel> {
     private  String userName;
     private String  email;
@@ -13,80 +20,16 @@ public class UserModel extends AbstractModel<UserModel> {
     private Boolean admin;
     private String association = "none";
 
-    public Timestamp getLastLogged() {
-        return lastLogged;
-    }
-
-    public void setLastLogged(Timestamp lastLogged) {
-        this.lastLogged = lastLogged;
-    }
-
-    public String getAssociation() {
-        return association;
-    }
-
-    public void setAssociation(String association) {
-        this.association = association;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getBirthDay() {
-        return birthDay;
-    }
-
-    public void setBirthDay(String birthDay) {
-        this.birthDay = birthDay;
-    }
-
-    public Boolean getAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(Boolean admin) {
-        this.admin = admin;
-    }
-
-    @Override
-    public String toString() {
-        return "UserModel{" +
-                "userName='" + userName + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", birthDay='" + birthDay + '\'' +
-                ", admin=" + admin +
-                ", association='" + association + '\'' +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "{" +
+//                "userName='" + userName + '\'' +
+//                ", email='" + email + '\'' +
+//                ", password='" + password + '\'' +
+//                ", fullName='" + fullName + '\'' +
+//                ", birthDay='" + birthDay + '\'' +
+//                ", admin=" + admin +
+//                ", association='" + association + '\'' +
+//                '}';
+//    }
 }
