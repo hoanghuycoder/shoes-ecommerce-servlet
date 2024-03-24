@@ -3,7 +3,6 @@ package com.ltweb_servlet_ecommerce.mapper.impl;
 import com.ltweb_servlet_ecommerce.mapper.RowMapper;
 import com.ltweb_servlet_ecommerce.mapper.result.MapSQLAndParamsResult;
 import com.ltweb_servlet_ecommerce.model.LogModel;
-import com.ltweb_servlet_ecommerce.model.OrderModel;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 
 import java.lang.reflect.InvocationTargetException;
