@@ -1,111 +1,150 @@
 package com.ltweb_servlet_ecommerce.dao.impl;
 
 import com.ltweb_servlet_ecommerce.dao.ILogDAO;
+import com.ltweb_servlet_ecommerce.mapper.RowMapper;
 import com.ltweb_servlet_ecommerce.mapper.impl.LogMapper;
 import com.ltweb_servlet_ecommerce.mapper.result.MapSQLAndParamsResult;
 import com.ltweb_servlet_ecommerce.model.LogModel;
-import com.ltweb_servlet_ecommerce.model.LogModel;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.subquery.SubQuery;
-import com.ltweb_servlet_ecommerce.utils.JDBIConnector;
+import com.ltweb_servlet_ecommerce.utils.JDBCUtil;
 import com.ltweb_servlet_ecommerce.utils.SqlPagebleUtil;
-import org.jdbi.v3.core.statement.Update;
 import org.json.JSONObject;
 
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.sql.Types;
+import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Alternative;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+@Dependent
+@Alternative
 public class LogDAO extends AbstractDAO<LogModel> implements ILogDAO {
 
-
     @Override
-    public List<LogModel> findAllWithFilter(LogModel model, Pageble pageble) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM log WHERE 1=1 ");
-        MapSQLAndParamsResult sqlAndParams = new LogMapper().mapSQLAndParams(sqlStrBuilder,model,"select",pageble);
+    public List<LogModel> findAllWithFilter(LogModel model, Pageble pageble) {
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM logs WHERE 1=1 ");
+        MapSQLAndParamsResult sqlAndParams = new LogMapper().mapSQLAndParams(sqlStrBuilder, model, "select", pageble);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
-        List<LogModel> result = query(sql.toString(), new LogMapper(),params,LogModel.class);
+        List<LogModel> result = query(sql, null, params, null);
         return result;
     }
+
     @Override
-    public List<LogModel> findAll(Pageble pageble) throws SQLException {
+    public List<LogModel> findAll(Pageble pageble) {
         StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM log");
-        SqlPagebleUtil.addSQlPageble(sqlStrBuilder,pageble);
-        return query(sqlStrBuilder.toString(),new LogMapper(),null, LogModel.class);
+        SqlPagebleUtil.addSQlPageble(sqlStrBuilder, pageble);
+        return query(sqlStrBuilder.toString(), null, null, null);
     }
 
     @Override
-    public LogModel findById(Long id) throws SQLException {
-        String sql = "select * from log where id=?";
+    public LogModel findById(Long id) {
+        String sql = "select * from logs where id=?";
         List<Object> params = new ArrayList<>();
         params.add(id);
-        List<LogModel> result =  query(sql,new LogMapper(),params,LogModel.class);
-        return result.isEmpty() ? null : result.get(0);
-    }
-    @Override
-    public LogModel findWithFilter(LogModel model) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM log WHERE 1=1 ");
-        MapSQLAndParamsResult sqlAndParams = new LogMapper().mapSQLAndParams(sqlStrBuilder,model,"select",null);
-        String sql = sqlAndParams.getSql();
-        List<Object> params = sqlAndParams.getParams();
-        List<LogModel> result = query(sql.toString(), new LogMapper(),params,LogModel.class);
+        List<LogModel> result = query(sql, null, params, null);
         return result.isEmpty() ? null : result.get(0);
     }
 
     @Override
-    public List<LogModel> findByColumnValues(List<SubQuery> subQueryList, Pageble pageble) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM log WHERE 1=1 ");
-        List<LogModel> result = queryWithSubQuery(sqlStrBuilder,new LogMapper(),subQueryList,"in",LogModel.class,pageble);
+    public <T> List<T> query(String sql, RowMapper<T> rowMapper, List<Object> parameters, Class<T> modelClass) {
+        List<T> results = new ArrayList<>();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        try {
+            connection = JDBCUtil.getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            if (parameters != null) {
+                setParameter(preparedStatement, parameters);
+            }
+            rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                long id = rs.getLong("id");
+                String ip = rs.getString("ip");
+                String level = rs.getString("level");
+                String action = rs.getString("action");
+                String resource = rs.getString("resource");
+                String preValueString = rs.getString("preValue");
+                JSONObject preValue = null;
+                if (preValueString != null)
+                    preValue = new JSONObject(preValueString);
+                JSONObject value = new JSONObject(rs.getString("value"));
+                Timestamp createdAt = rs.getTimestamp("createAt");
+                Timestamp updatedAt = rs.getTimestamp("updateAt");
+                LogModel logModel = LogModel.builder().ip(ip).level(level).action(action).resource(resource)
+                        .preValue(preValue).value(value).build();
+                logModel.setId(id);
+                logModel.setCreateAt(createdAt);
+                logModel.setUpdateAt(updatedAt);
+
+                results.add((T) logModel);
+            }
+            return results;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            JDBCUtil.closeConnection(connection, preparedStatement, rs);
+        }
+    }
+
+    @Override
+    public LogModel findWithFilter(LogModel model) {
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM logs WHERE 1=1 ");
+        MapSQLAndParamsResult sqlAndParams = new LogMapper().mapSQLAndParams(sqlStrBuilder, model, "select", null);
+        String sql = sqlAndParams.getSql();
+        List<Object> params = sqlAndParams.getParams();
+        List<LogModel> result = query(sql, null, params, null);
+        return result.isEmpty() ? null : result.get(0);
+    }
+
+    @Override
+    public List<LogModel> findByColumnValues(List<SubQuery> subQueryList, Pageble pageble) {
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM logs WHERE 1=1 ");
+        List<LogModel> result = queryWithSubQuery(sqlStrBuilder, new LogMapper(), subQueryList, "in", LogModel.class, pageble);
         return result;
     }
 
     @Override
-    public Long save(LogModel model) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("INSERT INTO log SET ");
-        MapSQLAndParamsResult sqlAndParams = new LogMapper().mapSQLAndParams(sqlStrBuilder,model,"insert",null);
+    public Long save(LogModel model) {
+        StringBuilder sqlStrBuilder = new StringBuilder("INSERT INTO logs SET ");
+        MapSQLAndParamsResult sqlAndParams = new LogMapper().mapSQLAndParams(sqlStrBuilder, model, "insert", null);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
-        return insert(sql,params);
+        try {
+            return insert(sql, params);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
-    public void update(LogModel model) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("UPDATE log SET ");
-        MapSQLAndParamsResult sqlAndParams = new LogMapper().mapSQLAndParams(sqlStrBuilder,model,"update",null);
+    public int update(LogModel model) {
+        StringBuilder sqlStrBuilder = new StringBuilder("UPDATE logs SET ");
+        MapSQLAndParamsResult sqlAndParams = new LogMapper().mapSQLAndParams(sqlStrBuilder, model, "update", null);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
-        update(sql,params);
+        try {
+            return update(sql, params);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
     @Override
-    public void delete(Long id) throws SQLException {
-        String sql = "delete from log where id=?";
+    public int delete(Long id) {
+        String sql = "delete from logs where id=?";
         List<Object> params = new ArrayList<>();
         params.add(id);
-        delete(sql,params);
+        try {
+            return delete(sql, params);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
-
-    @Override
-    public void softDelete(Long id) throws SQLException {
-        LogModel model = new LogModel();
-        model.setId(id);
-        model.setIsDeleted(true);
-        StringBuilder sqlStrBuilder = new StringBuilder("UPDATE log SET ");
-        MapSQLAndParamsResult sqlAndParams = new LogMapper().mapSQLAndParams(sqlStrBuilder,model,"update",null);
-        String sql = sqlAndParams.getSql();
-        List<Object> params = sqlAndParams.getParams();
-        update(sql,params);
-    }
-
-    @Override
-    public Map<String, Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException {
-        return queryCustom(sql,params);
-    }
-
-
-
 }
