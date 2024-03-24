@@ -146,16 +146,16 @@ public class AbstractDAO<T> implements GenericDAO<T> {
     }
 
     @Override
-    public void update(String sql, List<Object> parameters) throws SQLException {
+    public int update(String sql, List<Object> parameters) throws SQLException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-
+        int affectedRows = 0;
         try {
             connection = JDBCUtil.getConnection();
             connection.setAutoCommit(false);
             preparedStatement = connection.prepareStatement(sql);
             setParameter(preparedStatement, parameters);
-            preparedStatement.executeUpdate();
+            affectedRows = preparedStatement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
             if (connection != null) {
@@ -164,11 +164,12 @@ public class AbstractDAO<T> implements GenericDAO<T> {
         } finally {
             JDBCUtil.closeConnection(connection, preparedStatement, null);
         }
+        return affectedRows;
     }
 
     @Override
-    public void delete(String sql, List<Object> parameters) throws SQLException {
-        this.update(sql, parameters);
+    public int delete(String sql, List<Object> parameters) throws SQLException {
+        return this.update(sql, parameters);
     }
 
 

@@ -65,24 +65,24 @@ public class OrderDetailsDAO extends AbstractDAO<OrderDetailsModel> implements I
     }
 
     @Override
-    public void update(OrderDetailsModel model) throws SQLException {
+    public int update(OrderDetailsModel model) throws SQLException {
         StringBuilder sqlStrBuilder = new StringBuilder("UPDATE orderDetails SET ");
         MapSQLAndParamsResult sqlAndParams = new OrderDetailsMapper().mapSQLAndParams(sqlStrBuilder,model,"update",null);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
-        update(sql,params);
+        return update(sql,params);
     }
 
     @Override
-    public void delete(Long id) throws SQLException {
+    public int delete(Long id) throws SQLException {
         String sql = "delete from orderDetails where id=?";
         List<Object> params = new ArrayList<>();
         params.add(id);
-        delete(sql,params);
+        return delete(sql,params);
     }
 
     @Override
-    public void softDelete(Long id) throws SQLException {
+    public int softDelete(Long id) throws SQLException {
         OrderDetailsModel model = new OrderDetailsModel();
         model.setId(id);
         model.setIsDeleted(true);
@@ -90,7 +90,7 @@ public class OrderDetailsDAO extends AbstractDAO<OrderDetailsModel> implements I
         MapSQLAndParamsResult sqlAndParams = new OrderDetailsMapper().mapSQLAndParams(sqlStrBuilder,model,"update",null);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
-        update(sql,params);
+        return update(sql,params);
     }
 
     @Override
