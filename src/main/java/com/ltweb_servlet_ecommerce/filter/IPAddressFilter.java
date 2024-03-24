@@ -8,6 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 public class IPAddressFilter implements Filter {
+    private  ServletContext context;
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        this.context = filterConfig.getServletContext();
+    }
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String ipAddress;
