@@ -65,20 +65,20 @@ public class CartDAO extends AbstractDAO<CartModel> implements ICartDAO {
     }
 
     @Override
-    public void update(CartModel model) throws SQLException {
+    public int update(CartModel model) throws SQLException {
         StringBuilder sqlStrBuilder = new StringBuilder("UPDATE cart SET ");
         MapSQLAndParamsResult sqlAndParams = new CartMapper().mapSQLAndParams(sqlStrBuilder,model,"update",null);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
-        update(sql,params);
+        return update(sql,params);
     }
 
     @Override
-    public void delete(Long id) throws SQLException {
+    public int delete(Long id) throws SQLException {
         String sql = "delete from cart where id=?";
         List<Object> params = new ArrayList<>();
         params.add(id);
-        delete(sql,params);
+        return delete(sql,params);
     }
 
     @Override

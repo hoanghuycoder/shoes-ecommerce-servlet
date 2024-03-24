@@ -1,10 +1,14 @@
 package com.ltweb_servlet_ecommerce.service.impl;
 
+import com.ltweb_servlet_ecommerce.constant.SystemConstant;
 import com.ltweb_servlet_ecommerce.dao.IOrderDetailsDAO;
+import com.ltweb_servlet_ecommerce.log.LoggerHelper;
 import com.ltweb_servlet_ecommerce.model.OrderDetailsModel;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.service.IOrderDetailsService;
 import com.ltweb_servlet_ecommerce.subquery.SubQuery;
+import com.ltweb_servlet_ecommerce.utils.RuntimeInfo;
+import org.json.JSONObject;
 
 import javax.inject.Inject;
 import java.sql.SQLException;
@@ -18,7 +22,7 @@ public class OrderDetailsService implements IOrderDetailsService {
 
     @Override
     public List<OrderDetailsModel> findAllWithFilter(OrderDetailsModel model, Pageble pageble) throws SQLException {
-        return orderDetailsDAO.findAllWithFilter(model,pageble);
+        return orderDetailsDAO.findAllWithFilter(model, pageble);
     }
 
     @Override
@@ -28,19 +32,32 @@ public class OrderDetailsService implements IOrderDetailsService {
 
     @Override
     public List<OrderDetailsModel> findByColumnValues(List<SubQuery> subQueryList, Pageble pageble) throws SQLException {
-        return orderDetailsDAO.findByColumnValues(subQueryList,pageble);
+        return orderDetailsDAO.findByColumnValues(subQueryList, pageble);
     }
+
     @Override
-    public Map<String,Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException {
-        return orderDetailsDAO.findWithCustomSQL(sql,params);
+    public Map<String, Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException {
+        return orderDetailsDAO.findWithCustomSQL(sql, params);
     }
 
     @Override
     public OrderDetailsModel update(OrderDetailsModel model) throws SQLException {
         OrderDetailsModel oldModel = orderDetailsDAO.findById(model.getId());
         model.setUpdateAt(new Timestamp(System.currentTimeMillis()));
-        orderDetailsDAO.update(model);
-        return orderDetailsDAO.findById(model.getId());
+        boolean isUpdated = orderDetailsDAO.update(model) > 0;
+        OrderDetailsModel newModel = orderDetailsDAO.findById(model.getId());
+
+        //logging
+        JSONObject preValue = new JSONObject().put(SystemConstant.VALUE_LOG, new JSONObject(oldModel));
+        String status = String.format("Updated orderDetails with id = %d %s", model.getId(), isUpdated ? "successfully" : "failed");
+        JSONObject value = new JSONObject().put(SystemConstant.STATUS_LOG, status)
+                .put(SystemConstant.VALUE_LOG, new JSONObject(newModel));
+
+        LoggerHelper.log(isUpdated ? SystemConstant.INFO_LEVEL : SystemConstant.ERORR_LEVEL,
+                "UPDATE", RuntimeInfo.getCallerClassNameAndLineNumber(), preValue, value);
+
+
+        return newModel;
     }
 
     @Override
@@ -72,6 +89,16 @@ public class OrderDetailsService implements IOrderDetailsService {
     @Override
     public OrderDetailsModel save(OrderDetailsModel model) throws SQLException {
         Long productId = orderDetailsDAO.save(model);
-        return orderDetailsDAO.findById(productId);
+        OrderDetailsModel result = orderDetailsDAO.findById(productId);
+
+        //logging
+        String status = String.format("Saved orderDetails %s",  result !=null ? "successfully" : "failed");
+        JSONObject value = new JSONObject().put(SystemConstant.STATUS_LOG, status)
+                .put(SystemConstant.VALUE_LOG, new JSONObject(result));
+
+        LoggerHelper.log(result != null ? SystemConstant.INFO_LEVEL : SystemConstant.ERORR_LEVEL,
+                "INSERT", RuntimeInfo.getCallerClassNameAndLineNumber(), value);
+
+        return result;
     }
 }
