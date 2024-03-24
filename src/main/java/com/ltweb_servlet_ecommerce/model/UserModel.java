@@ -21,6 +21,6 @@ public class UserModel extends AbstractModel<UserModel> {
     private String role;
     private Boolean admin;
     public Boolean getAdmin() {
-        return (this.role.equalsIgnoreCase("admin"));
+        return (this.role != null && this.role.equalsIgnoreCase("admin"));
     }
 }
