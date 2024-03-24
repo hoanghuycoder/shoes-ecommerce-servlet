@@ -47,7 +47,6 @@ public class RegisterController extends HttpServlet {
             tmpUser.setEmail(userModel.getEmail());
             tmpUser = userService.findWithFilter(tmpUser);
             if (tmpUser==null) {
-
                 try {
                     Random random = new Random();
                     Integer OTP = 100_000 + random.nextInt(900_000);
