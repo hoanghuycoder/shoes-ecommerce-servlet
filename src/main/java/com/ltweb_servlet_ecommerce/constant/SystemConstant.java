@@ -1,6 +1,8 @@
 package com.ltweb_servlet_ecommerce.constant;
 
 public class SystemConstant {
+    public static final String USER_MODEL = "USER_MODEL";
+
     public static final String MODEL = "MODEL";
     public static final String LIST_MODEL = "LIST_MODEL";
     public static final String HOME_TAB = "Home";

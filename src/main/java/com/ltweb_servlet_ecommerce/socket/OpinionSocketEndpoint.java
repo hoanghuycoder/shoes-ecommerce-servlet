@@ -33,7 +33,11 @@ public class OpinionSocketEndpoint {
     static Map<String, Set<Session>> room = new HashMap<>();
     @OnOpen
     public void onOpen(Session userSession,  @PathParam("productId") String productId, EndpointConfig config ) {
-        System.out.println("Connect to product "+productId);
+        if (Integer.parseInt(productId)==0) {
+            System.out.println("Connect to admin page ");
+        } else {
+            System.out.println("Connect to product "+productId);
+        }
         UserModel userModel = (UserModel) config.getUserProperties().get(UserModel.class.getName());
         if (userModel!=null) {
             userSession.getUserProperties().put("userId", userModel.getId());
