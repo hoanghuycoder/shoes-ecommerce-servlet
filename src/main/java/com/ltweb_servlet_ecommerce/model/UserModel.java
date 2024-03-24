@@ -17,19 +17,10 @@ public class UserModel extends AbstractModel<UserModel> {
     private  String fullName;
     private String birthDay;
     private Timestamp lastLogged;
-    private Boolean admin;
     private String association = "none";
-
-//    @Override
-//    public String toString() {
-//        return "{" +
-//                "userName='" + userName + '\'' +
-//                ", email='" + email + '\'' +
-//                ", password='" + password + '\'' +
-//                ", fullName='" + fullName + '\'' +
-//                ", birthDay='" + birthDay + '\'' +
-//                ", admin=" + admin +
-//                ", association='" + association + '\'' +
-//                '}';
-//    }
+    private String role;
+    private Boolean admin;
+    public Boolean getAdmin() {
+        return (this.role.equalsIgnoreCase("admin"));
+    }
 }

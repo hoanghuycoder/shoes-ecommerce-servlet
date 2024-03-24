@@ -17,7 +17,7 @@
                 <li class="<c:if test="${tab eq 'Shop'}">active</c:if>"><a class="nav-link" href="/shop">Shop</a></li>
                 <li class="<c:if test="${tab eq 'Services'}">active</c:if>"><a class="nav-link" href="/services">Services</a></li>
                 <li class="<c:if test="${tab eq 'Contact us'}">active</c:if>"><a class="nav-link" href="/contact">Contact us</a></li>
-                <c:if test="${USER_MODEL.admin eq true}">
+                <c:if test="${USER_MODEL.admin}">
                     <li><a class="nav-link" href="/admin">Admin</a></li>
                 </c:if>
             </ul>
