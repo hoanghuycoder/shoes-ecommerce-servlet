@@ -3,7 +3,7 @@ package com.ltweb_servlet_ecommerce.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;\
+import lombok.NoArgsConstructor;
 import org.json.JSONObject;
 
 

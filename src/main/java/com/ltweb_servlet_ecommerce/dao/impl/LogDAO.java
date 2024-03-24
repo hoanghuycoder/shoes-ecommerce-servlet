@@ -41,9 +41,13 @@ public class LogDAO implements ILogDAO {
                 Update update = handle.createUpdate(sql)
                         .bind("ip", log.getIp())
                         .bind("level", log.getLevel())
-                        .bind("action", log.getAction())
                         .bind("resource", log.getResource())
                         .bind("value", log.getValue().toString());
+                if (log.getAction() != null) {
+                    update.bind("action", log.getAction());
+                } else {
+                    update.bindNull("action", Types.NVARCHAR);
+                }
                 if (log.getPreValue() != null) {
                     update.bind("preValue", log.getPreValue().toString());
                 } else {
