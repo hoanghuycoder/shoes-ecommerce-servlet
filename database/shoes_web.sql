@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `cart` (
   KEY `Cart_fk1` (`orderDetailsId`),
   CONSTRAINT `Cart_fk0` FOREIGN KEY (`userId`) REFERENCES `user` (`id`),
   CONSTRAINT `Cart_fk1` FOREIGN KEY (`orderDetailsId`) REFERENCES `orderdetails` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4;
 
 -- Dumping data for table shoes_web.cart: ~2 rows (approximately)
 /*!40000 ALTER TABLE `cart` DISABLE KEYS */;
@@ -117,18 +117,23 @@ CREATE TABLE IF NOT EXISTS `logs` (
   `resource` char(200) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `preValue` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `value` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `createdAt` timestamp NULL DEFAULT current_timestamp(),
-  `updatedAt` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `createAt` timestamp NULL DEFAULT current_timestamp(),
+  `updateAt` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `isDeleted` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table shoes_web.logs: ~3 rows (approximately)
+-- Dumping data for table shoes_web.logs: ~8 rows (approximately)
 /*!40000 ALTER TABLE `logs` DISABLE KEYS */;
-INSERT INTO `logs` (`id`, `ip`, `level`, `action`, `resource`, `preValue`, `value`, `createdAt`, `updatedAt`) VALUES
-	(52, '0:0:0:0:0:0:0:1', 'WARN', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.LoginController:76', NULL, '{"value":{"email":"hoanghoangking01@gmail.com"},"status":"Authentication Failure. Email or password is invalid"}', '2024-03-22 21:06:26', '2024-03-22 21:06:26'),
-	(53, '0:0:0:0:0:0:0:1', 'WARN', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.LoginController:76', NULL, '{"value":{"email":"vophihoang252003@gmail.com"},"status":"Authentication Failure. Email or password is invalid"}', '2024-03-22 21:06:28', '2024-03-22 21:06:28'),
-	(54, '0:0:0:0:0:0:0:1', 'WARN', 'UPDATE', 'com.ltweb_servlet_ecommerce.service.impl.UserService:64', '{"value":{"isDeleted":false,"lastLogged":"2024-03-22 20:42:57.0","fullName":"Vo Hoang","admin":false,"association":"none","updateAt":"2024-03-22 20:42:57.0","id":14,"email":"vophihoang252003@gmail.com","createAt":"2024-03-13 15:14:47.0"}}', '{"value":{"isDeleted":false,"lastLogged":"2024-03-22 21:06:32.0","fullName":"Vo Hoang","admin":false,"association":"none","updateAt":"2024-03-22 21:06:32.0","id":14,"email":"vophihoang252003@gmail.com","createAt":"2024-03-13 15:14:47.0"},"status":"UpdatedAt and lastLogged fields successfully updated"}', '2024-03-22 21:06:32', '2024-03-22 21:06:32'),
-	(55, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.LoginController:68', NULL, '{"value":{"id":14,"email":"vophihoang252003@gmail.com"},"status":"Authentication successful"}', '2024-03-22 21:06:34', '2024-03-22 21:06:34');
+INSERT INTO `logs` (`id`, `ip`, `level`, `action`, `resource`, `preValue`, `value`, `createAt`, `updateAt`, `isDeleted`) VALUES
+	(89, '0:0:0:0:0:0:0:1', 'WARN', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.LoginController:78', NULL, '{"value":{"email":"vophihoang252003@gmail.com"},"status":"Authentication Failure. Email or password is invalid"}', '2024-03-24 22:38:17', '2024-03-24 22:38:17', 0),
+	(90, '0:0:0:0:0:0:0:1', 'WARN', 'UPDATE', 'com.ltweb_servlet_ecommerce.service.impl.UserService:63', '{"value":{"isDeleted":false,"lastLogged":"2024-03-24 20:01:12.0","fullName":"Vo Hoang","association":"none","updateAt":"2024-03-24 20:01:12.0","id":14,"email":"vophihoang252003@gmail.com","createAt":"2024-03-13 15:14:47.0"}}', '{"value":{"isDeleted":false,"lastLogged":"2024-03-24 22:38:22.0","fullName":"Vo Hoang","association":"none","updateAt":"2024-03-24 22:38:22.0","id":14,"email":"vophihoang252003@gmail.com","createAt":"2024-03-13 15:14:47.0"},"status":"UpdatedAt and lastLogged fields successfully updated"}', '2024-03-24 22:38:22', '2024-03-24 22:38:22', 0),
+	(91, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.LoginController:68', NULL, '{"value":{"id":14,"email":"vophihoang252003@gmail.com"},"status":"Authentication successful"}', '2024-03-24 22:38:24', '2024-03-24 22:38:24', 0),
+	(92, '0:0:0:0:0:0:0:1', 'WARN', 'UPDATE', 'com.ltweb_servlet_ecommerce.service.impl.UserService:63', '{"value":{"isDeleted":false,"lastLogged":"2024-03-24 22:38:22.0","fullName":"Vo Hoang","association":"none","updateAt":"2024-03-24 22:38:22.0","id":14,"email":"vophihoang252003@gmail.com","createAt":"2024-03-13 15:14:47.0"}}', '{"value":{"isDeleted":false,"lastLogged":"2024-03-24 22:43:04.0","fullName":"Vo Hoang","association":"none","updateAt":"2024-03-24 22:43:04.0","id":14,"email":"vophihoang252003@gmail.com","createAt":"2024-03-13 15:14:47.0"},"status":"UpdatedAt and lastLogged fields successfully updated"}', '2024-03-24 22:43:04', '2024-03-24 22:43:04', 0),
+	(93, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.LoginController:68', NULL, '{"value":{"id":14,"email":"vophihoang252003@gmail.com"},"status":"Authentication successful"}', '2024-03-24 22:43:06', '2024-03-24 22:43:06', 0),
+	(94, '0:0:0:0:0:0:0:1', 'WARN', 'UPDATE', 'com.ltweb_servlet_ecommerce.service.impl.UserService:63', '{"value":{"isDeleted":false,"lastLogged":"2024-03-24 22:43:04.0","fullName":"Vo Hoang","association":"none","updateAt":"2024-03-24 22:43:04.0","id":14,"email":"vophihoang252003@gmail.com","createAt":"2024-03-13 15:14:47.0"}}', '{"value":{"isDeleted":false,"lastLogged":"2024-03-24 22:44:39.0","fullName":"Vo Hoang","association":"none","updateAt":"2024-03-24 22:44:39.0","id":14,"email":"vophihoang252003@gmail.com","createAt":"2024-03-13 15:14:47.0"},"status":"UpdatedAt and lastLogged fields successfully updated"}', '2024-03-24 22:44:39', '2024-03-24 22:44:39', 0),
+	(95, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.LoginController:68', NULL, '{"value":{"id":14,"email":"vophihoang252003@gmail.com"},"status":"Authentication successful"}', '2024-03-24 22:44:41', '2024-03-24 22:44:41', 0),
+	(96, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.CartController:71', NULL, '{"status":"Access the path http://localhost:8080/cart"}', '2024-03-24 22:45:19', '2024-03-24 22:45:19', 0);
 /*!40000 ALTER TABLE `logs` ENABLE KEYS */;
 
 -- Dumping structure for table shoes_web.notify
@@ -218,7 +223,7 @@ CREATE TABLE IF NOT EXISTS `orderdetails` (
   KEY `orderDetails_fk1` (`productSizeId`),
   CONSTRAINT `orderDetails_fk0` FOREIGN KEY (`orderId`) REFERENCES `order` (`id`),
   CONSTRAINT `orderDetails_fk1` FOREIGN KEY (`productSizeId`) REFERENCES `productsize` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4;
 
 -- Dumping data for table shoes_web.orderdetails: ~5 rows (approximately)
 /*!40000 ALTER TABLE `orderdetails` DISABLE KEYS */;
@@ -471,7 +476,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 INSERT INTO `user` (`id`, `userName`, `email`, `password`, `fullName`, `birthDay`, `admin`, `association`, `lastLogged`, `createAt`, `updateAt`, `isDeleted`) VALUES
 	(6, 'hoanghuydev', 'tranvohoanghuy12ab@gmail.com', '$2a$12$n1ZRw5rmlRGU0uqK6USVR.p8i66degNqeanwUZK9j0hdgDF8gfvVm', 'Tran Vo Hoang Huy', NULL, 1, 'none', '2024-01-22 16:39:09', '2023-12-27 15:23:38', '2024-01-22 16:39:09', 0),
 	(8, '111635119529567317993', '21130386@st.hcmuaf.edu.vn', NULL, 'Trần Võ Hoàng Huy', NULL, 0, 'google', '2024-01-21 21:22:17', '2023-12-28 11:21:13', '2024-01-21 21:22:17', 0),
-	(14, 'ad', 'vophihoang252003@gmail.com', '$2a$12$9szEjqLykjaQVvPTnccyRuPLqAfBwCUMRNut8OECjLXLS4HW0LyiG', 'Vo Hoang', NULL, 0, 'none', '2024-03-22 21:06:32', '2024-03-13 15:14:47', '2024-03-22 21:06:32', 0);
+	(14, 'ad', 'vophihoang252003@gmail.com', '$2a$12$9szEjqLykjaQVvPTnccyRuPLqAfBwCUMRNut8OECjLXLS4HW0LyiG', 'Vo Hoang', NULL, 1, 'none', '2024-03-24 22:44:39', '2024-03-13 15:14:47', '2024-03-24 22:44:39', 0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
 -- Dumping structure for table shoes_web.useraddress
