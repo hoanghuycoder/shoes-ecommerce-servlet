@@ -1,63 +1,111 @@
 package com.ltweb_servlet_ecommerce.dao.impl;
 
 import com.ltweb_servlet_ecommerce.dao.ILogDAO;
+import com.ltweb_servlet_ecommerce.mapper.impl.LogMapper;
+import com.ltweb_servlet_ecommerce.mapper.result.MapSQLAndParamsResult;
 import com.ltweb_servlet_ecommerce.model.LogModel;
+import com.ltweb_servlet_ecommerce.model.LogModel;
+import com.ltweb_servlet_ecommerce.paging.Pageble;
+import com.ltweb_servlet_ecommerce.subquery.SubQuery;
 import com.ltweb_servlet_ecommerce.utils.JDBIConnector;
+import com.ltweb_servlet_ecommerce.utils.SqlPagebleUtil;
 import org.jdbi.v3.core.statement.Update;
 import org.json.JSONObject;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class LogDAO implements ILogDAO {
-    public static List<LogModel> find() {
-        return JDBIConnector.getInstance().withHandle(handle ->
-                handle.createQuery("SELECT * FROM logs").map(((rs, ctx) -> {
-                    long id = rs.getLong("id");
-                    String ip = rs.getString("ip");
-                    String level = rs.getString("level");
-                    String action = rs.getString("action");
-                    String resource = rs.getString("resource");
-                    String preValueString = rs.getString("preValue");
-                    JSONObject preValue = null;
-                    if (preValueString != null)
-                        preValue = new JSONObject(preValueString);
-                    JSONObject value = new JSONObject(rs.getString("value"));
-                    Timestamp createdAt = rs.getTimestamp("createdAt");
-                    Timestamp updatedAt = rs.getTimestamp("updatedAt");
-                    return LogModel.builder().id(id).ip(ip).level(level).action(action).resource(resource)
-                            .preValue(preValue).value(value).createdAt(createdAt).updatedAt(updatedAt).build();
-                })).list()
-        );
+public class LogDAO extends AbstractDAO<LogModel> implements ILogDAO {
+
+
+    @Override
+    public List<LogModel> findAllWithFilter(LogModel model, Pageble pageble) throws SQLException {
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM log WHERE 1=1 ");
+        MapSQLAndParamsResult sqlAndParams = new LogMapper().mapSQLAndParams(sqlStrBuilder,model,"select",pageble);
+        String sql = sqlAndParams.getSql();
+        List<Object> params = sqlAndParams.getParams();
+        List<LogModel> result = query(sql.toString(), new LogMapper(),params,LogModel.class);
+        return result;
+    }
+    @Override
+    public List<LogModel> findAll(Pageble pageble) throws SQLException {
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM log");
+        SqlPagebleUtil.addSQlPageble(sqlStrBuilder,pageble);
+        return query(sqlStrBuilder.toString(),new LogMapper(),null, LogModel.class);
     }
 
     @Override
-    public void insert(List<LogModel> logs) {
-        String sql = "INSERT INTO logs(ip, level, action, resource, preValue, value) " +
-                "VALUES(:ip, :level, :action, :resource, :preValue, :value)";
-        JDBIConnector.getInstance().inTransaction(handle -> {
-            for (LogModel log : logs) {
-                Update update = handle.createUpdate(sql)
-                        .bind("ip", log.getIp())
-                        .bind("level", log.getLevel())
-                        .bind("resource", log.getResource())
-                        .bind("value", log.getValue().toString());
-                if (log.getAction() != null) {
-                    update.bind("action", log.getAction());
-                } else {
-                    update.bindNull("action", Types.NVARCHAR);
-                }
-                if (log.getPreValue() != null) {
-                    update.bind("preValue", log.getPreValue().toString());
-                } else {
-                    update.bindNull("preValue", Types.NVARCHAR);
-                }
-                update.execute();
-            }
-            return null;
-        });
+    public LogModel findById(Long id) throws SQLException {
+        String sql = "select * from log where id=?";
+        List<Object> params = new ArrayList<>();
+        params.add(id);
+        List<LogModel> result =  query(sql,new LogMapper(),params,LogModel.class);
+        return result.isEmpty() ? null : result.get(0);
     }
+    @Override
+    public LogModel findWithFilter(LogModel model) throws SQLException {
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM log WHERE 1=1 ");
+        MapSQLAndParamsResult sqlAndParams = new LogMapper().mapSQLAndParams(sqlStrBuilder,model,"select",null);
+        String sql = sqlAndParams.getSql();
+        List<Object> params = sqlAndParams.getParams();
+        List<LogModel> result = query(sql.toString(), new LogMapper(),params,LogModel.class);
+        return result.isEmpty() ? null : result.get(0);
+    }
+
+    @Override
+    public List<LogModel> findByColumnValues(List<SubQuery> subQueryList, Pageble pageble) throws SQLException {
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM log WHERE 1=1 ");
+        List<LogModel> result = queryWithSubQuery(sqlStrBuilder,new LogMapper(),subQueryList,"in",LogModel.class,pageble);
+        return result;
+    }
+
+    @Override
+    public Long save(LogModel model) throws SQLException {
+        StringBuilder sqlStrBuilder = new StringBuilder("INSERT INTO log SET ");
+        MapSQLAndParamsResult sqlAndParams = new LogMapper().mapSQLAndParams(sqlStrBuilder,model,"insert",null);
+        String sql = sqlAndParams.getSql();
+        List<Object> params = sqlAndParams.getParams();
+        return insert(sql,params);
+    }
+
+    @Override
+    public void update(LogModel model) throws SQLException {
+        StringBuilder sqlStrBuilder = new StringBuilder("UPDATE log SET ");
+        MapSQLAndParamsResult sqlAndParams = new LogMapper().mapSQLAndParams(sqlStrBuilder,model,"update",null);
+        String sql = sqlAndParams.getSql();
+        List<Object> params = sqlAndParams.getParams();
+        update(sql,params);
+    }
+
+    @Override
+    public void delete(Long id) throws SQLException {
+        String sql = "delete from log where id=?";
+        List<Object> params = new ArrayList<>();
+        params.add(id);
+        delete(sql,params);
+    }
+
+    @Override
+    public void softDelete(Long id) throws SQLException {
+        LogModel model = new LogModel();
+        model.setId(id);
+        model.setIsDeleted(true);
+        StringBuilder sqlStrBuilder = new StringBuilder("UPDATE log SET ");
+        MapSQLAndParamsResult sqlAndParams = new LogMapper().mapSQLAndParams(sqlStrBuilder,model,"update",null);
+        String sql = sqlAndParams.getSql();
+        List<Object> params = sqlAndParams.getParams();
+        update(sql,params);
+    }
+
+    @Override
+    public Map<String, Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException {
+        return queryCustom(sql,params);
+    }
+
 
 
 }
