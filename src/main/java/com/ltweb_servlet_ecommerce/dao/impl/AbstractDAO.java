@@ -1,11 +1,14 @@
 package com.ltweb_servlet_ecommerce.dao.impl;
 
 
+import com.ltweb_servlet_ecommerce.constant.SystemConstant;
 import com.ltweb_servlet_ecommerce.dao.GenericDAO;
+import com.ltweb_servlet_ecommerce.log.LoggerHelper;
 import com.ltweb_servlet_ecommerce.mapper.RowMapper;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.subquery.SubQuery;
 import com.ltweb_servlet_ecommerce.utils.JDBCUtil;
+import com.ltweb_servlet_ecommerce.utils.RuntimeInfo;
 import com.ltweb_servlet_ecommerce.utils.SqlPagebleUtil;
 import org.json.JSONObject;
 
@@ -54,6 +57,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
             }
             return resultMap;
         } catch (SQLException e) {
+            LoggerHelper.logDetailedDangerMessage(e, "SELECT");
             return null;
         } finally {
             JDBCUtil.closeConnection(connection, preparedStatement, resultSet);
@@ -88,10 +92,9 @@ public class AbstractDAO<T> implements GenericDAO<T> {
                 results.add(rowMapper.mapRow(resultSet, modelClass));
             }
             return results;
-        } catch (SQLException e) {
+        } catch (Exception e) {
+            LoggerHelper.logDetailedDangerMessage(e, "SELECT");
             return null;
-        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
         } finally {
             JDBCUtil.closeConnection(connection, preparedStatement, resultSet);
         }
@@ -115,6 +118,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
             }
             return results;
         } catch (Exception e) {
+            LoggerHelper.logDetailedDangerMessage(e,"SELECT");
             e.printStackTrace();
             return null;
         } finally {
@@ -140,6 +144,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
                 return rs.getLong(1);
             }
         } catch (SQLException e) {
+            LoggerHelper.logDetailedDangerMessage(e,"INSERT");
             if (connection != null) {
                 connection.rollback();
             }
@@ -163,6 +168,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
             affectedRows = preparedStatement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
+            LoggerHelper.logDetailedDangerMessage(e, "UPDATE");
             if (connection != null) {
                 connection.rollback();
             }
@@ -191,4 +197,6 @@ public class AbstractDAO<T> implements GenericDAO<T> {
             throw new RuntimeException(e);
         }
     }
+
+
 }

@@ -1,20 +1,25 @@
 package com.ltweb_servlet_ecommerce.utils;
 
 import java.sql.*;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class JDBCUtil {
     public static Connection getConnection() {
+        Connection connection = null;
+        String message = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 //            Lưu trong /bin/setenv.bat của tomcat
             ResourceBundle resourceBundle = ResourceBundle.getBundle("env");
-            return DriverManager.getConnection(resourceBundle.getString("DB_URL"), resourceBundle.getString("DB_USERNAME"), resourceBundle.getString("DB_PASSWORD"));
-        } catch (ClassNotFoundException | SQLException e) {
-            System.out.println(e);
-            return null;
+            connection = DriverManager.getConnection(resourceBundle.getString("DB_URL"), resourceBundle.getString("DB_USERNAME"), resourceBundle.getString("DB_PASSWORD"));
+            if (connection == null) {
+                message = "Connection is null;";
+            }
+        } catch (ClassNotFoundException | MissingResourceException | SQLException e) {
+            e.printStackTrace();
         }
-
+        return connection;
     }
 
 

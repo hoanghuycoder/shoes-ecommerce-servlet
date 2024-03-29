@@ -1,41 +1,76 @@
 package com.ltweb_servlet_ecommerce.utils;
 
+import com.ltweb_servlet_ecommerce.constant.SystemConstant;
+import com.ltweb_servlet_ecommerce.model.LogModel;
+
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Transport;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SendMailUtil {
-    public static void sendMail(String toEmailAddress,String titleMail,String templateMail) throws MessagingException {
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("env");
-        String fromEmail = resourceBundle.getString("EMAIL_ADDRESS");
-        String username = resourceBundle.getString("EMAIL_ADDRESS");
-        String password = resourceBundle.getString("EMAIL_PASSWORD");
-        Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.ssl.trust", "*");
-        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
-        javax.mail.Session sessionEmail = javax.mail.Session.getInstance(props, new Authenticator() {
-            protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
-                return new javax.mail.PasswordAuthentication(username, password);
+    /*
+     * Mỗi khi gọi phương thức sendMail, một Runnable được gửi đến ExecutorService
+     * để thực thi việc gửi email trên một thread riêng biệt. ExecutorService giúp
+     * tạo và quản lý các thread để thực hiện công việc gửi email một cách bất
+     * đồng bộ
+     */
+    private static ExecutorService executorService = Executors.newFixedThreadPool(3); // Số lượng thread tùy chọn
+
+    public static void sendMail(String toEmailAddress, String titleMail, String templateMail) {
+        executorService.submit(() -> {
+            ResourceBundle resourceBundle = ResourceBundle.getBundle("env");
+            String fromEmail = resourceBundle.getString("EMAIL_ADDRESS");
+            String username = resourceBundle.getString("EMAIL_ADDRESS");
+            String password = resourceBundle.getString("EMAIL_PASSWORD");
+            Properties props = new Properties();
+            props.put("mail.smtp.host", "smtp.gmail.com");
+            props.put("mail.smtp.port", "587");
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.ssl.trust", "*");
+            props.put("mail.smtp.ssl.protocols", "TLSv1.2");
+            javax.mail.Session sessionEmail = javax.mail.Session.getInstance(props, new Authenticator() {
+                protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
+                    return new javax.mail.PasswordAuthentication(username, password);
+                }
+            });
+            try {
+                MimeMessage message = new MimeMessage(sessionEmail);
+                message.setFrom(new InternetAddress(username));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmailAddress));
+                message.setSubject(titleMail);
+                message.setContent(templateMail, "text/html;charset=UTF-8");
+                Transport.send(message);
+            } catch (MessagingException ex) {
+                ex.printStackTrace();
             }
         });
-        MimeMessage message = new MimeMessage(sessionEmail);
-        message.setFrom(new InternetAddress(username));
-        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmailAddress));
-        message.setSubject(titleMail);
-        message.setContent(templateMail, "text/html;charset=UTF-8");
-        Transport.send(message);
     }
-    public static String templateMailContact(String fullName,String email,String message) {
+    public static String templateMailDanger(LogModel logModel) {
+        StringBuilder content = new StringBuilder();
+        content.append("<p>Subject: Critical Error Report on Server</p>");
+        content.append("<p><strong>Dear Admin,</strong></p>");
+        content.append("<p>We regret to inform you that our server has encountered a critical error that requires immediate attention. Below are the details of the error:</p>");
+        content.append("<ol>");
+        content.append("<li><p><strong>Error:</strong> ").append(logModel.getValue().get(SystemConstant.STATUS_LOG)).append("</p></li>");
+        content.append("<li><p><strong>Time of Error:</strong> ").append(logModel.getCreateAt().toString()).append("</p></li>");
+        content.append("<li><p><strong>Error Message:</strong> ").append(logModel.getValue().get(SystemConstant.VALUE_LOG)).append("</p></li>");
+        content.append("</ol>");
+        content.append("<p>Your prompt action is highly appreciated to address this issue and ensure the smooth operation of our website. If further assistance or information is needed, please do not hesitate to contact us.</p>");
+        content.append("<p>Thank you for your attention and cooperation.</p>");
+        content.append("<p>Sincerely,</p>");
+        content.append("<p><strong>Nai Shoes &amp; Sneakers</strong><br /><br /></p>");
+        return content.toString();
+    }
+
+    public static String templateMailContact(String fullName, String email, String message) {
         return "<!DOCTYPE html>\n" +
                 "\n" +
                 "<html lang=\"en\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:v=\"urn:schemas-microsoft-com:vml\">\n" +
@@ -138,7 +173,7 @@ public class SendMailUtil {
                 "<tr>\n" +
                 "<td class=\"pad\">\n" +
                 "<div style=\"color:#444a5b;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:19.2px;\">\n" +
-                "<p style=\"margin: 0;\"><strong>"+fullName+"</strong> just send you contact form</p>\n" +
+                "<p style=\"margin: 0;\"><strong>" + fullName + "</strong> just send you contact form</p>\n" +
                 "</div>\n" +
                 "</td>\n" +
                 "</tr>\n" +
@@ -188,7 +223,7 @@ public class SendMailUtil {
                 "<tr>\n" +
                 "<td class=\"pad\">\n" +
                 "<div style=\"color:#444a5b;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:19.2px;\">\n" +
-                "<p style=\"margin: 0;\">Fullname : "+fullName+"</p>\n" +
+                "<p style=\"margin: 0;\">Fullname : " + fullName + "</p>\n" +
                 "</div>\n" +
                 "</td>\n" +
                 "</tr>\n" +
@@ -213,7 +248,7 @@ public class SendMailUtil {
                 "<tr>\n" +
                 "<td class=\"pad\">\n" +
                 "<div style=\"color:#444a5b;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:19.2px;\">\n" +
-                "<p style=\"margin: 0;\">Email : "+email+"</p>\n" +
+                "<p style=\"margin: 0;\">Email : " + email + "</p>\n" +
                 "</div>\n" +
                 "</td>\n" +
                 "</tr>\n" +
@@ -238,7 +273,7 @@ public class SendMailUtil {
                 "<tr>\n" +
                 "<td class=\"pad\">\n" +
                 "<div style=\"color:#444a5b;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:19.2px;\">\n" +
-                "<p style=\"margin: 0;\">Message : "+message+"</p>\n" +
+                "<p style=\"margin: 0;\">Message : " + message + "</p>\n" +
                 "</div>\n" +
                 "</td>\n" +
                 "</tr>\n" +
@@ -263,11 +298,11 @@ public class SendMailUtil {
                 "<tr>\n" +
                 "<td class=\"pad\">\n" +
                 "<div align=\"center\" class=\"alignment\"><!--[if mso]>\n" +
-                "<v:roundrect xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:w=\"urn:schemas-microsoft-com:office:word\" href=\"https://mail.google.com/mail/u/0/?fs=1&to="+email+"&su=Support-Nai%20Shoes%20&%20Sneaker&body=Hi%20"+fullName+",%0AThank%20you%20for%20reaching%20out%20to%20us,%20and%20we%20appreciate%20your%20interest%20in%20"+fullName+".%20We%20understand%20that%20placing%20an%20order%20can%20sometimes%20be%20challenging,%20and%20we%20are%20here%20to%20provide%20the%20assistance%20you%20need.%0ABelow,%20I%27ve%20outlined%20a%20simple%20guide&tf=cm\" style=\"height:42px;width:123px;v-text-anchor:middle;\" arcsize=\"10%\" stroke=\"false\" fillcolor=\"#7747ff\">\n" +
+                "<v:roundrect xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:w=\"urn:schemas-microsoft-com:office:word\" href=\"https://mail.google.com/mail/u/0/?fs=1&to=" + email + "&su=Support-Nai%20Shoes%20&%20Sneaker&body=Hi%20" + fullName + ",%0AThank%20you%20for%20reaching%20out%20to%20us,%20and%20we%20appreciate%20your%20interest%20in%20" + fullName + ".%20We%20understand%20that%20placing%20an%20order%20can%20sometimes%20be%20challenging,%20and%20we%20are%20here%20to%20provide%20the%20assistance%20you%20need.%0ABelow,%20I%27ve%20outlined%20a%20simple%20guide&tf=cm\" style=\"height:42px;width:123px;v-text-anchor:middle;\" arcsize=\"10%\" stroke=\"false\" fillcolor=\"#7747ff\">\n" +
                 "<w:anchorlock/>\n" +
                 "<v:textbox inset=\"0px,0px,0px,0px\">\n" +
                 "<center style=\"color:#ffffff; font-family:Arial, sans-serif; font-size:16px\">\n" +
-                "<![endif]--><a href=\"https://mail.google.com/mail/u/0/?fs=1&to="+email+"&su=Support-Nai%20Shoes%20&%20Sneaker&body=Hi%20"+fullName+",%0AThank%20you%20for%20reaching%20out%20to%20us,%20and%20we%20appreciate%20your%20interest%20in%20"+fullName+".%20We%20understand%20that%20placing%20an%20order%20can%20sometimes%20be%20challenging,%20and%20we%20are%20here%20to%20provide%20the%20assistance%20you%20need.%0ABelow,%20I%27ve%20outlined%20a%20simple%20guide&tf=cm\" style=\"text-decoration:none;display:inline-block;color:#ffffff;background-color:#7747ff;border-radius:4px;width:auto;border-top:0px solid transparent;font-weight:400;border-right:0px solid transparent;border-bottom:0px solid transparent;border-left:0px solid transparent;padding-top:5px;padding-bottom:5px;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:16px;text-align:center;mso-border-alt:none;word-break:keep-all;\" target=\"_blank\"><span style=\"padding-left:20px;padding-right:20px;font-size:16px;display:inline-block;letter-spacing:normal;\"><span style=\"word-break: break-word; line-height: 32px;\">Relpy email</span></span></a><!--[if mso]></center></v:textbox></v:roundrect><![endif]--></div>\n" +
+                "<![endif]--><a href=\"https://mail.google.com/mail/u/0/?fs=1&to=" + email + "&su=Support-Nai%20Shoes%20&%20Sneaker&body=Hi%20" + fullName + ",%0AThank%20you%20for%20reaching%20out%20to%20us,%20and%20we%20appreciate%20your%20interest%20in%20" + fullName + ".%20We%20understand%20that%20placing%20an%20order%20can%20sometimes%20be%20challenging,%20and%20we%20are%20here%20to%20provide%20the%20assistance%20you%20need.%0ABelow,%20I%27ve%20outlined%20a%20simple%20guide&tf=cm\" style=\"text-decoration:none;display:inline-block;color:#ffffff;background-color:#7747ff;border-radius:4px;width:auto;border-top:0px solid transparent;font-weight:400;border-right:0px solid transparent;border-bottom:0px solid transparent;border-left:0px solid transparent;padding-top:5px;padding-bottom:5px;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:16px;text-align:center;mso-border-alt:none;word-break:keep-all;\" target=\"_blank\"><span style=\"padding-left:20px;padding-right:20px;font-size:16px;display:inline-block;letter-spacing:normal;\"><span style=\"word-break: break-word; line-height: 32px;\">Relpy email</span></span></a><!--[if mso]></center></v:textbox></v:roundrect><![endif]--></div>\n" +
                 "</td>\n" +
                 "</tr>\n" +
                 "</table>\n" +
@@ -315,7 +350,8 @@ public class SendMailUtil {
                 "</body>\n" +
                 "</html>";
     }
-    public static String templateContentMail(String title,String content) {
+
+    public static String templateContentMail(String title, String content) {
         return "<!DOCTYPE html>\n" +
                 "<html xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" lang=\"en\">\n" +
                 "\n" +
@@ -498,7 +534,7 @@ public class SendMailUtil {
                 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t<tr>\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<td class=\"pad\" style=\"padding-left:10px;padding-right:10px;padding-top:10px;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div style=\"color:#0f7085;font-family:Oswald, Arial, Helvetica Neue, Helvetica, sans-serif;font-size:20px;letter-spacing:1px;line-height:120%;text-align:center;mso-line-height-alt:24px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p style=\"margin: 0;\">"+title+"</p>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p style=\"margin: 0;\">" + title + "</p>\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t</tr>\n" +
@@ -507,7 +543,7 @@ public class SendMailUtil {
                 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t<tr>\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<td class=\"pad\" style=\"padding-bottom:10px;padding-left:10px;padding-right:10px;padding-top:5px;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div style=\"color:#4e8c9d;font-family:'Lato',Tahoma,Verdana,Segoe,sans-serif;font-size:16px;line-height:150%;text-align:center;mso-line-height-alt:24px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p style=\"margin: 0;\">"+content+"</p>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p style=\"margin: 0;\">" + content + "</p>\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t</tr>\n" +
@@ -605,6 +641,7 @@ public class SendMailUtil {
                 "\n" +
                 "</html>";
     }
+
     public static String templateOTPMail(String OTP) {
         return "<!DOCTYPE html>\n" +
                 "<html xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" lang=\"en\">\n" +
@@ -797,7 +834,7 @@ public class SendMailUtil {
                 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t<tr>\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<td class=\"pad\" style=\"padding-bottom:10px;padding-left:10px;padding-right:10px;padding-top:5px;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div style=\"color:#4e8c9d;font-family:'Lato',Tahoma,Verdana,Segoe,sans-serif;font-size:16px;line-height:150%;text-align:center;mso-line-height-alt:24px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p style=\"margin: 0;\">Here is your otp code : "+OTP+"</p>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p style=\"margin: 0;\">Here is your otp code : " + OTP + "</p>\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t\t\t\t</tr>\n" +
