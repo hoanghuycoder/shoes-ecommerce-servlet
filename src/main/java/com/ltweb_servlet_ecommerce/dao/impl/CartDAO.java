@@ -16,7 +16,7 @@ import java.util.Map;
 public class CartDAO extends AbstractDAO<CartModel> implements ICartDAO {
     @Override
     public List<CartModel> findAllWithFilter(CartModel model, Pageble pageble) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM cart WHERE 1=1 ");
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM  carts WHERE 1=1 ");
         MapSQLAndParamsResult sqlAndParams = new CartMapper().mapSQLAndParams(sqlStrBuilder,model,"select",pageble);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
@@ -25,14 +25,14 @@ public class CartDAO extends AbstractDAO<CartModel> implements ICartDAO {
     }
     @Override
     public List<CartModel> findAll(Pageble pageble) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM cart");
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM  carts");
         SqlPagebleUtil.addSQlPageble(sqlStrBuilder,pageble);
         return query(sqlStrBuilder.toString(),new CartMapper(),null, CartModel.class);
     }
 
     @Override
     public CartModel findById(Long id) throws SQLException {
-        String sql = "select * from cart where id=?";
+        String sql = "select * from  carts where id=?";
         List<Object> params = new ArrayList<>();
         params.add(id);
         List<CartModel> result =  query(sql,new CartMapper(),params,CartModel.class);
@@ -40,7 +40,7 @@ public class CartDAO extends AbstractDAO<CartModel> implements ICartDAO {
     }
     @Override
     public CartModel findWithFilter(CartModel model) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM cart WHERE 1=1 ");
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM  carts WHERE 1=1 ");
         MapSQLAndParamsResult sqlAndParams = new CartMapper().mapSQLAndParams(sqlStrBuilder,model,"select",null);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
@@ -50,14 +50,14 @@ public class CartDAO extends AbstractDAO<CartModel> implements ICartDAO {
 
     @Override
     public List<CartModel> findByColumnValues(List<SubQuery> subQueryList, Pageble pageble) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM cart WHERE 1=1 ");
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM  carts WHERE 1=1 ");
         List<CartModel> result = queryWithSubQuery(sqlStrBuilder,new CartMapper(),subQueryList,"in",CartModel.class,pageble);
         return result;
     }
 
     @Override
     public Long save(CartModel model) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("INSERT INTO cart SET ");
+        StringBuilder sqlStrBuilder = new StringBuilder("INSERT INTO  carts SET ");
         MapSQLAndParamsResult sqlAndParams = new CartMapper().mapSQLAndParams(sqlStrBuilder,model,"insert",null);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
@@ -66,7 +66,7 @@ public class CartDAO extends AbstractDAO<CartModel> implements ICartDAO {
 
     @Override
     public int update(CartModel model) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("UPDATE cart SET ");
+        StringBuilder sqlStrBuilder = new StringBuilder("UPDATE  carts SET ");
         MapSQLAndParamsResult sqlAndParams = new CartMapper().mapSQLAndParams(sqlStrBuilder,model,"update",null);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
@@ -75,7 +75,7 @@ public class CartDAO extends AbstractDAO<CartModel> implements ICartDAO {
 
     @Override
     public int delete(Long id) throws SQLException {
-        String sql = "delete from cart where id=?";
+        String sql = "delete from  carts where id=?";
         List<Object> params = new ArrayList<>();
         params.add(id);
         return delete(sql,params);
@@ -86,7 +86,7 @@ public class CartDAO extends AbstractDAO<CartModel> implements ICartDAO {
         CartModel model = new CartModel();
         model.setId(id);
         model.setIsDeleted(true);
-        StringBuilder sqlStrBuilder = new StringBuilder("UPDATE cart SET ");
+        StringBuilder sqlStrBuilder = new StringBuilder("UPDATE  carts SET ");
         MapSQLAndParamsResult sqlAndParams = new CartMapper().mapSQLAndParams(sqlStrBuilder,model,"update",null);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();

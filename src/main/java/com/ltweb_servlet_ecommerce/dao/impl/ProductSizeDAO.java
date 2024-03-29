@@ -20,7 +20,7 @@ import java.util.Map;
 public class ProductSizeDAO extends AbstractDAO<ProductSizeModel> implements IProductSizeDAO {
     @Override
     public List<ProductSizeModel> findAllWithFilter(ProductSizeModel model,Pageble pageble) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM productSize WHERE 1=1 ");
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM product_sizes WHERE 1=1 ");
         MapSQLAndParamsResult sqlAndParams = new ProductSizeMapper().mapSQLAndParams(sqlStrBuilder,model,"select",pageble);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
@@ -29,14 +29,14 @@ public class ProductSizeDAO extends AbstractDAO<ProductSizeModel> implements IPr
     }
     @Override
     public List<ProductSizeModel> findAll(Pageble pageble) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM productSize");
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM product_sizes");
         SqlPagebleUtil.addSQlPageble(sqlStrBuilder,pageble);
         return query(sqlStrBuilder.toString(),new ProductSizeMapper(),null, ProductSizeModel.class);
     }
 
     @Override
     public ProductSizeModel findById(Long id) throws SQLException {
-        String sql = "select * from productSize where id=?";
+        String sql = "select * from product_sizes where id=?";
         List<Object> params = new ArrayList<>();
         params.add(id);
         List<ProductSizeModel> result =  query(sql,new ProductSizeMapper(),params,ProductSizeModel.class);
@@ -44,7 +44,7 @@ public class ProductSizeDAO extends AbstractDAO<ProductSizeModel> implements IPr
     }
     @Override
     public ProductSizeModel findWithFilter(ProductSizeModel model) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM productSize WHERE 1=1 ");
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM product_sizes WHERE 1=1 ");
         MapSQLAndParamsResult sqlAndParams = new ProductSizeMapper().mapSQLAndParams(sqlStrBuilder,model,"select",null);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
@@ -54,14 +54,14 @@ public class ProductSizeDAO extends AbstractDAO<ProductSizeModel> implements IPr
 
     @Override
     public List<ProductSizeModel> findByColumnValues(List<SubQuery> subQueryList,Pageble pageble) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM productSize WHERE 1=1 ");
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM product_sizes WHERE 1=1 ");
         List<ProductSizeModel> result = queryWithSubQuery(sqlStrBuilder,new ProductSizeMapper(),subQueryList,"in",ProductSizeModel.class,pageble);
         return result;
     }
 
     @Override
     public Long save(ProductSizeModel model) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("INSERT INTO productSize SET ");
+        StringBuilder sqlStrBuilder = new StringBuilder("INSERT INTO product_sizes SET ");
         MapSQLAndParamsResult sqlAndParams = new ProductSizeMapper().mapSQLAndParams(sqlStrBuilder,model,"insert",null);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
@@ -70,7 +70,7 @@ public class ProductSizeDAO extends AbstractDAO<ProductSizeModel> implements IPr
 
     @Override
     public void update(ProductSizeModel model) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("UPDATE productSize SET ");
+        StringBuilder sqlStrBuilder = new StringBuilder("UPDATE product_sizes SET ");
         MapSQLAndParamsResult sqlAndParams = new ProductSizeMapper().mapSQLAndParams(sqlStrBuilder,model,"update",null);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
@@ -79,7 +79,7 @@ public class ProductSizeDAO extends AbstractDAO<ProductSizeModel> implements IPr
 
     @Override
     public void delete(Long id) throws SQLException {
-        String sql = "delete from productSize where id=?";
+        String sql = "delete from product_sizes where id=?";
         List<Object> params = new ArrayList<>();
         params.add(id);
         delete(sql,params);
