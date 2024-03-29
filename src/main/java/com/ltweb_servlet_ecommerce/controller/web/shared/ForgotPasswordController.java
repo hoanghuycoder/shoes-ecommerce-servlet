@@ -6,6 +6,7 @@ import com.ltweb_servlet_ecommerce.utils.NotifyUtil;
 import com.ltweb_servlet_ecommerce.utils.SendMailUtil;
 import com.ltweb_servlet_ecommerce.utils.SessionUtil;
 
+import javax.inject.Inject;
 import javax.mail.MessagingException;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -16,6 +17,7 @@ import java.util.Random;
 
 @WebServlet(urlPatterns = {"/forgot-password"})
 public class ForgotPasswordController extends HttpServlet {
+    @Inject
     IUserService userService;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -33,17 +35,21 @@ public class ForgotPasswordController extends HttpServlet {
         tmpUser.setEmail(email);
         tmpUser = userService.findWithFilter(tmpUser);
         if (tmpUser != null) {
-            Random random = new Random();
-            Integer OTP = 100_000 + random.nextInt(900_000);
-            SendMailUtil.sendMail(email,"Vertify your email",SendMailUtil.templateOTPMail(OTP+""));
-            SessionUtil.putValue(request,"OTP",OTP);
-            SessionUtil.getInstance().putValue(request,"FORGET_PASS",tmpUser);
-            response.sendRedirect("/vertify-email");
+            try {
+                Random random = new Random();
+                Integer OTP = 100_000 + random.nextInt(900_000);
+                SendMailUtil.sendMail(email, "Vertify your email", SendMailUtil.templateOTPMail(OTP + ""));
+                SessionUtil.putValue(request, "OTP", OTP);
+                SessionUtil.getInstance().putValue(request, "FORGET_PASS", tmpUser);
+                response.sendRedirect("/vertify-email");
+            } catch (MessagingException mex) {
+                mex.printStackTrace();
+            }
         } else {
             RequestDispatcher rd = request.getRequestDispatcher("/views/shared/forgot-pass.jsp");
             rd.forward(request, response);
         }
-        } catch (SQLException | MessagingException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }

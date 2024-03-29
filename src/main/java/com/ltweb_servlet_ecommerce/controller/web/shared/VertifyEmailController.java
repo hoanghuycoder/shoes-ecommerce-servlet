@@ -34,15 +34,22 @@ public class VertifyEmailController extends HttpServlet {
         String otpOrigin = SessionUtil.getInstance().getValue(req,"OTP")+"";
 
         if (otp.equals(otpOrigin)) {
-            UserModel userModel = (UserModel) SessionUtil.getInstance().getValue(req,"REGISTER_USER");
-            BCrypt.Hasher hasher = BCrypt.withDefaults();
-            String hashedPassword = hasher.hashToString(12, userModel.getPassword().toCharArray());
-            userModel.setPassword(hashedPassword);
-            try {
-                userService.save(userModel);
-                resp.sendRedirect(req.getContextPath()+"/sign-in?message=register_success&toast=success");
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+            //forgot password
+            UserModel tmpUser = (UserModel) SessionUtil.getInstance().getValue(req,"FORGET_PASS");
+            if (tmpUser != null) {
+                resp.sendRedirect("/views/shared/new-password.jsp");
+            } else {
+
+                UserModel userModel = (UserModel) SessionUtil.getInstance().getValue(req, "REGISTER_USER");
+                BCrypt.Hasher hasher = BCrypt.withDefaults();
+                String hashedPassword = hasher.hashToString(12, userModel.getPassword().toCharArray());
+                userModel.setPassword(hashedPassword);
+                try {
+                    userService.save(userModel);
+                    resp.sendRedirect(req.getContextPath() + "/sign-in?message=register_success&toast=success");
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         } else {
             resp.sendRedirect(req.getContextPath()+"/vertify-email?message=otp_invalid&toast=danger");

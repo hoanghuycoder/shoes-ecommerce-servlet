@@ -22,7 +22,7 @@ public class SendMailUtil {
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.ssl.trust", "*");
-
+        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
         javax.mail.Session sessionEmail = javax.mail.Session.getInstance(props, new Authenticator() {
             protected javax.mail.PasswordAuthentication getPasswordAuthentication() {
                 return new javax.mail.PasswordAuthentication(username, password);
