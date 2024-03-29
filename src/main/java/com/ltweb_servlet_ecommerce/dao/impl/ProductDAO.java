@@ -22,7 +22,7 @@ import java.util.Map;
 public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO {
     @Override
     public List<ProductModel> findAllWithFilter(ProductModel model,Pageble pageble) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM product WHERE 1=1 ");
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM products WHERE 1=1 ");
         MapSQLAndParamsResult sqlAndParams = new ProductMapper().mapSQLAndParams(sqlStrBuilder,model,"select",pageble);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
@@ -31,14 +31,14 @@ public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO
     }
     @Override
     public List<ProductModel> findAll(Pageble pageble) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM product");
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM products");
         SqlPagebleUtil.addSQlPageble(sqlStrBuilder,pageble);
         return query(sqlStrBuilder.toString(),new ProductMapper(),null, ProductModel.class);
     }
 
     @Override
     public ProductModel findById(Long id) throws SQLException {
-        String sql = "select * from product where id=?";
+        String sql = "select * from products where id=?";
         List<Object> params = new ArrayList<>();
         params.add(id);
         List<ProductModel> result =  query(sql,new ProductMapper(),params,ProductModel.class);
@@ -46,7 +46,7 @@ public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO
     }
     @Override
     public ProductModel findWithFilter(ProductModel model) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM product WHERE 1=1 ");
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM products WHERE 1=1 ");
         MapSQLAndParamsResult sqlAndParams = new ProductMapper().mapSQLAndParams(sqlStrBuilder,model,"select",null);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
@@ -56,14 +56,14 @@ public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO
 
     @Override
     public List<ProductModel> findByColumnValues(List<SubQuery> subQueryList,Pageble pageble) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM product WHERE 1=1 ");
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM products WHERE 1=1 ");
         List<ProductModel> result = queryWithSubQuery(sqlStrBuilder,new ProductMapper(),subQueryList,"in",ProductModel.class,pageble);
         return result;
     }
 
     @Override
     public Long save(ProductModel model) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("INSERT INTO product SET ");
+        StringBuilder sqlStrBuilder = new StringBuilder("INSERT INTO products SET ");
         MapSQLAndParamsResult sqlAndParams = new ProductMapper().mapSQLAndParams(sqlStrBuilder,model,"insert",null);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
@@ -72,7 +72,7 @@ public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO
 
     @Override
     public void update(ProductModel model) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("UPDATE product SET ");
+        StringBuilder sqlStrBuilder = new StringBuilder("UPDATE products SET ");
         MapSQLAndParamsResult sqlAndParams = new ProductMapper().mapSQLAndParams(sqlStrBuilder,model,"update",null);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
@@ -81,7 +81,7 @@ public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO
 
     @Override
     public void delete(Long id) throws SQLException {
-        String sql = "delete from product where id=?";
+        String sql = "delete from products where id=?";
         List<Object> params = new ArrayList<>();
         params.add(id);
         delete(sql,params);

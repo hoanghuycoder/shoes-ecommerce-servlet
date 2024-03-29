@@ -61,7 +61,8 @@ public class CartAjax extends HttpServlet {
             UserModel user = (UserModel) SessionUtil.getInstance().getValue(req, "USER_MODEL");
             List<OrderDetailsModel> orderDetailsModelList = null;
             //Get id product size and subTotal
-            String sqlProductSizeId = " select productSize.id as productSizeId, product.price as priceProduct from productSize,product where productSize.productId = product.id and productSize.productId = ? and productSize.sizeId = ?";
+            String sqlProductSizeId = " select product_sizes.id as productSizeId, products.price as priceProduct from product_sizes,products where product_sizes.productId = products.id and product_sizes.productId = ? and product_sizes.sizeId = ?";
+
             List<Object> params = new ArrayList<>();
             params.add(productId);
             params.add(sizeId);
@@ -74,10 +75,10 @@ public class CartAjax extends HttpServlet {
             orderDetailsModel.setQuantity(quantity);
             orderDetailsModel.setSubTotal(subTotal);
             if (user != null) {
-                String sqlExistCartItem = "select orderDetails.id as id from cart,orderDetails,productSize " +
-                        "where cart.orderDetailsId = orderDetails.id " +
-                        "and orderDetails.productSizeId = ? " +
-                        "and cart.userId = ?";
+                String sqlExistCartItem = "select order_details.id as id from carts,order_details,product_sizes " +
+                        "where carts.orderDetailsId = order_details.id " +
+                        "and order_details.productSizeId = ? " +
+                        "and carts.userId = ?";
                 List<Object> paramsExistCartItem = new ArrayList<>();
                 paramsExistCartItem.add(productSizeId);
                 paramsExistCartItem.add(user.getId());
@@ -111,11 +112,13 @@ public class CartAjax extends HttpServlet {
             } else {
                 OrderDetailsModel existOrderDetails = null;
                 orderDetailsModelList = (List<OrderDetailsModel>) SessionUtil.getInstance().getValue(req, "LIST_ORDER_DETAILS");
-                List<OrderDetailsModel> orderDetailsOld = new ArrayList<>(orderDetailsModelList);
+                List<OrderDetailsModel> orderDetailsOld = null;
                 if (orderDetailsModelList == null) {
                     orderDetailsModelList = new ArrayList<>();
                     orderDetailsModelList.add(orderDetailsModel);
+                    orderDetailsOld = new ArrayList<>();
                 } else {
+                    orderDetailsOld = new ArrayList<>(orderDetailsModelList);
                     existOrderDetails = orderDetailsModelList.stream()
                             .filter(orderDetails -> orderDetails.getProductSizeId().equals(productSizeId))
                             .findFirst()

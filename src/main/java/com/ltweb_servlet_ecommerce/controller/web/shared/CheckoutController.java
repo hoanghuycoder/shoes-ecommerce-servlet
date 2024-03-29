@@ -127,7 +127,7 @@ public class CheckoutController extends HttpServlet {
                 Long sizeId = Long.parseLong(productStrSplit[1]);
                 int quantity = Integer.parseInt(productStrSplit[2]);
                 //Find product size and price
-                String sqlProductSizeId = " select productSize.id as productSizeId, product.price as priceProduct from productSize,product where productSize.productId = product.id and productSize.productId = ? and productSize.sizeId = ?";
+                String sqlProductSizeId = " select product_sizes.id as productSizeId, products.price as priceProduct from product_sizes,products where product_sizes.productId = products.id and product_sizes.productId = ? and product_sizes.sizeId = ?";
                 List<Object> params = new ArrayList<>();
                 params.add(productId);
                 params.add(sizeId);

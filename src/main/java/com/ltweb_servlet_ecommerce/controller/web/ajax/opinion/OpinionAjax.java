@@ -45,7 +45,7 @@ public class OpinionAjax extends HttpServlet {
             ArrayNode opinionsArray = objectMapper.createArrayNode();
 //                Return json list opinions
             for (OpinionModel model : opinionModelList) {
-                String sql = " select fullName from user where id = ?";
+                String sql = " select fullName from users where id = ?";
                 List<Object> params = new ArrayList<>();
                 params.add(model.getUserId());
                 Map<String,Object> sqlMap = userService.findWithCustomSQL(sql,params);
@@ -56,14 +56,14 @@ public class OpinionAjax extends HttpServlet {
             }
             jsonResult.put("opinions", opinionsArray);
 //                Get amount opinion of that product
-            String sql = " select count(*) as total from opinion where productId = ? and isDeleted = false";
+            String sql = " select count(*) as total from opinions where productId = ? and isDeleted = false";
             List<Object> params = new ArrayList<>();
             params.add(productId);
             Map<String,Object> countRating = opinionService.findWithCustomSQL(sql,params);
             int totalCountRating = Integer.parseInt(countRating.get("total").toString());
             jsonResult.put("countRating", totalCountRating);
 //                Get sum rating of that product
-            String sqlRating = "select sum(rating) as sumRating from opinion where productId =? and isDeleted = false";
+            String sqlRating = "select sum(rating) as sumRating from opinions where productId =? and isDeleted = false";
             List<Object> params2 = new ArrayList<>();
             params2.add(productId);
             Map<String,Object> sumRating = opinionService.findWithCustomSQL(sqlRating,params2);
