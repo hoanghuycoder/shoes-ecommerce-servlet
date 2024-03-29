@@ -61,17 +61,18 @@ public class LoginController extends HttpServlet {
                     userService.update(updateUserLogged);
 
                     // Logging successful login
-
                     JSONObject logValue = new JSONObject();
                     logValue.put(SystemConstant.STATUS_LOG, "Authentication successful");
                     logValue.put(SystemConstant.VALUE_LOG, new JSONObject().put("email", tmpUser.getEmail()).put("id", tmpUser.getId()));
                     LoggerHelper.log(SystemConstant.INFO_LEVEL, "SELECT", RuntimeInfo.getCallerClassNameAndLineNumber(), logValue);
 
-                    resp.sendRedirect(req.getContextPath() + "/home");
+                    if (tmpUser.getRole().equals("admin"))
+                        resp.sendRedirect(req.getContextPath() + "/admin/home");
+                    else
+                        resp.sendRedirect(req.getContextPath() + "/home");
 
                 } else {
                     // Logging login error
-
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put(SystemConstant.STATUS_LOG, "Authentication Failure. Email or password is invalid");
                     jsonObject.put(SystemConstant.VALUE_LOG, new JSONObject().put("email", userModel.getEmail()));
@@ -82,7 +83,6 @@ public class LoginController extends HttpServlet {
                 }
             } else {
                 // Logging requires filling out complete information
-
                 JSONObject logValue = new JSONObject();
                 logValue.put(SystemConstant.STATUS_LOG, "Authentication Failure. Email or password is null");
                 LoggerHelper.log(SystemConstant.WARN_LEVEL, "SELECT", RuntimeInfo.getCallerClassNameAndLineNumber(), logValue);

@@ -53,7 +53,7 @@ public class OrderDetailsService implements IOrderDetailsService {
         JSONObject value = new JSONObject().put(SystemConstant.STATUS_LOG, status)
                 .put(SystemConstant.VALUE_LOG, new JSONObject(newModel));
 
-        LoggerHelper.log(isUpdated ? SystemConstant.INFO_LEVEL : SystemConstant.ERORR_LEVEL,
+        LoggerHelper.log(isUpdated ? SystemConstant.WARN_LEVEL : SystemConstant.ERORR_LEVEL,
                 "UPDATE", RuntimeInfo.getCallerClassNameAndLineNumber(), preValue, value);
 
 
@@ -96,7 +96,7 @@ public class OrderDetailsService implements IOrderDetailsService {
         JSONObject value = new JSONObject().put(SystemConstant.STATUS_LOG, status)
                 .put(SystemConstant.VALUE_LOG, new JSONObject(result));
 
-        LoggerHelper.log(result != null ? SystemConstant.INFO_LEVEL : SystemConstant.ERORR_LEVEL,
+        LoggerHelper.log(result != null ? SystemConstant.WARN_LEVEL : SystemConstant.ERORR_LEVEL,
                 "INSERT", RuntimeInfo.getCallerClassNameAndLineNumber(), value);
 
         return result;

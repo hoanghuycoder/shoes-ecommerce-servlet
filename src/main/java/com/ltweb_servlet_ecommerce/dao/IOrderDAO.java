@@ -16,7 +16,7 @@ public interface IOrderDAO {
     List<OrderModel> findByColumnValues(List<SubQuery> subQueryList,Pageble pageble) throws SQLException;
     List<OrderModel> findAllWithFilter(OrderModel model,Pageble pageble) throws SQLException;
     Long save(OrderModel model) throws SQLException;
-    void update(OrderModel model) throws SQLException;
+    int update(OrderModel model) throws SQLException;
     void delete(Long id) throws SQLException;
     Map<String,Object> findWithCustomSQL(String sql,List<Object> params) throws SQLException;
 }

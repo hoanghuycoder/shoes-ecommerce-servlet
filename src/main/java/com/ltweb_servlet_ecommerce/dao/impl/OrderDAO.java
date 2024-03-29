@@ -69,12 +69,12 @@ public class OrderDAO extends AbstractDAO<OrderModel> implements IOrderDAO {
     }
 
     @Override
-    public void update(OrderModel model) throws SQLException {
+    public int update(OrderModel model) throws SQLException {
         StringBuilder sqlStrBuilder = new StringBuilder("UPDATE `order` SET ");
         MapSQLAndParamsResult sqlAndParams = new OrderMapper().mapSQLAndParams(sqlStrBuilder,model,"update",null);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
-        update(sql,params);
+        return update(sql,params);
     }
 
     @Override
