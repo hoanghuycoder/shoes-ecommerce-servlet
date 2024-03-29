@@ -21,11 +21,13 @@ public class AuthRole {
             return;
         }
     }
-    public static void checkPermission(HttpServletResponse resp, HttpServletRequest req, String... permissions) throws IOException {
+    public static boolean checkPermission(HttpServletResponse resp, HttpServletRequest req, String... permissions) throws IOException {
         UserModel user = (UserModel) SessionUtil.getInstance().getValue(req, SystemConstant.USER_MODEL);
         List<String> permissionList = Arrays.asList(permissions);
         if (!permissionList.contains(user.getRole())) {
             resp.sendRedirect(req.getContextPath()+"/sign-in?action=login&message=not_permission&toast=danger");
+            return false;
         }
+        return true;
     }
 }

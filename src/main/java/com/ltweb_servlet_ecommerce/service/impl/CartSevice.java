@@ -60,7 +60,7 @@ public class CartSevice implements ICartService {
         String status = String.format("Deleted cart with id = %d %s", id, isDeleted ? "successfully" : "failed");
         JSONObject value = new JSONObject().put(SystemConstant.STATUS_LOG, status);
 
-        LoggerHelper.log(isDeleted ? SystemConstant.INFO_LEVEL : SystemConstant.ERORR_LEVEL,
+        LoggerHelper.log(isDeleted ? SystemConstant.WARN_LEVEL : SystemConstant.ERORR_LEVEL,
                 "DELETE", RuntimeInfo.getCallerClassNameAndLineNumber(), preValue, value);
 
         return oldModel;
@@ -85,7 +85,7 @@ public class CartSevice implements ICartService {
         JSONObject value = new JSONObject().put(SystemConstant.STATUS_LOG, status)
                 .put(SystemConstant.VALUE_LOG, new JSONObject(newModel));
 
-        LoggerHelper.log(isDeleted ? SystemConstant.INFO_LEVEL : SystemConstant.ERORR_LEVEL,
+        LoggerHelper.log(isDeleted ? SystemConstant.WARN_LEVEL : SystemConstant.ERORR_LEVEL,
                 "DELETE", RuntimeInfo.getCallerClassNameAndLineNumber(), preValue, value);
 
         return newModel;
@@ -106,7 +106,7 @@ public class CartSevice implements ICartService {
         JSONObject value = new JSONObject().put(SystemConstant.STATUS_LOG, status)
                 .put(SystemConstant.VALUE_LOG, new JSONObject(result));
 
-        LoggerHelper.log(result != null ? SystemConstant.INFO_LEVEL : SystemConstant.ERORR_LEVEL,
+        LoggerHelper.log(result != null ? SystemConstant.WARN_LEVEL : SystemConstant.ERORR_LEVEL,
                 "INSERT", RuntimeInfo.getCallerClassNameAndLineNumber(), value);
 
         return result;

@@ -1,11 +1,15 @@
 package com.ltweb_servlet_ecommerce.service.impl;
 
+import com.ltweb_servlet_ecommerce.constant.SystemConstant;
 import com.ltweb_servlet_ecommerce.dao.IOrderDAO;
 import com.ltweb_servlet_ecommerce.dao.IProductDAO;
+import com.ltweb_servlet_ecommerce.log.LoggerHelper;
 import com.ltweb_servlet_ecommerce.model.OrderModel;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.service.IOrderService;
 import com.ltweb_servlet_ecommerce.subquery.SubQuery;
+import com.ltweb_servlet_ecommerce.utils.RuntimeInfo;
+import org.json.JSONObject;
 
 import javax.inject.Inject;
 import java.sql.SQLException;
@@ -40,8 +44,21 @@ public class OrderService implements IOrderService {
     public OrderModel update(OrderModel model) throws SQLException {
         OrderModel oldModel = orderDAO.findById(model.getId());
         model.setUpdateAt(new Timestamp(System.currentTimeMillis()));
-        orderDAO.update(model);
-        return orderDAO.findById(model.getId());
+        boolean isUpdated = orderDAO.update(model) > 0;
+        OrderModel newModel = orderDAO.findById(model.getId());
+
+        // logging
+        JSONObject preValue = new JSONObject()
+                .put(SystemConstant.VALUE_LOG, new JSONObject(oldModel));
+
+        JSONObject value = new JSONObject()
+                .put(SystemConstant.STATUS_LOG, String.format("Update orderDetails %s",  isUpdated ? "successfully" : "failed"))
+                .put(SystemConstant.VALUE_LOG, new JSONObject(newModel));
+
+        LoggerHelper.log(SystemConstant.WARN_LEVEL, "UPDATE",
+                RuntimeInfo.getCallerClassNameAndLineNumber(), preValue, value);
+
+        return newModel;
     }
 
     @Override
@@ -73,6 +90,16 @@ public class OrderService implements IOrderService {
     @Override
     public OrderModel save(OrderModel model) throws SQLException {
         Long productId = orderDAO.save(model);
-        return orderDAO.findById(productId);
+        OrderModel result = orderDAO.findById(productId);
+
+        //logging
+        String status = String.format("Saved order %s", result != null ? "successfully" : "failed");
+        JSONObject value = new JSONObject().put(SystemConstant.STATUS_LOG, status)
+                .put(SystemConstant.VALUE_LOG, result != null ? new JSONObject(result) : new JSONObject());
+
+        LoggerHelper.log(result != null ? SystemConstant.WARN_LEVEL : SystemConstant.ERORR_LEVEL,
+                "INSERT", RuntimeInfo.getCallerClassNameAndLineNumber(), value);
+
+        return result;
     }
 }

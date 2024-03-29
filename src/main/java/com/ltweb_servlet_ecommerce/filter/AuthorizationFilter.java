@@ -8,6 +8,8 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class AuthorizationFilter implements Filter {
     private  ServletContext context;
@@ -22,7 +24,9 @@ public class AuthorizationFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         String url = req.getRequestURI();
         if (url.startsWith("/admin")) {
-            AuthRole.checkPermission(resp,req,"admin","moderator");
+            boolean isSuccess = AuthRole.checkPermission(resp,req,"admin","moderator");
+            if (isSuccess)
+                filterChain.doFilter(servletRequest,servletResponse);
         } else {
             filterChain.doFilter(servletRequest,servletResponse);
         }
