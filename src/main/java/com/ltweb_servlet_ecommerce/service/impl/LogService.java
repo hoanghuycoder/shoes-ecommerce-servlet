@@ -35,7 +35,6 @@ public class LogService implements ILogService {
 
     @Override
     public LogModel update(LogModel model) {
-        LogModel oldModel = logDAO.findById(model.getId());
         model.setUpdateAt(new Timestamp(System.currentTimeMillis()));
         logDAO.update(model);
         return logDAO.findById(model.getId());

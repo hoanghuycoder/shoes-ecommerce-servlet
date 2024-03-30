@@ -7,12 +7,14 @@ import com.ltweb_servlet_ecommerce.model.OrderDetailsModel;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.service.IOrderDetailsService;
 import com.ltweb_servlet_ecommerce.subquery.SubQuery;
+import com.ltweb_servlet_ecommerce.utils.ObjectComparator;
 import com.ltweb_servlet_ecommerce.utils.RuntimeInfo;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,13 +49,15 @@ public class OrderDetailsService implements IOrderDetailsService {
         boolean isUpdated = orderDetailsDAO.update(model) > 0;
         OrderDetailsModel newModel = orderDetailsDAO.findById(model.getId());
 
+        LinkedHashMap<String, String>[] results = ObjectComparator.compareObjects(oldModel, newModel);
+
         //logging
-        JSONObject preValue = new JSONObject().put(SystemConstant.VALUE_LOG, new JSONObject(oldModel));
+        JSONObject preValue = new JSONObject().put(SystemConstant.VALUE_LOG, new JSONObject(results[0]));
         String status = String.format("Updated orderDetails with id = %d %s", model.getId(), isUpdated ? "successfully" : "failed");
         JSONObject value = new JSONObject().put(SystemConstant.STATUS_LOG, status)
-                .put(SystemConstant.VALUE_LOG, new JSONObject(newModel));
+                .put(SystemConstant.VALUE_LOG, new JSONObject(results[1]));
 
-        LoggerHelper.log(isUpdated ? SystemConstant.WARN_LEVEL : SystemConstant.ERORR_LEVEL,
+        LoggerHelper.log(isUpdated ? SystemConstant.WARN_LEVEL : SystemConstant.ERROR_LEVEL,
                 "UPDATE", RuntimeInfo.getCallerClassNameAndLineNumber(), preValue, value);
 
 
@@ -96,7 +100,7 @@ public class OrderDetailsService implements IOrderDetailsService {
         JSONObject value = new JSONObject().put(SystemConstant.STATUS_LOG, status)
                 .put(SystemConstant.VALUE_LOG, new JSONObject(result));
 
-        LoggerHelper.log(result != null ? SystemConstant.WARN_LEVEL : SystemConstant.ERORR_LEVEL,
+        LoggerHelper.log(result != null ? SystemConstant.WARN_LEVEL : SystemConstant.ERROR_LEVEL,
                 "INSERT", RuntimeInfo.getCallerClassNameAndLineNumber(), value);
 
         return result;

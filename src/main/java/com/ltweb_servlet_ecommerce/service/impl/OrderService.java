@@ -2,18 +2,19 @@ package com.ltweb_servlet_ecommerce.service.impl;
 
 import com.ltweb_servlet_ecommerce.constant.SystemConstant;
 import com.ltweb_servlet_ecommerce.dao.IOrderDAO;
-import com.ltweb_servlet_ecommerce.dao.IProductDAO;
 import com.ltweb_servlet_ecommerce.log.LoggerHelper;
 import com.ltweb_servlet_ecommerce.model.OrderModel;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.service.IOrderService;
 import com.ltweb_servlet_ecommerce.subquery.SubQuery;
+import com.ltweb_servlet_ecommerce.utils.ObjectComparator;
 import com.ltweb_servlet_ecommerce.utils.RuntimeInfo;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,14 +47,15 @@ public class OrderService implements IOrderService {
         model.setUpdateAt(new Timestamp(System.currentTimeMillis()));
         boolean isUpdated = orderDAO.update(model) > 0;
         OrderModel newModel = orderDAO.findById(model.getId());
+        LinkedHashMap<String, String>[] results = ObjectComparator.compareObjects(oldModel, newModel);
 
         // logging
         JSONObject preValue = new JSONObject()
-                .put(SystemConstant.VALUE_LOG, new JSONObject(oldModel));
+                .put(SystemConstant.VALUE_LOG, new JSONObject(results[0]));
 
         JSONObject value = new JSONObject()
                 .put(SystemConstant.STATUS_LOG, String.format("Update orderDetails %s",  isUpdated ? "successfully" : "failed"))
-                .put(SystemConstant.VALUE_LOG, new JSONObject(newModel));
+                .put(SystemConstant.VALUE_LOG, new JSONObject(results[1]));
 
         LoggerHelper.log(SystemConstant.WARN_LEVEL, "UPDATE",
                 RuntimeInfo.getCallerClassNameAndLineNumber(), preValue, value);
@@ -97,7 +99,7 @@ public class OrderService implements IOrderService {
         JSONObject value = new JSONObject().put(SystemConstant.STATUS_LOG, status)
                 .put(SystemConstant.VALUE_LOG, result != null ? new JSONObject(result) : new JSONObject());
 
-        LoggerHelper.log(result != null ? SystemConstant.WARN_LEVEL : SystemConstant.ERORR_LEVEL,
+        LoggerHelper.log(result != null ? SystemConstant.WARN_LEVEL : SystemConstant.ERROR_LEVEL,
                 "INSERT", RuntimeInfo.getCallerClassNameAndLineNumber(), value);
 
         return result;
