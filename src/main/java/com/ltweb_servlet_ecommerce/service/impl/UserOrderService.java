@@ -84,7 +84,7 @@ public class UserOrderService implements IUserOrderService {
         JSONObject value = new JSONObject().put(SystemConstant.STATUS_LOG, status)
                 .put(SystemConstant.VALUE_LOG, result != null ? new JSONObject(result) : new JSONObject());
 
-        LoggerHelper.log(result != null ? SystemConstant.WARN_LEVEL : SystemConstant.ERORR_LEVEL,
+        LoggerHelper.log(result != null ? SystemConstant.WARN_LEVEL : SystemConstant.ERROR_LEVEL,
                 "INSERT", RuntimeInfo.getCallerClassNameAndLineNumber(), value);
 
         return result;

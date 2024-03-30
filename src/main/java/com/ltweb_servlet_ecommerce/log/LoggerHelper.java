@@ -15,19 +15,11 @@ import java.sql.Timestamp;
 public class LoggerHelper {
     private static final LogManager logger = LogManager.getInstance();
     public static void logDetailedDangerMessage(Exception e, String action) {
-        String errorMessage = e.getMessage(); // Lấy thông điệp lỗi
-        StackTraceElement[] stackTrace = e.getStackTrace(); // Lấy stack trace
-
-        // Xây dựng thông điệp lỗi chi tiết
-        StringBuilder detailedMessage = new StringBuilder();
-        detailedMessage.append(errorMessage).append("<br>"); // Thêm dòng mới bằng cách sử dụng thẻ HTML <br>
-        for (StackTraceElement element : stackTrace) {
-            detailedMessage.append("&emsp;&emsp;").append(element.toString()).append("<br>"); // Thêm dấu tab bằng cách sử dụng thẻ HTML &emsp;
-        }
+        String errorMessage = e.getLocalizedMessage(); // Lấy thông điệp lỗi
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(SystemConstant.STATUS_LOG, "A serious error occurred!");
-        jsonObject.put(SystemConstant.VALUE_LOG, new JSONObject().put("error_message", detailedMessage.toString()));
+        jsonObject.put(SystemConstant.VALUE_LOG, new JSONObject().put("error_message", errorMessage));
         LoggerHelper.log(SystemConstant.DANGER_LEVEL, action, RuntimeInfo.getCallerClassNameAndLineNumber(), jsonObject);
     }
     public static void log(String level, String action, String resource, JSONObject value) {

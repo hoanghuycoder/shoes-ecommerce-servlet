@@ -15,7 +15,9 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Dependent
 @Alternative
@@ -33,7 +35,7 @@ public class LogDAO extends AbstractDAO<LogModel> implements ILogDAO {
 
     @Override
     public List<LogModel> findAll(Pageble pageble) {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM log");
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM logs");
         SqlPagebleUtil.addSQlPageble(sqlStrBuilder, pageble);
         return query(sqlStrBuilder.toString(), null, null, null);
     }
@@ -78,7 +80,6 @@ public class LogDAO extends AbstractDAO<LogModel> implements ILogDAO {
                 logModel.setId(id);
                 logModel.setCreateAt(createdAt);
                 logModel.setUpdateAt(updatedAt);
-
                 results.add((T) logModel);
             }
             return results;

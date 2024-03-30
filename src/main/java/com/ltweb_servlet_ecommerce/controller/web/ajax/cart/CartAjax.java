@@ -13,6 +13,7 @@ import com.ltweb_servlet_ecommerce.service.IProductSizeService;
 import com.ltweb_servlet_ecommerce.utils.HttpUtil;
 import com.ltweb_servlet_ecommerce.utils.RuntimeInfo;
 import com.ltweb_servlet_ecommerce.utils.SessionUtil;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
@@ -22,9 +23,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @WebServlet(urlPatterns = {"/ajax/cart"})
 public class CartAjax extends HttpServlet {
@@ -137,8 +137,8 @@ public class CartAjax extends HttpServlet {
                 }
                 SessionUtil.getInstance().putValue(req, "LIST_ORDER_DETAILS", orderDetailsModelList);
 
-                // Log the activity of adding or updating order details
-                logging(existOrderDetails, orderDetailsOld, orderDetailsModel);
+                // LogController the activity of adding or updating order details
+                logging(existOrderDetails, orderDetailsOld, orderDetailsModelList);
 
                 objectMapper.writeValue(resp.getOutputStream(), orderDetailsModel);
             }
@@ -148,7 +148,7 @@ public class CartAjax extends HttpServlet {
     }
 
     private void logging(OrderDetailsModel existOrderDetails, List<OrderDetailsModel> orderDetailsOld,
-                         OrderDetailsModel orderDetailsModel) {
+                         List<OrderDetailsModel> orderDetailsModel) {
         String logStatus;
         String logAction;
         if (existOrderDetails != null) {
@@ -159,14 +159,25 @@ public class CartAjax extends HttpServlet {
             logAction = "INSERT";
         }
 
+        JSONArray preValueArray = new JSONArray();
+        for (OrderDetailsModel oldOrderDetail : orderDetailsOld) {
+            preValueArray.put(new JSONObject(oldOrderDetail));
+        }
+
+        JSONArray valueArray = new JSONArray();
+        for (OrderDetailsModel newOrderDetail : orderDetailsModel) {
+            valueArray.put(new JSONObject(newOrderDetail));
+        }
+
         JSONObject preValue = new JSONObject()
-                .put(SystemConstant.VALUE_LOG, new JSONObject(orderDetailsOld));
+                .put(SystemConstant.VALUE_LOG, preValueArray);
 
         JSONObject value = new JSONObject()
                 .put(SystemConstant.STATUS_LOG, logStatus)
-                .put(SystemConstant.VALUE_LOG, new JSONObject(orderDetailsModel));
+                .put(SystemConstant.VALUE_LOG, valueArray);
 
         LoggerHelper.log(SystemConstant.WARN_LEVEL, logAction,
                 RuntimeInfo.getCallerClassNameAndLineNumber(), preValue, value);
     }
+
 }
