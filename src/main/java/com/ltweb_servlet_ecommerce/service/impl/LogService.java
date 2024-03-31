@@ -1,18 +1,14 @@
 package com.ltweb_servlet_ecommerce.service.impl;
 
 import com.ltweb_servlet_ecommerce.dao.ILogDAO;
-import com.ltweb_servlet_ecommerce.dao.IOpinionDAO;
 import com.ltweb_servlet_ecommerce.dao.impl.LogDAO;
 import com.ltweb_servlet_ecommerce.model.LogModel;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.service.ILogService;
 import com.ltweb_servlet_ecommerce.subquery.SubQuery;
 
-import javax.inject.Inject;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 
 public class LogService implements ILogService {
 
@@ -20,7 +16,7 @@ public class LogService implements ILogService {
 
     @Override
     public List<LogModel> findAllWithFilter(LogModel model, Pageble pageble) {
-        return logDAO.findAllWithFilter(model,pageble);
+        return logDAO.findAllWithFilter(model, pageble);
     }
 
     @Override
@@ -30,7 +26,7 @@ public class LogService implements ILogService {
 
     @Override
     public List<LogModel> findByColumnValues(List<SubQuery> subQueryList, Pageble pageble) {
-        return logDAO.findByColumnValues(subQueryList,pageble);
+        return logDAO.findByColumnValues(subQueryList, pageble);
     }
 
     @Override
@@ -41,10 +37,12 @@ public class LogService implements ILogService {
     }
 
     @Override
-    public LogModel delete(Long id) {
-        LogModel oldModel = logDAO.findById(id);
-        logDAO.delete(id);
-        return oldModel;
+    public boolean delete(Long[] ids) {
+        boolean result = true;
+        for (Long id : ids) {
+            result = result && logDAO.softDelete(id);
+        }
+        return result;
     }
 
     @Override
