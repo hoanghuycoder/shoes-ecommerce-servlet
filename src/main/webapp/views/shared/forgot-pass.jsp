@@ -24,6 +24,7 @@
                             Enter your email to reset your password.
                         </p>
                     </div>
+                    <div></div>
 
                     <div class="card">
                         <div class="card-body">

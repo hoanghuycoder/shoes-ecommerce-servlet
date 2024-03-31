@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class SendMailUtil {
+
     /*
      * Mỗi khi gọi phương thức sendMail, một Runnable được gửi đến ExecutorService
      * để thực thi việc gửi email trên một thread riêng biệt. ExecutorService giúp
