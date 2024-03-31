@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
     <link href="<c:url value="/template/web/css/custom.css"/>" rel="stylesheet">
-
+    <link rel="stylesheet" href="<c:url value="/template/admin/assets/css/admin-log.css"/>">
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 
@@ -35,7 +35,7 @@
         <%@ include file="/common/admin/header.jsp" %>
         <div class="container-fluid py-4">
             <dec:body/>
-            <%@ include file="/common/admin/footer.jsp" %>
+<%--            <%@ include file="/common/admin/footer.jsp" %>--%>
         </div>
 
     </main>
@@ -99,6 +99,7 @@
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script src="/template/admin/assets/js/core/popper.min.js"></script>
 <script src="/template/admin/assets/js/core/bootstrap.min.js"></script>

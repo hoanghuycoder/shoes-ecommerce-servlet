@@ -14,5 +14,6 @@ public interface ILogDAO {
     List<LogModel> findAllWithFilter(LogModel model,Pageble pageble) ;
     Long save(LogModel model) ;
     int update(LogModel model) ;
-    int delete(Long id) ;
+    boolean delete(Long id) ;
+    boolean softDelete(Long id) ;
 }

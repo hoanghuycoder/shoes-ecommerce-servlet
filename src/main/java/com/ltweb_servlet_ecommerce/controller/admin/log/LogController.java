@@ -1,11 +1,8 @@
 package com.ltweb_servlet_ecommerce.controller.admin.log;
 
-import com.ltweb_servlet_ecommerce.constant.SystemConstant;
-import com.ltweb_servlet_ecommerce.model.LogModel;
 import com.ltweb_servlet_ecommerce.service.ILogService;
+import com.ltweb_servlet_ecommerce.utils.HttpUtil;
 import com.ltweb_servlet_ecommerce.utils.NotifyUtil;
-import com.ltweb_servlet_ecommerce.utils.StringUtilsHelper;
-import org.json.JSONObject;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -14,9 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
-@WebServlet("/admin/log")
+@WebServlet("/admin/logs")
 public class LogController extends HttpServlet {
     @Inject
     ILogService logService;
@@ -25,5 +23,16 @@ public class LogController extends HttpServlet {
         NotifyUtil.setUp(request);
         request.setAttribute("logs", logService.findAll(null));
         request.getRequestDispatcher("/views/admin/log/list.jsp").forward(request,response);
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Long[] ids = HttpUtil.of(request.getReader()).toModel(Long[].class);
+        if (ids.length != 0) {
+            boolean result = logService.delete(ids);
+            response.setStatus(result ? HttpServletResponse.SC_OK : HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        } else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
     }
 }

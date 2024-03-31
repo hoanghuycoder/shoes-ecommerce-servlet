@@ -1,17 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: HUY
-  Date: 12/30/2023
-  Time: 10:05 PM
-  To change this template use File | Settings | File Templates.
---%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page import="com.ltweb_servlet_ecommerce.constant.SystemConstant" %>
 <%@page import="com.ltweb_servlet_ecommerce.utils.StringUtilsHelper" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Logs</title>
 </head>
 <body>
 <div class="row">
@@ -24,13 +18,17 @@
             </div>
             <div class="card-body px-0 pb-2">
                 <div class="table-responsive p-0">
+                    <div class="d-flex justify-content-end me-4">
+                        <button id="btnDelete" type="button" class="btnDelete" data-toggle="tooltip" title='Delete Logs'>
+                            <span><i class="fa-solid fa-trash"></i></span>
+                        </button>
+                    </div>
                     <table class="table align-items-center mb-0" id="dataTable">
                         <thead>
                         <tr>
-                            <th class="text-center opacity-7">
+                            <th class="text-center">
                                 <label class="pos-rel">
-                                    <input type="checkbox" class="form-check-input" id="checkAll"
-                                           style="border: 1px solid #ccc"/>
+                                    <input type="checkbox" class="form-check-input checkbox" id="checkAll"/>
                                     <span class="lbl"></span>
                                 </label>
                             </th>
@@ -47,7 +45,7 @@
                             <tr>
                                 <td class="text-center">
                                     <label class="pos-rel">
-                                        <input style="border: 1px solid" type="checkbox" class="form-check-input checkbox" value="${item.id}"/>
+                                        <input type="checkbox" class="form-check-input checkbox" value="${item.id}"/>
                                         <span class="lbl"></span>
                                     </label>
                                 </td>
@@ -70,7 +68,7 @@
                                         <span class="badge badge-sm bg-gradient-${alert}">${item.level}</span>
                                     </div>
                                 </td>
-                                <td data-bs-toggle="tooltip text-center" data-bs-placement="top" title="" >
+                                <td data-bs-toggle="tooltip" class="text-center" data-bs-placement="top" title="" >
                                     <p class="text-xs font-weight-bold mx-auto mb-0">${item.action}</p>
                                 </td>
                                 <td class="align-middle text-sm">
@@ -90,11 +88,12 @@
 
                                 </td>
                                 <td class="align-middle text-center">
-                                    <p class="text-xs font-weight-bold mx-auto mb-0">${item.createAt}</p>
+                                    <p class="text-xs font-weight-bold mx-auto mb-0">
+                                        <fmt:formatDate value="${item.createAt}" pattern="yyy-MM-dd hh:mm:ssa"/>
+                                    </p>
                                 </td>
                             </tr>
                         </c:forEach>
-
                         </tbody>
                     </table>
                 </div>
@@ -120,6 +119,73 @@
             $("#checkAll").change(function() {
                 $(".checkbox").prop('checked', $(this).prop("checked"));
             });
+
+            $('#btnDelete').on('click', function () {
+                Swal.fire({
+                    title: "Delete ?",
+                    text: "Do you want to delete these logs ?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    cancelButtonText: "Cancel",
+                    confirmButtonText: "Yes"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var ids = [];
+                        $('input[type="checkbox"].checkbox:checked').each(function() {
+                            if ($(this).attr('id') !== 'checkAll') {
+                                ids.push($(this).val()); // Thêm giá trị của checkbox được chọn vào mảng
+                            }
+                        });
+                        console.log(ids)
+                        $.ajax({
+                            url: '<c:url value="/admin/logs"/>',
+                            method: 'DELETE',
+                            contentType: "application/json; charset=utf-8",
+                            // dataType: "json",
+                            data: JSON.stringify(ids),
+                            success: function (response) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Successfully",
+                                    toast: true,
+                                    position: "top-end",
+                                    showConfirmButton: false,
+                                    timer: 600,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.onmouseenter = Swal.stopTimer;
+                                        toast.onmouseleave = Swal.resumeTimer;
+                                    }
+                                });
+                                setTimeout(function () {
+                                    window.location.href = "<c:url value="/admin/logs"/>";
+                                }, 700);
+                            },
+                            error: function (error) {
+                                console.log('that bai')
+                                Swal.fire({
+                                    icon: "warning",
+                                    title: "Failed!",
+                                    toast: true,
+                                    position: "top-end",
+                                    showConfirmButton: false,
+                                    timer: 600,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.onmouseenter = Swal.stopTimer;
+                                        toast.onmouseleave = Swal.resumeTimer;
+                                    }
+                                });
+                            }
+                        })
+
+                    }
+                });
+            });
+
+
         });
 
 

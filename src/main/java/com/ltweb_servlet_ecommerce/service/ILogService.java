@@ -11,7 +11,7 @@ public interface ILogService {
     LogModel findWithFilter(LogModel model);
     List<LogModel> findByColumnValues(List<SubQuery> subQueryList, Pageble pageble);
     LogModel save(LogModel model);
-    LogModel delete(Long id);
+    boolean delete(Long[] ids);
     LogModel update(LogModel model);
     LogModel findById(Long id);
     List<LogModel> findAll(Pageble pageble);

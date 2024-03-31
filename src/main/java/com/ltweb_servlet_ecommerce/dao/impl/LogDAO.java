@@ -35,7 +35,7 @@ public class LogDAO extends AbstractDAO<LogModel> implements ILogDAO {
 
     @Override
     public List<LogModel> findAll(Pageble pageble) {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM logs");
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM logs where isDeleted = 0");
         SqlPagebleUtil.addSQlPageble(sqlStrBuilder, pageble);
         return query(sqlStrBuilder.toString(), null, null, null);
     }
@@ -137,15 +137,29 @@ public class LogDAO extends AbstractDAO<LogModel> implements ILogDAO {
     }
 
     @Override
-    public int delete(Long id) {
+    public boolean delete(Long id) {
         String sql = "delete from logs where id=?";
         List<Object> params = new ArrayList<>();
         params.add(id);
         try {
-            return delete(sql, params);
+            return delete(sql, params) > 0;
         } catch (SQLException e) {
             e.printStackTrace();
-            return 0;
+            return false;
+        }
+    }
+
+    @Override
+    public boolean softDelete(Long id) {
+        String sql = "update logs set isDeleted=? where id=?";
+        List<Object> params = new ArrayList<>();
+        params.add(1);
+        params.add(id);
+        try {
+            return delete(sql, params) > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }
