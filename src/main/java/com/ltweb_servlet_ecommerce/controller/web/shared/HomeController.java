@@ -1,12 +1,15 @@
 package com.ltweb_servlet_ecommerce.controller.web.shared;
 
 import com.ltweb_servlet_ecommerce.constant.SystemConstant;
+import com.ltweb_servlet_ecommerce.log.LoggerHelper;
 import com.ltweb_servlet_ecommerce.model.ProductModel;
 import com.ltweb_servlet_ecommerce.paging.PageRequest;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.service.IProductService;
 import com.ltweb_servlet_ecommerce.sort.Sorter;
 import com.ltweb_servlet_ecommerce.utils.NotifyUtil;
+import com.ltweb_servlet_ecommerce.utils.RuntimeInfo;
+import org.json.JSONObject;
 
 import javax.inject.Inject;
 import javax.servlet.RequestDispatcher;
@@ -32,6 +35,11 @@ public class HomeController extends HttpServlet {
             List<ProductModel> productList = productService.findAll(pagebleProduct);
             req.setAttribute(SystemConstant.LIST_MODEL,productList);
             RequestDispatcher rd = req.getRequestDispatcher("/views/web/home.jsp");
+
+            //logging
+            JSONObject value = new JSONObject().put(SystemConstant.STATUS_LOG, "Access the path "+req.getRequestURL().toString());
+            LoggerHelper.log(SystemConstant.INFO_LEVEL, "SELECT", RuntimeInfo.getCallerClassNameAndLineNumber(), value);
+
             rd.forward(req,resp);
         } catch (Exception e) {
             throw new RuntimeException(e);
