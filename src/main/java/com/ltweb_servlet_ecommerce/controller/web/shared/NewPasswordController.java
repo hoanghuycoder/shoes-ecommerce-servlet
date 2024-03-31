@@ -35,14 +35,15 @@ public class NewPasswordController extends HttpServlet {
 
             UserModel userModel = (UserModel) SessionUtil.getInstance().getValue(request, "FORGET_PASS");
             SessionUtil.removeValue(request, "FORGET_PASS");
+            userModel.getPassword();
 
             BCrypt.Hasher hasher = BCrypt.withDefaults();
             String hashedPassword = hasher.hashToString(12, pass.toCharArray());
             userModel.setPassword(hashedPassword);
             try {
-                userService.save(userModel);
+                userService.update(userModel);
                 request.setAttribute("error", "Đổi mật khẩu thành công!");
-                request.getRequestDispatcher("/views/shared/new-password.jsp").forward(request, response);
+                request.getRequestDispatcher("/views/shared/change-password.jsp").forward(request, response);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

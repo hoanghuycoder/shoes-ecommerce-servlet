@@ -18,7 +18,7 @@
     <!-- form card change password -->
     <div class="card card-outline-secondary">
         <div class="card-header">
-            <h3 class="mb-0">Change Password</h3>
+            <h3 class="mb-0">New Password</h3>
             <%
                 String error = (String)(request.getAttribute("error"));
                 if (error != null) {
