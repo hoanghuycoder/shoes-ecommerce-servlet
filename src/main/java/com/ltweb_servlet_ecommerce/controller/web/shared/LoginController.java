@@ -70,7 +70,6 @@ public class LoginController extends HttpServlet {
                         resp.sendRedirect(req.getContextPath() + "/admin/home");
                     else
                         resp.sendRedirect(req.getContextPath() + "/home");
-
                 } else {
                     // Logging login error
                     JSONObject jsonObject = new JSONObject();
@@ -79,7 +78,6 @@ public class LoginController extends HttpServlet {
                     LoggerHelper.log(SystemConstant.WARN_LEVEL, "SELECT", RuntimeInfo.getCallerClassNameAndLineNumber(), jsonObject);
 
                     resp.sendRedirect(req.getContextPath() + "/sign-in?message=username_password_invalid&toast=danger");
-
                 }
             } else {
                 // Logging requires filling out complete information
