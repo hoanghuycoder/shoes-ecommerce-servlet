@@ -16,8 +16,12 @@ public class UserModel extends AbstractModel<UserModel> {
     private String birthDay;
     private Timestamp lastLogged;
     private String association = "none";
-    private String role;
+//    Info render
     private Boolean admin;
+    private  Boolean moderator;
+    private Boolean user;
+    private String role;
+
 
     public String getUserName() {
         return userName;
@@ -85,6 +89,12 @@ public class UserModel extends AbstractModel<UserModel> {
 
     public Boolean getAdmin() {
         return (this.role != null && this.role.equalsIgnoreCase("admin"));
+    }
+    public Boolean getModerator() {
+        return (this.role != null && this.role.equalsIgnoreCase("moderator"));
+    }
+    public Boolean getUser() {
+        return (this.role != null && this.role.equalsIgnoreCase("user"));
     }
 
 }
