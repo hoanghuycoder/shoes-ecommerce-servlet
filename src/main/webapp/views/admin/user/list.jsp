@@ -89,8 +89,8 @@
                                 </td>
                                 <!-- Action -->
                                 <td class="align-middle">
-                                    <a class="btn btn-link text-dark px-1 mb-0" ><i class="material-icons text-sm me-1">edit</i>Edit</a>
-                                    <a class="btn btn-link text-danger text-gradient px-1 mb-0"  data-bs-toggle="modal" href="#deleteModal" onclick="setId(${item.id})"><i class="material-icons text-sm me-1">delete</i>Delete</a>
+                                    <a class="btn btn-link text-dark px-1 mb-0" data-bs-toggle="modal" href="#roleModal" onclick="setIdUserUpdateRole(${item.id})"><i class="material-icons text-sm me-1">edit</i>Edit</a>
+                                    <a class="btn btn-link text-danger text-gradient px-1 mb-0"  data-bs-toggle="modal" href="#deleteModal" onclick="setIdDelete(${item.id})"><i class="material-icons text-sm me-1">delete</i>Delete</a>
                                 </td>
                                 <!-- End action -->
                             </tr>
@@ -127,11 +127,47 @@
     </div>
 </div>
 <%-- Change Role Model--%>
-
+<div class="modal fade" id="roleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-normal" id="updateModalLabel">Change role of user</h5>
+                <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Current role is <strong>user</strong> role. Choose your role you wanna change:
+                </p>
+               <div class="input-group mb-3">
+                   <select class="form-select" aria-label="Select role">
+                       <option selected>-- Choose role --</option>
+                       <option value="admin">Admin</option>
+                       <option value="moderator">Moderator</option>
+                       <option value="user">User</option>
+                   </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-block btn-light" data-bs-dismiss="modal">Close</button>
+                <form method="POST">
+                    <input type="hidden" name="action" value="put">
+                    <input type="hidden" name="id" id="idUser">
+                    <button type="submit" class="btn bg-gradient-primary">Change</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
-    const setId = (id) => {
+    const setIdDelete = (id) => {
         $("#deleteModalLabel").text("Delete User Id "+id+"?");
         $("#idDelete").val(id);
+    }
+    const setIdUserUpdateRole = (id) => {
+        $("#updateModalLabel").text("Change Role Of User Id "+id+"?");
+        $("#roleModal > #idUser").val(id);
     }
 </script>
 <!-- End Delete Modal -->
