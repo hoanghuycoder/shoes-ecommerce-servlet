@@ -33,7 +33,7 @@
                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Association</th>
                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Birthday</th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Admin</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Role</th>
                         <th class="text-secondary opacity-7"></th>
                     </tr>
                     </thead>
@@ -83,7 +83,7 @@
                                 <td>
                                     <div class="d-flex px-2 py-1">
                                         <div class="d-flex flex-column justify-content-center">
-                                            <p class="text-xs font-weight-bold mx-auto mb-0">${item.admin}</p>
+                                            <p class="text-xs font-weight-bold mx-auto mb-0">${item.role}</p>
                                         </div>
                                     </div>
                                 </td>
@@ -126,6 +126,8 @@
         </div>
     </div>
 </div>
+<%-- Change Role Model--%>
+
 <script>
     const setId = (id) => {
         $("#deleteModalLabel").text("Delete User Id "+id+"?");

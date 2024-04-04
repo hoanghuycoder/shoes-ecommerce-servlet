@@ -42,7 +42,7 @@ public class ForgotPasswordController extends HttpServlet {
                 SessionUtil.putValue(request, "OTP", OTP);
                 SessionUtil.getInstance().putValue(request, "FORGET_PASS", tmpUser);
                 response.sendRedirect("/vertify-email");
-            } catch (MessagingException mex) {
+            } catch (Exception mex) {
                 mex.printStackTrace();
             }
         } else {
