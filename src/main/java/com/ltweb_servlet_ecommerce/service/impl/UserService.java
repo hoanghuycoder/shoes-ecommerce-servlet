@@ -71,10 +71,10 @@ public class UserService implements IUserService {
     @Override
     public UserModel update(UserModel model) throws SQLException {
         model.setRole(null);
-        UserModel oldModel = userDAO.findById(model.getId());
+        UserModel oldModel = findById(model.getId());
         model.setUpdateAt(new Timestamp(System.currentTimeMillis()));
         userDAO.update(model);
-        UserModel newModel = userDAO.findById(model.getId());
+        UserModel newModel = findById(model.getId());
         LinkedHashMap<String, String>[] results = ObjectComparator.compareObjects(oldModel, newModel);
         // Logging
         JSONObject preValue = new JSONObject();
@@ -95,7 +95,7 @@ public class UserService implements IUserService {
 
     @Override
     public UserModel delete(Long id) throws SQLException {
-        UserModel oldModel = userDAO.findById(id);
+        UserModel oldModel = findById(id);
         userDAO.delete(id);
         return oldModel;
     }
@@ -108,22 +108,25 @@ public class UserService implements IUserService {
 
     @Override
     public UserModel softDelete(Long id) throws SQLException {
-        UserModel model = userDAO.findById(id);
+        UserModel model = findById(id);
         model.setUpdateAt(new Timestamp(System.currentTimeMillis()));
         model.setIsDeleted(true);
-        userDAO.update(model);
-        return userDAO.findById(model.getId());
+        update(model);
+        return findById(model.getId());
     }
 
     @Override
     public UserModel findById(Long id) throws SQLException {
-        return userDAO.findById(id);
+        UserModel user = userDAO.findById(id);
+        RoleModel role = roleDAO.findById(user.getRoleId());
+        user.setRole(role);
+        return user;
     }
 
     @Override
     public UserModel save(UserModel model) throws SQLException {
         model.setRole(null);
         Long productId = userDAO.save(model);
-        return userDAO.findById(productId);
+        return findById(productId);
     }
 }

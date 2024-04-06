@@ -16,7 +16,7 @@ public class UserModel extends AbstractModel<UserModel> {
     private  String fullName;
     private String birthDay;
     private Timestamp lastLogged;
-    private String association = "none";
+    private String association;
 //    Info render
     private Boolean admin;
     private  Boolean moderator;
