@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 04, 2024 at 06:10 AM
+-- Generation Time: Apr 06, 2024 at 06:25 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -51,7 +51,8 @@ INSERT INTO `addresses` (`id`, `fullName`, `phoneNumber`, `province`, `district`
                                                                                                                                                 (6, 'NGUYEN VAN A', 702315166, 'Hồ Ch&iacute; Minh', '1', 'Bến Ngh&eacute;', 'aádfasdf Khác', '2024-04-04 03:29:03', '2024-04-04 03:29:03', 0),
                                                                                                                                                 (7, 'NGUYEN VAN A', 702315166, 'Hồ Ch&iacute; Minh', '10', '10', 'aádfasdf Khác', '2024-04-04 03:31:48', '2024-04-04 03:31:48', 0),
                                                                                                                                                 (8, 'NGUYEN VAN A', 702315166, 'Hồ Ch&iacute; Minh', '1', 'Bến Th&agrave;nh', 'aádfasdf Khác', '2024-04-04 03:33:45', '2024-04-04 03:33:45', 0),
-                                                                                                                                                (9, 'NGUYEN VAN A', 702315166, 'An Giang', 'Ch&acirc;u Ph&uacute;', 'B&igrave;nh Mỹ', 'aádfasdf ấp Bình Hưng 2', '2024-04-04 03:55:00', '2024-04-04 03:55:00', 0);
+                                                                                                                                                (9, 'NGUYEN VAN A', 702315166, 'An Giang', 'Ch&acirc;u Ph&uacute;', 'B&igrave;nh Mỹ', 'aádfasdf ấp Bình Hưng 2', '2024-04-04 03:55:00', '2024-04-04 03:55:00', 0),
+                                                                                                                                                (10, 'NGUYEN VAN A', 702315166, 'An Giang', 'An Ph&uacute;', 'Kh&aacute;nh An', 'aádfasdf ấp Khánh Hòa', '2024-04-05 00:18:28', '2024-04-05 00:18:28', 0);
 
 -- --------------------------------------------------------
 
@@ -293,7 +294,63 @@ INSERT INTO `logs` (`id`, `ip`, `level`, `action`, `resource`, `preValue`, `valu
 (230, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-04 03:55:01', '2024-04-04 03:55:03', 0),
 (231, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.CartController:71', NULL, '{\"status\":\"Access the path http://localhost:8080/cart\"}', '2024-04-04 03:55:07', '2024-04-04 03:55:07', 0),
 (232, '0:0:0:0:0:0:0:1', 'DANGER', 'SELECT', 'com.ltweb_servlet_ecommerce.log.LoggerHelper:23', NULL, '{\"value\":{\"error_message\":\"Table \'shoes_web.order\' doesn\'t exist\"},\"status\":\"A serious error occurred!\"}', '2024-04-04 03:56:09', '2024-04-04 03:56:09', 0),
-(233, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-04 03:56:09', '2024-04-04 03:56:11', 0);
+(233, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-04 03:56:09', '2024-04-04 03:56:11', 0),
+(234, '127.0.0.1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-04 04:24:26', '2024-04-04 04:24:28', 0),
+(235, '127.0.0.1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-04 04:24:27', '2024-04-04 04:24:28', 0),
+(236, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-04 04:24:27', '2024-04-04 04:24:28', 0),
+(237, '0:0:0:0:0:0:0:1', 'WARN', 'UPDATE', 'com.ltweb_servlet_ecommerce.service.impl.UserService:65', '{\"value\":{\"lastLogged\":\"2024-04-04 10:25:19.0\"}}', '{\"value\":{\"lastLogged\":\"2024-04-05 07:17:02.0\"},\"status\":\"UpdatedAt and lastLogged fields successfully updated\"}', '2024-04-05 00:17:02', '2024-04-05 00:17:02', 0),
+(238, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-05 00:17:02', '2024-04-05 00:17:04', 0),
+(239, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.CartController:71', NULL, '{\"status\":\"Access the path http://localhost:8080/cart\"}', '2024-04-05 00:17:06', '2024-04-05 00:17:07', 0),
+(240, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.CheckoutController:85', NULL, '{\"status\":\"Access the path http://localhost:8080/checkout\"}', '2024-04-05 00:17:55', '2024-04-05 00:17:55', 0),
+(241, '0:0:0:0:0:0:0:1', 'WARN', 'INSERT', 'com.ltweb_servlet_ecommerce.service.impl.AddressService:88', NULL, '{\"value\":{\"phoneNumber\":702315166,\"province\":\"An Giang\",\"isDeleted\":false,\"hamlet\":\"aádfasdf ấp Khánh Hòa\",\"commune\":\"Kh&aacute;nh An\",\"district\":\"An Ph&uacute;\",\"fullName\":\"NGUYEN VAN A\",\"updateAt\":\"2024-04-05 07:18:28.0\",\"id\":10,\"createAt\":\"2024-04-05 07:18:28.0\"},\"status\":\"Saved user address successfully\"}', '2024-04-05 00:18:28', '2024-04-05 00:18:28', 0),
+(242, '0:0:0:0:0:0:0:1', 'WARN', 'INSERT', 'com.ltweb_servlet_ecommerce.service.impl.OrderService:103', NULL, '{\"value\":{\"note\":\"sdfgnhm,\",\"totalAmount\":0,\"isDeleted\":false,\"paid\":false,\"updateAt\":\"2024-04-05 07:18:28.0\",\"id\":11,\"createAt\":\"2024-04-05 07:18:28.0\",\"addressId\":10},\"status\":\"Saved order successfully\"}', '2024-04-05 00:18:28', '2024-04-05 00:18:36', 0),
+(243, '0:0:0:0:0:0:0:1', 'WARN', 'INSERT', 'com.ltweb_servlet_ecommerce.service.impl.OrderDetailsService:104', NULL, '{\"value\":{\"productSizeId\":1,\"quantity\":1,\"isDeleted\":false,\"orderId\":11,\"updateAt\":\"2024-04-05 07:18:28.0\",\"subTotal\":100,\"id\":35,\"createAt\":\"2024-04-05 07:18:28.0\"},\"status\":\"Saved orderDetails successfully\"}', '2024-04-05 00:18:28', '2024-04-05 00:18:44', 0),
+(244, '0:0:0:0:0:0:0:1', 'WARN', 'UPDATE', 'com.ltweb_servlet_ecommerce.service.impl.OrderService:61', '{\"value\":{\"totalAmount\":\"0.0\",\"slug\":\"null\"}}', '{\"value\":{\"totalAmount\":\"105.0\",\"slug\":\"KyPl35OTpN\"},\"status\":\"Update orderDetails successfully\"}', '2024-04-05 00:18:36', '2024-04-05 00:18:45', 0),
+(245, '0:0:0:0:0:0:0:1', 'WARN', 'INSERT', 'com.ltweb_servlet_ecommerce.service.impl.UserOrderService:88', NULL, '{\"value\":{\"isDeleted\":false,\"orderId\":11,\"updateAt\":\"2024-04-05 07:19:08.0\",\"id\":3,\"userId\":8,\"createAt\":\"2024-04-05 07:19:08.0\"},\"status\":\"Saved userOrder successfully\"}', '2024-04-05 00:19:19', '2024-04-05 00:19:25', 0),
+(246, '0:0:0:0:0:0:0:1', 'DANGER', 'SELECT', 'com.ltweb_servlet_ecommerce.log.LoggerHelper:23', NULL, '{\"value\":{\"error_message\":\"Table \'shoes_web.order\' doesn\'t exist\"},\"status\":\"A serious error occurred!\"}', '2024-04-05 00:21:16', '2024-04-05 00:21:16', 0),
+(247, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-05 00:21:16', '2024-04-05 00:21:18', 0),
+(248, '0:0:0:0:0:0:0:1', 'DANGER', 'SELECT', 'com.ltweb_servlet_ecommerce.log.LoggerHelper:23', NULL, '{\"value\":{\"error_message\":\"Table \'shoes_web.order\' doesn\'t exist\"},\"status\":\"A serious error occurred!\"}', '2024-04-05 00:22:58', '2024-04-05 00:23:32', 0),
+(249, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-05 00:23:32', '2024-04-05 00:23:32', 0),
+(250, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-05 00:23:35', '2024-04-05 00:23:35', 0),
+(251, '0:0:0:0:0:0:0:1', 'DANGER', 'SELECT', 'com.ltweb_servlet_ecommerce.log.LoggerHelper:23', NULL, '{\"value\":{\"error_message\":\"Table \'shoes_web.order\' doesn\'t exist\"},\"status\":\"A serious error occurred!\"}', '2024-04-05 00:24:35', '2024-04-05 00:24:35', 0),
+(252, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-05 00:24:35', '2024-04-05 00:24:37', 0),
+(253, '0:0:0:0:0:0:0:1', 'DANGER', 'SELECT', 'com.ltweb_servlet_ecommerce.log.LoggerHelper:23', NULL, '{\"value\":{\"error_message\":\"Table \'shoes_web.order\' doesn\'t exist\"},\"status\":\"A serious error occurred!\"}', '2024-04-05 00:24:40', '2024-04-05 00:24:40', 0),
+(254, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-05 00:24:40', '2024-04-05 00:24:42', 0),
+(255, '0:0:0:0:0:0:0:1', 'DANGER', 'SELECT', 'com.ltweb_servlet_ecommerce.log.LoggerHelper:23', NULL, '{\"value\":{\"error_message\":\"Table \'shoes_web.order\' doesn\'t exist\"},\"status\":\"A serious error occurred!\"}', '2024-04-05 00:24:49', '2024-04-05 00:24:49', 0),
+(256, '127.0.0.1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-05 00:30:00', '2024-04-05 00:30:03', 0),
+(257, '127.0.0.1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-05 00:30:01', '2024-04-05 00:30:03', 0),
+(258, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-05 00:30:01', '2024-04-05 00:30:03', 0),
+(259, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-05 00:30:41', '2024-04-05 00:30:41', 0),
+(260, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-05 00:35:54', '2024-04-05 00:35:54', 0),
+(261, '127.0.0.1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-06 04:03:37', '2024-04-06 04:03:39', 0),
+(262, '127.0.0.1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-06 04:03:38', '2024-04-06 04:03:39', 0),
+(263, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-06 04:03:38', '2024-04-06 04:03:39', 0),
+(264, '0:0:0:0:0:0:0:1', 'WARN', 'UPDATE', 'com.ltweb_servlet_ecommerce.service.impl.UserService:97', '{\"value\":{\"lastLogged\":\"2024-03-31 14:42:43.0\"}}', '{\"value\":{\"lastLogged\":\"2024-04-06 11:03:49.0\"},\"status\":\"UpdatedAt and lastLogged fields successfully updated\"}', '2024-04-06 04:03:49', '2024-04-06 04:03:49', 0),
+(265, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.LoginController:67', NULL, '{\"value\":{\"id\":6,\"email\":\"tranvohoanghuy12ab@gmail.com\"},\"status\":\"Authentication successful\"}', '2024-04-06 04:03:49', '2024-04-06 04:03:51', 0),
+(266, '0:0:0:0:0:0:0:1', 'WARN', 'UPDATE', 'com.ltweb_servlet_ecommerce.service.impl.UserService:97', '{\"value\":{\"lastLogged\":\"2024-04-06 11:03:49.0\"}}', '{\"value\":{\"lastLogged\":\"2024-04-06 11:04:44.0\"},\"status\":\"UpdatedAt and lastLogged fields successfully updated\"}', '2024-04-06 04:04:44', '2024-04-06 04:04:44', 0),
+(267, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.LoginController:67', NULL, '{\"value\":{\"id\":6,\"email\":\"tranvohoanghuy12ab@gmail.com\"},\"status\":\"Authentication successful\"}', '2024-04-06 04:04:44', '2024-04-06 04:04:46', 0),
+(268, '127.0.0.1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-06 04:08:00', '2024-04-06 04:08:03', 0),
+(269, '127.0.0.1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-06 04:08:00', '2024-04-06 04:08:03', 0),
+(270, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-06 04:08:01', '2024-04-06 04:08:03', 0),
+(271, '127.0.0.1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-06 04:10:35', '2024-04-06 04:10:38', 0),
+(272, '127.0.0.1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-06 04:10:37', '2024-04-06 04:10:38', 0),
+(273, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-06 04:10:37', '2024-04-06 04:10:38', 0),
+(274, '0:0:0:0:0:0:0:1', 'WARN', 'UPDATE', 'com.ltweb_servlet_ecommerce.service.impl.UserService:91', '{\"value\":{\"lastLogged\":\"2024-04-05 07:17:02.0\"}}', '{\"value\":{\"lastLogged\":\"2024-04-06 11:11:39.0\"},\"status\":\"UpdatedAt and lastLogged fields successfully updated\"}', '2024-04-06 04:11:50', '2024-04-06 04:11:50', 0),
+(275, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-06 04:11:50', '2024-04-06 04:11:53', 0),
+(276, '127.0.0.1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-06 04:13:29', '2024-04-06 04:13:31', 0),
+(277, '127.0.0.1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-06 04:13:29', '2024-04-06 04:13:31', 0),
+(278, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-06 04:13:29', '2024-04-06 04:13:31', 0),
+(279, '0:0:0:0:0:0:0:1', 'WARN', 'UPDATE', 'com.ltweb_servlet_ecommerce.service.impl.UserService:91', '{\"value\":{\"lastLogged\":\"2024-04-06 11:11:39.0\"}}', '{\"value\":{\"lastLogged\":\"2024-04-06 11:15:09.0\"},\"status\":\"UpdatedAt and lastLogged fields successfully updated\"}', '2024-04-06 04:15:14', '2024-04-06 04:15:14', 0),
+(280, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-06 04:15:14', '2024-04-06 04:15:16', 0),
+(281, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-06 04:16:25', '2024-04-06 04:16:25', 0),
+(282, '0:0:0:0:0:0:0:1', 'WARN', 'UPDATE', 'com.ltweb_servlet_ecommerce.service.impl.UserService:91', '{\"value\":{\"lastLogged\":\"2024-04-06 11:15:09.0\"}}', '{\"value\":{\"lastLogged\":\"2024-04-06 11:18:57.0\"},\"status\":\"UpdatedAt and lastLogged fields successfully updated\"}', '2024-04-06 04:18:59', '2024-04-06 04:19:11', 0),
+(283, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-06 04:19:11', '2024-04-06 04:19:11', 0),
+(284, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-06 04:20:48', '2024-04-06 04:20:48', 0),
+(285, '0:0:0:0:0:0:0:1', 'WARN', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.LoginController:78', NULL, '{\"value\":{\"email\":\"tranvohoanghuy12ab@gmail.com\"},\"status\":\"Authentication Failure. Email or password is invalid\"}', '2024-04-06 04:22:22', '2024-04-06 04:22:22', 0),
+(286, '0:0:0:0:0:0:0:1', 'WARN', 'UPDATE', 'com.ltweb_servlet_ecommerce.service.impl.UserService:91', '{\"value\":{\"lastLogged\":\"2024-04-06 11:04:44.0\"}}', '{\"value\":{\"lastLogged\":\"2024-04-06 11:22:28.0\"},\"status\":\"UpdatedAt and lastLogged fields successfully updated\"}', '2024-04-06 04:22:28', '2024-04-06 04:22:28', 0),
+(287, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.LoginController:67', NULL, '{\"value\":{\"id\":6,\"email\":\"tranvohoanghuy12ab@gmail.com\"},\"status\":\"Authentication successful\"}', '2024-04-06 04:22:28', '2024-04-06 04:22:47', 0),
+(288, '0:0:0:0:0:0:0:1', 'WARN', 'UPDATE', 'com.ltweb_servlet_ecommerce.service.impl.UserService:91', '{\"value\":{\"lastLogged\":\"2024-04-06 11:18:57.0\"}}', '{\"value\":{\"lastLogged\":\"2024-04-06 11:23:44.0\"},\"status\":\"UpdatedAt and lastLogged fields successfully updated\"}', '2024-04-06 04:23:44', '2024-04-06 04:23:44', 0),
+(289, '0:0:0:0:0:0:0:1', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:41', NULL, '{\"status\":\"Access the path http://localhost:8080/home\"}', '2024-04-06 04:23:44', '2024-04-06 04:23:46', 0);
 
 -- --------------------------------------------------------
 
@@ -349,7 +406,8 @@ CREATE TABLE `orders` (
 
 INSERT INTO `orders` (`id`, `status`, `note`, `totalAmount`, `addressId`, `isPaid`, `slug`, `createAt`, `updateAt`, `isDeleted`) VALUES
 (9, NULL, 'sdfgnhm,', 315.0, 6, 0, 'hwIF95Vsv7', '2024-04-04 03:39:43', '2024-04-04 03:39:45', 0),
-(10, NULL, 'sdfgnhm,', 115.0, 9, 0, '9yTYU6LGJ0', '2024-04-04 03:55:00', '2024-04-04 03:55:01', 0);
+(10, NULL, 'sdfgnhm,', 115.0, 9, 0, '9yTYU6LGJ0', '2024-04-04 03:55:00', '2024-04-04 03:55:01', 0),
+(11, NULL, 'sdfgnhm,', 105.0, 10, 0, 'KyPl35OTpN', '2024-04-05 00:18:28', '2024-04-05 00:18:36', 0);
 
 -- --------------------------------------------------------
 
@@ -375,7 +433,8 @@ CREATE TABLE `order_details` (
 INSERT INTO `order_details` (`id`, `quantity`, `subTotal`, `orderId`, `productSizeId`, `createAt`, `updateAt`, `isDeleted`) VALUES
 (32, 2, 200.0, 9, 1, '2024-04-04 03:39:43', '2024-04-04 03:39:43', 0),
 (33, 1, 110.0, 9, 5, '2024-04-04 03:39:43', '2024-04-04 03:39:43', 0),
-(34, 1, 110.0, 10, 5, '2024-04-04 03:55:00', '2024-04-04 03:55:00', 0);
+(34, 1, 110.0, 10, 5, '2024-04-04 03:55:00', '2024-04-04 03:55:00', 0),
+(35, 1, 100.0, 11, 1, '2024-04-05 00:18:28', '2024-04-05 00:18:28', 0);
 
 -- --------------------------------------------------------
 
@@ -569,6 +628,15 @@ CREATE TABLE `roles` (
   `updateAt` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `roles`
+--
+
+INSERT INTO `roles` (`id`, `code`, `value`, `createAt`, `updateAt`) VALUES
+(1, 'R1', 'admin', '2024-04-06 03:18:44', '2024-04-06 03:18:44'),
+(2, 'R2', 'moderator', '2024-04-06 03:18:44', '2024-04-06 03:18:44'),
+(3, 'R3', 'user', '2024-04-06 03:18:44', '2024-04-06 03:18:44');
+
 -- --------------------------------------------------------
 
 --
@@ -627,9 +695,9 @@ CREATE TABLE `users` (
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `fullName` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `birthDay` date DEFAULT NULL,
-  `role` char(50) NOT NULL,
   `association` varchar(20) DEFAULT 'none',
   `lastLogged` timestamp NULL DEFAULT current_timestamp(),
+  `roleId` bigint(20) DEFAULT NULL,
   `createAt` timestamp NULL DEFAULT current_timestamp(),
   `updateAt` timestamp NULL DEFAULT current_timestamp(),
   `isDeleted` tinyint(1) DEFAULT 0
@@ -639,11 +707,11 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `userName`, `email`, `password`, `fullName`, `birthDay`, `role`, `association`, `lastLogged`, `createAt`, `updateAt`, `isDeleted`) VALUES
-(6, 'hoanghuydev', 'tranvohoanghuy12ab@gmail.com', '$2a$12$n1ZRw5rmlRGU0uqK6USVR.p8i66degNqeanwUZK9j0hdgDF8gfvVm', 'Tran Vo Hoang Huy', NULL, 'admin', 'none', '2024-03-31 07:42:43', '2023-12-27 08:23:38', '2024-03-31 07:42:43', 0),
-(8, '111635119529567317993', '21130386@st.hcmuaf.edu.vn', NULL, 'Trần Võ Hoàng Huy', NULL, 'admin', 'google', '2024-04-04 03:25:19', '2023-12-28 04:21:13', '2024-04-04 03:25:35', 0),
-(14, 'a', 'vophihoang252003@gmail.com', '$2a$12$9szEjqLykjaQVvPTnccyRuPLqAfBwCUMRNut8OECjLXLS4HW0LyiG', 'Vo Hoang', NULL, 'admin', 'none', '2024-03-29 08:09:26', '2024-03-13 08:14:47', '2024-03-29 08:09:26', 0),
-(16, 'b', 'vophihoang@gmail.com', '$2a$12$9szEjqLykjaQVvPTnccyRuPLqAfBwCUMRNut8OECjLXLS4HW0LyiG', 'Vo Hoang', NULL, 'user', 'none', '2024-03-29 03:58:10', '2024-03-13 08:14:47', '2024-03-29 03:58:10', 0);
+INSERT INTO `users` (`id`, `userName`, `email`, `password`, `fullName`, `birthDay`, `association`, `lastLogged`, `roleId`, `createAt`, `updateAt`, `isDeleted`) VALUES
+(6, 'hoanghuydev', 'tranvohoanghuy12ab@gmail.com', '$2a$12$n1ZRw5rmlRGU0uqK6USVR.p8i66degNqeanwUZK9j0hdgDF8gfvVm', 'Tran Vo Hoang Huy', NULL, 'none', '2024-04-06 04:22:28', 1, '2023-12-27 08:23:38', '2024-04-06 04:22:28', 0),
+(8, '111635119529567317993', '21130386@st.hcmuaf.edu.vn', NULL, 'Trần Võ Hoàng Huy', NULL, 'google', '2024-04-06 04:23:44', 2, '2023-12-28 04:21:13', '2024-04-06 04:23:44', 0),
+(14, 'a', 'vophihoang252003@gmail.com', '$2a$12$9szEjqLykjaQVvPTnccyRuPLqAfBwCUMRNut8OECjLXLS4HW0LyiG', 'Vo Hoang', NULL, 'none', '2024-03-29 08:09:26', 1, '2024-03-13 08:14:47', '2024-03-29 08:09:26', 0),
+(16, 'b', 'vophihoang@gmail.com', '$2a$12$9szEjqLykjaQVvPTnccyRuPLqAfBwCUMRNut8OECjLXLS4HW0LyiG', 'Vo Hoang', NULL, 'none', '2024-03-29 03:58:10', 3, '2024-03-13 08:14:47', '2024-03-29 03:58:10', 0);
 
 -- --------------------------------------------------------
 
@@ -674,6 +742,13 @@ CREATE TABLE `user_orders` (
   `updateAt` timestamp NULL DEFAULT current_timestamp(),
   `isDeleted` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `user_orders`
+--
+
+INSERT INTO `user_orders` (`id`, `userId`, `orderId`, `createAt`, `updateAt`, `isDeleted`) VALUES
+(3, 8, 11, '2024-04-05 00:19:08', '2024-04-05 00:19:08', 0);
 
 -- --------------------------------------------------------
 
@@ -839,7 +914,8 @@ ALTER TABLE `product_sizes`
 --
 ALTER TABLE `roles`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `roles_pk_2` (`code`);
+  ADD UNIQUE KEY `roles_pk` (`code`),
+  ADD UNIQUE KEY `roles_pk_2` (`value`);
 
 --
 -- Indexes for table `sizes`
@@ -855,7 +931,8 @@ ALTER TABLE `sizes`
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `email` (`email`),
-  ADD UNIQUE KEY `userName` (`userName`);
+  ADD UNIQUE KEY `userName` (`userName`),
+  ADD KEY `users_roles_id_fk` (`roleId`);
 
 --
 -- Indexes for table `user_addresses`
@@ -911,7 +988,7 @@ ALTER TABLE `voucher_usage`
 -- AUTO_INCREMENT for table `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `carts`
@@ -929,7 +1006,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=234;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=290;
 
 --
 -- AUTO_INCREMENT for table `opinions`
@@ -941,13 +1018,13 @@ ALTER TABLE `opinions`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `order_details`
 --
 ALTER TABLE `order_details`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -971,7 +1048,7 @@ ALTER TABLE `product_sizes`
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `sizes`
@@ -995,7 +1072,7 @@ ALTER TABLE `user_addresses`
 -- AUTO_INCREMENT for table `user_orders`
 --
 ALTER TABLE `user_orders`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `vouchers`
@@ -1077,6 +1154,12 @@ ALTER TABLE `product_images`
 ALTER TABLE `product_sizes`
   ADD CONSTRAINT `productSize_fk0` FOREIGN KEY (`sizeId`) REFERENCES `sizes` (`id`),
   ADD CONSTRAINT `productSize_fk1` FOREIGN KEY (`productId`) REFERENCES `products` (`id`);
+
+--
+-- Constraints for table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `users_roles_id_fk` FOREIGN KEY (`roleId`) REFERENCES `roles` (`id`);
 
 --
 -- Constraints for table `user_addresses`

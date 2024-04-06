@@ -20,4 +20,6 @@ public interface IOrderService {
     List<OrderModel> findAll(Pageble pageble) throws SQLException;
     OrderModel softDelete(Long id) throws SQLException;
     Map<String,Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException;
+    Map<String,Object> findIdBySlug(List<Object> params) throws SQLException;
+
 }

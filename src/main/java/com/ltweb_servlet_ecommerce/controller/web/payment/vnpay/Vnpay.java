@@ -91,7 +91,7 @@ public class Vnpay extends HttpServlet {
                                 OrderModel order = new OrderModel();
                                 order.setSlug(slug);
                                 order = orderService.findWithFilter(order);
-                                order.setPaid(true);
+                                order.setIsPaid(true);
                                 order = orderService.update(order);
                                 resp.sendRedirect("/order-details/"+slug+"?message=paid_order&toast=success");
                             }

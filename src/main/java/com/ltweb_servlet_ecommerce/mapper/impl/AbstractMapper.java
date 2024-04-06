@@ -37,7 +37,6 @@ public class AbstractMapper<T> implements GenericMapper<T> {
                         params.add(value);
                     }
                     // Append the field name and placeholder to the SQL statement
-
                 }
             } catch (IllegalAccessException e) {
                 e.printStackTrace();

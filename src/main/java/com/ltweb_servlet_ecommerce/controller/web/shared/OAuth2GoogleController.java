@@ -86,11 +86,10 @@ public class OAuth2GoogleController extends HttpServlet {
            resp.sendRedirect(req.getContextPath()+"/home?message=welcome&toast=success");
        } else if (tmpUser!=null && tmpUser.getAssociation().equals("google")) {
 //           If have user then login
-           UserModel updateUserLogged = tmpUser;
-           updateUserLogged.setLastLogged(new Timestamp(System.currentTimeMillis()));
-           updateUserLogged.setId(tmpUser.getId());
-           tmpUser = userService.update(updateUserLogged);
-           SessionUtil.getInstance().putValue(req,"USER_MODEL",tmpUser);
+           tmpUser.setLastLogged(new Timestamp(System.currentTimeMillis()));
+           tmpUser.setId(tmpUser.getId());
+           userService.update(tmpUser);
+           SessionUtil.getInstance().putValue(req, "USER_MODEL", tmpUser);
            CartUtil.setCartFromSessionForUser(SessionUtil.getInstance(),req,orderDetailsService,cartService,tmpUser.getId());
            resp.sendRedirect(req.getContextPath()+"/home");
        } else if (tmpUser!=null && !tmpUser.getAssociation().equals("google")) {

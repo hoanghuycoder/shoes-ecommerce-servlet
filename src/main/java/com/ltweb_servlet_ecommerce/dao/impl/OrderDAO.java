@@ -89,4 +89,9 @@ public class OrderDAO extends AbstractDAO<OrderModel> implements IOrderDAO {
     public Map<String, Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException {
         return queryCustom(sql,params);
     }
+
+    @Override
+    public Map<String, Object> findIdBySlug(List<Object> params) throws SQLException {
+        return queryCustom("select id from `orders` where slug=?",params);
+    }
 }

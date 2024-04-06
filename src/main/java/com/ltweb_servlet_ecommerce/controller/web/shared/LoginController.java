@@ -66,7 +66,7 @@ public class LoginController extends HttpServlet {
                     logValue.put(SystemConstant.VALUE_LOG, new JSONObject().put("email", tmpUser.getEmail()).put("id", tmpUser.getId()));
                     LoggerHelper.log(SystemConstant.INFO_LEVEL, "SELECT", RuntimeInfo.getCallerClassNameAndLineNumber(), logValue);
 
-                    if (tmpUser.getRole().equals("admin"))
+                    if (tmpUser.getRole().getValue().equalsIgnoreCase(SystemConstant.ADMIN_ROLE) || tmpUser.getRole().getValue().equalsIgnoreCase(SystemConstant.MODERATOR_ROLE))
                         resp.sendRedirect(req.getContextPath() + "/admin/home");
                     else
                         resp.sendRedirect(req.getContextPath() + "/home");

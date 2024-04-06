@@ -1,8 +1,10 @@
 package com.ltweb_servlet_ecommerce.service.impl;
 
 import com.ltweb_servlet_ecommerce.constant.SystemConstant;
+import com.ltweb_servlet_ecommerce.dao.IRoleDAO;
 import com.ltweb_servlet_ecommerce.dao.IUserDAO;
 import com.ltweb_servlet_ecommerce.log.LoggerHelper;
+import com.ltweb_servlet_ecommerce.model.RoleModel;
 import com.ltweb_servlet_ecommerce.model.UserModel;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.service.IUserService;
@@ -10,6 +12,7 @@ import com.ltweb_servlet_ecommerce.subquery.SubQuery;
 import com.ltweb_servlet_ecommerce.utils.JSONObjectUtil;
 import com.ltweb_servlet_ecommerce.utils.ObjectComparator;
 import com.ltweb_servlet_ecommerce.utils.RuntimeInfo;
+import com.restfb.types.User;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
@@ -18,24 +21,45 @@ import java.sql.Timestamp;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class UserService implements IUserService {
     @Inject
     IUserDAO userDAO;
+    @Inject
+    IRoleDAO roleDAO;
+    private List<UserModel> appendRoleForUsers(List<UserModel> listUser) throws SQLException {
+        List<RoleModel> listRole = roleDAO.findAll(null);
+        Map<Long, RoleModel> roleMap = listRole.stream()
+                .collect(Collectors.toMap(RoleModel::getId, role -> role));
+//        Loop để lấy role
+        for (UserModel user : listUser) {
+            if (user.getRoleId() != null) {
+                RoleModel matchedRole = roleMap.get(user.getRoleId());
+                user.setRole(matchedRole);
+            }
+        }
+        return listUser;
+    }
 
     @Override
     public List<UserModel> findAllWithFilter(UserModel model, Pageble pageble) throws SQLException {
-        return userDAO.findAllWithFilter(model, pageble);
+        List<UserModel> listUser = userDAO.findAllWithFilter(model, pageble);
+       return appendRoleForUsers(listUser);
     }
 
     @Override
     public UserModel findWithFilter(UserModel model) throws SQLException {
-        return userDAO.findWithFilter(model);
+        UserModel user = userDAO.findWithFilter(model);
+        RoleModel role = roleDAO.findById(user.getRoleId());
+        user.setRole(role);
+        return user;
     }
 
     @Override
     public List<UserModel> findByColumnValues(List<SubQuery> subQueryList, Pageble pageble) throws SQLException {
-        return userDAO.findByColumnValues(subQueryList, pageble);
+        List<UserModel> listUser = userDAO.findByColumnValues(subQueryList, pageble);
+        return appendRoleForUsers(listUser);
     }
 
     @Override
@@ -43,8 +67,10 @@ public class UserService implements IUserService {
         return userDAO.findWithCustomSQL(sql, params);
     }
 
+
     @Override
     public UserModel update(UserModel model) throws SQLException {
+        model.setRole(null);
         UserModel oldModel = userDAO.findById(model.getId());
         model.setUpdateAt(new Timestamp(System.currentTimeMillis()));
         userDAO.update(model);
@@ -76,7 +102,8 @@ public class UserService implements IUserService {
 
     @Override
     public List<UserModel> findAll(Pageble pageble) throws SQLException {
-        return userDAO.findAll(pageble);
+        List<UserModel> listUser =  userDAO.findAll(pageble);
+        return appendRoleForUsers(listUser);
     }
 
     @Override
@@ -95,6 +122,7 @@ public class UserService implements IUserService {
 
     @Override
     public UserModel save(UserModel model) throws SQLException {
+        model.setRole(null);
         Long productId = userDAO.save(model);
         return userDAO.findById(productId);
     }
