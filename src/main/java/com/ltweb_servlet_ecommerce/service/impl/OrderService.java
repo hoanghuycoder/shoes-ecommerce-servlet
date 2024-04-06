@@ -104,4 +104,9 @@ public class OrderService implements IOrderService {
 
         return result;
     }
+
+    @Override
+    public Map<String, Object> findIdBySlug(List<Object> params) throws SQLException {
+        return orderDAO.findIdBySlug(params);
+    }
 }

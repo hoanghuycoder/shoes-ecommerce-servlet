@@ -1,5 +1,6 @@
 package com.ltweb_servlet_ecommerce.model;
 
+import com.ltweb_servlet_ecommerce.constant.SystemConstant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,8 @@ public class UserModel extends AbstractModel<UserModel> {
     private Boolean admin;
     private  Boolean moderator;
     private Boolean user;
-    private String role;
+    private  Long roleId;
+    private RoleModel role;
 
 
     public String getUserName() {
@@ -79,22 +81,30 @@ public class UserModel extends AbstractModel<UserModel> {
         this.association = association;
     }
 
-    public String getRole() {
+    public RoleModel getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(RoleModel role) {
         this.role = role;
     }
 
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
+    }
+
     public Boolean getAdmin() {
-        return (this.role != null && this.role.equalsIgnoreCase("admin"));
+        return (this.role != null && this.role.getValue().equalsIgnoreCase(SystemConstant.ADMIN_ROLE));
     }
     public Boolean getModerator() {
-        return (this.role != null && this.role.equalsIgnoreCase("moderator"));
+        return (this.role != null && this.role.getValue().equalsIgnoreCase(SystemConstant.MODERATOR_ROLE));
     }
     public Boolean getUser() {
-        return (this.role != null && this.role.equalsIgnoreCase("user"));
+        return (this.role != null && this.role.getValue().equalsIgnoreCase(SystemConstant.USER_MODEL));
     }
 
 }

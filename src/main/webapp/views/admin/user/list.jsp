@@ -83,7 +83,7 @@
                                 <td>
                                     <div class="d-flex px-2 py-1">
                                         <div class="d-flex flex-column justify-content-center">
-                                            <p class="text-xs font-weight-bold mx-auto mb-0">${item.role}</p>
+                                            <p class="text-xs font-weight-bold mx-auto mb-0">${item.role.value}</p>
                                         </div>
                                     </div>
                                 </td>

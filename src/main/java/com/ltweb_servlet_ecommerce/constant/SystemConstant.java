@@ -1,6 +1,11 @@
 package com.ltweb_servlet_ecommerce.constant;
 
 public class SystemConstant {
+    public static final String ADMIN_ROLE = "admin";
+    public static final String MODERATOR_ROLE = "moderator";
+    public static final String USER_ROLE = "user";
+
+
     public static final String USER_MODEL = "USER_MODEL";
 
     public static final String MODEL = "MODEL";
