@@ -53,7 +53,7 @@ public class LoginController extends HttpServlet {
                 tmpUser.setEmail(userModel.getEmail());
                 tmpUser = userService.findWithFilter(tmpUser);
                 if (tmpUser != null && BCrypt.verifyer().verify(userModel.getPassword().toCharArray(), tmpUser.getPassword()).verified) {
-                    SessionUtil.getInstance().putValue(req, "USER_MODEL", tmpUser);
+                    SessionUtil.getInstance().putValue(req, SystemConstant.USER_MODEL, tmpUser);
                     CartUtil.setCartFromSessionForUser(SessionUtil.getInstance(), req, orderDetailsService, cartService, tmpUser.getId());
                     UserModel updateUserLogged = new UserModel();
                     updateUserLogged.setLastLogged(new Timestamp(System.currentTimeMillis()));
