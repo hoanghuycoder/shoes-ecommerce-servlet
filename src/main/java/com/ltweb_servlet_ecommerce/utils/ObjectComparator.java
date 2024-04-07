@@ -41,41 +41,4 @@ public class ObjectComparator {
     private static boolean isEqual(Object obj1, Object obj2) {
         return (obj1 == null && obj2 == null) || (obj1 != null && obj1.equals(obj2));
     }
-
-    // Ví dụ sử dụng
-    public static void main(String[] args) {
-        // Tạo đối tượng old
-        MyObject oldObj = new MyObject(5, 1, "2024-03-29 10:07:59.0", 110, 23, "2024-03-29 10:07:59.0");
-        // Tạo đối tượng new
-        MyObject newObj = new MyObject(2, 3, "2024-03-29 10:07:59.0", 110, 23, "2025-03-29 10:07:59.0");
-
-        // So sánh và lấy kết quả
-        LinkedHashMap<String, String>[] results = compareObjects(oldObj, newObj);
-        LinkedHashMap<String, String> map1 = results[0];
-        LinkedHashMap<String, String> map2 = results[1];
-
-        // In kết quả
-        System.out.println("map1: " + map1);
-        System.out.println("map2: " + map2);
-    }
 }
-
-// Class mẫu đại diện cho đối tượng cần so sánh
-class MyObject {
-    int productSizeId;
-    int quantity;
-    String createAt;
-    int subTotal;
-    int id;
-    String updateAt;
-
-    public MyObject(int productSizeId, int quantity, String createAt, int subTotal, int id, String updateAt) {
-        this.productSizeId = productSizeId;
-        this.quantity = quantity;
-        this.createAt = createAt;
-        this.subTotal = subTotal;
-        this.id = id;
-        this.updateAt = updateAt;
-    }
-}
-

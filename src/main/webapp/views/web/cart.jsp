@@ -57,8 +57,11 @@
 
                                 <div class="col-md-2 mb-4 mb-md-0">
                                     <div class="form-outline mb-4" data-mdb-input-init>
-                                        <input type="number" id="quantityProduct${product_item.id}"  class="form-control quantityProduct" value="${product_item.quantity}" data-index="${loop.index}" data-product-id="${product_item.id}" data-size-id="${product_item.sizeId}" min="1" max="20" />
+                                        <input type="number" id="quantityProduct${product_item.id}"  class="form-control quantityProduct"
+                                               value="${product_item.quantity}" data-index="${loop.index}" data-product-id="${product_item.id}"
+                                               data-size-id="${product_item.sizeId}" min="1" max="${product_item.available}" />
                                         <label class="form-label" for="quantityProduct${product_item.id}">Quantity</label>
+                                        <label class="inStock" style="color: red;font-weight: 600;font-style: italic;"></label>
                                     </div>
 
                                     <h5 class="mb-2">
@@ -158,74 +161,113 @@
 </div>
 <script !src="">
     window.addEventListener("DOMContentLoaded",function () {
-        // Update quantity product cart item
-        let changeQuantityTimeout;
-        const updateDOMQuantity = (data,index,oldSubTotal) => {
-            data = JSON.parse(data);
-            const subTotal = data.subTotal;
-            const temporaryPrice = parseFloat($("#temporaryPrice").text()) - oldSubTotal + (data.subTotal);
-            const totalPrice = parseFloat($("#totalPrice").text()) - oldSubTotal + (data.subTotal);
-            $("#subTotal"+index).text(subTotal);
-            $("#temporaryPrice").text(temporaryPrice);
-            $("#totalPrice").text(totalPrice);
-        }
-        const updateQuantity = (productId,sizeId,quantity,index,oldSubTotal)=> {
-            $.ajax({
-                url : "/ajax/cart",
-                method : "PUT",
-                data : JSON.stringify({
-                    productId,
-                    sizeId,
-                    quantity
-                }),
-                success : function (data) {
-                    updateDOMQuantity(data,index,oldSubTotal);
-                },
-                error : function (error) {
-                    showToast("Error : "+error.error_desc+"","danger");
+        $(document).ready(function () {
+            // Xử lý hiển thị số lượng hàng tồn kho
+            function displayStockQuantity(quantity) {
+                let flag = false;
+                $('.quantityProduct').each(function() {
+                    var input = $(this);
+                    var max = parseInt(input.attr('max'));
+                    var value = quantity ===undefined ? parseInt(input.val()) : quantity;
+                    var inStockLabel = input.closest('.form-outline').find('.inStock');
+
+                    // Nếu số lượng vượt quá tồn kho, hiển thị số lượng tối đa có sẵn
+                    if (value > max){
+                        flag = true;
+                        inStockLabel.text('In stock: ' + max);
+                    }else
+                        inStockLabel.text('');
+                });
+
+                if (flag) {
+                    $('a.btn-primary').addClass('no-pointer-events');
+                }else {
+                    $('a.btn-primary').removeClass('no-pointer-events');
                 }
-            })
-        }
-        $('.quantityProduct').change(function () {
-            clearTimeout(changeQuantityTimeout);
-            changeQuantityTimeout = setTimeout(()=> {
+            }
+
+            // Gọi hàm để xử lý hiển thị số lượng tồn kho
+            displayStockQuantity(undefined);
+
+
+            // Update quantity product cart item
+            let changeQuantityTimeout;
+            const updateDOMQuantity = (data,index,oldSubTotal) => {
+                data = JSON.parse(data);
+                const subTotal = data.subTotal;
+                const temporaryPrice = parseFloat($("#temporaryPrice").text()) - oldSubTotal + (data.subTotal);
+                const totalPrice = parseFloat($("#totalPrice").text()) - oldSubTotal + (data.subTotal);
+                $("#subTotal"+index).text(subTotal);
+                $("#temporaryPrice").text(temporaryPrice);
+                $("#totalPrice").text(totalPrice);
+            }
+            const updateQuantity = (productId,sizeId,quantity,index,oldSubTotal)=> {
+                $.ajax({
+                    url : "/ajax/cart",
+                    method : "PUT",
+                    data : JSON.stringify({
+                        productId,
+                        sizeId,
+                        quantity
+                    }),
+                    success : function (data) {
+                        updateDOMQuantity(data,index,oldSubTotal);
+                    },
+                    error : function (error) {
+                        showToast("Error : "+error.error_desc+"","danger");
+                    }
+                })
+            }
+            $('.quantityProduct').change(function () {
+                clearTimeout(changeQuantityTimeout);
+
                 const productId = parseInt($(this).attr("data-product-id"));
                 const sizeId = parseInt($(this).attr("data-size-id"));
-                const quantity = parseInt($(this).val());
-                const index = $(this).attr("data-index");
-                const oldSubTotal = parseFloat($("#subTotal"+index).text());
-                updateQuantity(productId,sizeId,quantity,index,oldSubTotal);
-            },700);
-        })
-        // Delete product cart item
-        const deleteProductCartItem = (productId,sizeId,quantity,index) => {
-            $.ajax({
-                url : "/ajax/cart",
-                method: "DELETE",
-                data : JSON.stringify({
-                    productId,
-                    sizeId,
-                    quantity
-                }),
-                success : function (data) {
-                   window.location.reload();
-                },
-                error : function (errorData) {
-                    console.log(errorData);
-                    showToast("Error : "+errorData.error_desc+"","danger");
+                let quantity = parseInt($(this).val());
+                const min = parseInt($(this).attr('min'));
+                const max = parseInt($(this).attr('max'));
+                if (isNaN(quantity) || quantity < min) {
+                    quantity = min;
+                } else if (quantity > max) {
+                    quantity = max;
                 }
+                displayStockQuantity(quantity);
+                changeQuantityTimeout = setTimeout(()=> {
+                    $(this).val(quantity);
+                    const index = $(this).attr("data-index");
+                    const oldSubTotal = parseFloat($("#subTotal"+index).text());
+                    updateQuantity(productId,sizeId,quantity,index,oldSubTotal);
+                },700);
             })
-        }
-        $(".removeCart").click(function (e) {
-            e.preventDefault();
-            const productId = parseInt($(this).attr("data-product-id"));
-            const sizeId = parseInt($(this).attr("data-size-id"));
-            const quantity = 1;
-            const index = $(this).attr("data-index");
-            console.log("Index" + index);
-            deleteProductCartItem(productId,sizeId,quantity,index);
+            // Delete product cart item
+            const deleteProductCartItem = (productId,sizeId,quantity,index) => {
+                $.ajax({
+                    url : "/ajax/cart",
+                    method: "DELETE",
+                    data : JSON.stringify({
+                        productId,
+                        sizeId,
+                        quantity
+                    }),
+                    success : function (data) {
+                        window.location.reload();
+                    },
+                    error : function (errorData) {
+                        console.log(errorData);
+                        showToast("Error : "+errorData.error_desc+"","danger");
+                    }
+                })
+            }
+            $(".removeCart").click(function (e) {
+                e.preventDefault();
+                const productId = parseInt($(this).attr("data-product-id"));
+                const sizeId = parseInt($(this).attr("data-size-id"));
+                const quantity = 1;
+                const index = $(this).attr("data-index");
+                console.log("Index" + index);
+                deleteProductCartItem(productId,sizeId,quantity,index);
+            })
         })
-
     })
 </script>
 </body>
