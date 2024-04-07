@@ -35,16 +35,18 @@ public class ForgotPasswordController extends HttpServlet {
         tmpUser.setEmail(email);
         tmpUser = userService.findWithFilter(tmpUser);
         if (tmpUser != null) {
-            try {
+//            try {
                 Random random = new Random();
                 Integer OTP = 100_000 + random.nextInt(900_000);
                 SendMailUtil.sendMail(email, "Vertify your email", SendMailUtil.templateOTPMail(OTP + ""));
                 SessionUtil.putValue(request, "OTP", OTP);
                 SessionUtil.getInstance().putValue(request, "FORGET_PASS", tmpUser);
                 response.sendRedirect("/vertify-email");
+
             } catch (Exception mex) {
                 mex.printStackTrace();
             }
+
         } else {
             RequestDispatcher rd = request.getRequestDispatcher("/views/shared/forgot-pass.jsp");
             rd.forward(request, response);

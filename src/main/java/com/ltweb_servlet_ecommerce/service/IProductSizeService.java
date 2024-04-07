@@ -19,5 +19,6 @@ public interface IProductSizeService {
     ProductSizeModel findById(Long id) throws SQLException;
     List<ProductSizeModel> findAll(Pageble pageble) throws SQLException;
     ProductSizeModel softDelete(Long id) throws SQLException;
+    int getAvailableProducts(Long productSizeId);
     Map<String,Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException;
 }

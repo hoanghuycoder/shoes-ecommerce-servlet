@@ -66,6 +66,11 @@ public class ProductSizeService implements IProductSizeService {
     }
 
     @Override
+    public int getAvailableProducts(Long productSizeId) {
+        return productSizeDAO.getAvailableProducts(productSizeId);
+    }
+
+    @Override
     public ProductSizeModel findById(Long id) throws SQLException {
         return productSizeDAO.findById(id);
     }

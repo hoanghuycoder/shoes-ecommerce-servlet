@@ -18,4 +18,6 @@ public interface IProductSizeDAO {
     void update(ProductSizeModel model) throws SQLException;
     void delete(Long id) throws SQLException;
     Map<String,Object> findWithCustomSQL(String sql,List<Object> params) throws SQLException;
+
+    int getAvailableProducts(Long productSizeId);
 }
