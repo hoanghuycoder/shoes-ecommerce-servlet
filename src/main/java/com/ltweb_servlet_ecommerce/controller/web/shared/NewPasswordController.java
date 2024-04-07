@@ -19,7 +19,9 @@ public class NewPasswordController extends HttpServlet {
     IUserService userService;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        NotifyUtil.setUp(request);
+        RequestDispatcher rd = request.getRequestDispatcher("/views/shared/new-password.jsp");
+        rd.forward(request, response);
     }
 
     @Override
@@ -29,8 +31,9 @@ public class NewPasswordController extends HttpServlet {
         String repass = request.getParameter("repassword");
 
         if (!pass.equals(repass)) {
-            request.setAttribute("error", "Nhập mật khẩu chưa chính xác!");
-            request.getRequestDispatcher("/views/shared/new-password.jsp").forward(request, response);
+            response.sendRedirect(request.getContextPath()+"/new-password?message=two_password_diffirent&toast=danger");
+        } else if (pass.length() < 6) {
+            response.sendRedirect(request.getContextPath()+"/new-password?message=short_length_password&toast=danger");
         } else {
 
             UserModel userModel = (UserModel) SessionUtil.getInstance().getValue(request, "FORGET_PASS");
@@ -42,8 +45,9 @@ public class NewPasswordController extends HttpServlet {
             userModel.setPassword(hashedPassword);
             try {
                 userService.update(userModel);
-                request.setAttribute("error", "Đổi mật khẩu thành công!");
-                request.getRequestDispatcher("/views/shared/change-password.jsp").forward(request, response);
+//                request.setAttribute("error", "Đổi mật khẩu thành công!");
+//                request.getRequestDispatcher("/views/shared/change-password.jsp").forward(request, response);
+                response.sendRedirect(request.getContextPath()+"/new-password?message=change_password_success&toast=success");
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

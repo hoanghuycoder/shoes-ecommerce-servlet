@@ -41,29 +41,35 @@ public class RegisterController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            UserModel userModel = FormUtil.toModel(UserModel.class,req);
-            UserModel tmpUser = new UserModel();
-            tmpUser.setEmail(userModel.getEmail());
-            tmpUser = userService.findWithFilter(tmpUser);
-            if (tmpUser==null) {
+        String password = (String) req.getParameter("password");
+        if (password.length() < 6) {
+            resp.sendRedirect(req.getContextPath()+"/sign-up?message=short_length_password&toast=danger");
+        } else {
+
+            try {
+                UserModel userModel = FormUtil.toModel(UserModel.class, req);
+                UserModel tmpUser = new UserModel();
+                tmpUser.setEmail(userModel.getEmail());
+                tmpUser = userService.findWithFilter(tmpUser);
+                if (tmpUser == null) {
 //                try {
                     Random random = new Random();
                     Integer OTP = 100_000 + random.nextInt(900_000);
-                    SendMailUtil.sendMail(userModel.getEmail(),"Vertify your email",SendMailUtil.templateOTPMail(OTP+""));
-                    SessionUtil.putValue(req,"OTP",OTP);
-                    SessionUtil.getInstance().putValue(req,"REGISTER_USER",userModel);
+                    SendMailUtil.sendMail(userModel.getEmail(), "Vertify your email", SendMailUtil.templateOTPMail(OTP + ""));
+                    SessionUtil.putValue(req, "OTP", OTP);
+                    SessionUtil.getInstance().putValue(req, "REGISTER_USER", userModel);
                     resp.sendRedirect("/vertify-email");
 //                } catch (MessagingException mex) {
 //                    mex.printStackTrace();
 //                }
-            } else {
-                resp.sendRedirect(req.getContextPath()+"/sign-up?message=exist_user&toast=danger");
+                } else {
+                    resp.sendRedirect(req.getContextPath() + "/sign-up?message=exist_user&toast=danger");
+                }
+
+
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | SQLException e) {
+                throw new RuntimeException(e);
             }
-
-
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | SQLException e) {
-            throw new RuntimeException(e);
         }
     }
 }
