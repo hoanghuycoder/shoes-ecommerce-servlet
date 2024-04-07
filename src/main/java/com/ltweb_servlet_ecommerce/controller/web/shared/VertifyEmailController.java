@@ -44,6 +44,8 @@ public class VertifyEmailController extends HttpServlet {
                 BCrypt.Hasher hasher = BCrypt.withDefaults();
                 String hashedPassword = hasher.hashToString(12, userModel.getPassword().toCharArray());
                 userModel.setPassword(hashedPassword);
+                //set default roleId = 3 (user role)
+                userModel.setRoleId(Long.valueOf(3));
                 try {
                     userService.save(userModel);
                     resp.sendRedirect(req.getContextPath() + "/sign-in?message=register_success&toast=success");
