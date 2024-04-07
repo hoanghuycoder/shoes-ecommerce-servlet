@@ -25,12 +25,13 @@ public class ObjectComparator {
             }
 
             // So sánh giá trị của trường trong old và new
+            oldValue = (oldValue != null) ? oldValue : "null";
+            newValue = (newValue != null) ? newValue : "null";
             if (!isEqual(oldValue, newValue)) {
                 map1.put(field.getName(), oldValue.toString());
                 map2.put(field.getName(), newValue.toString());
             }
         }
-
         // Tạo mảng chứa map1 và map2
         @SuppressWarnings("unchecked")
         LinkedHashMap<String, String>[] result = new LinkedHashMap[]{map1, map2};

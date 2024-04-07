@@ -33,7 +33,7 @@
                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Association</th>
                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Birthday</th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Admin</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Role</th>
                         <th class="text-secondary opacity-7"></th>
                     </tr>
                     </thead>
@@ -83,14 +83,14 @@
                                 <td>
                                     <div class="d-flex px-2 py-1">
                                         <div class="d-flex flex-column justify-content-center">
-                                            <p class="text-xs font-weight-bold mx-auto mb-0">${item.admin}</p>
+                                            <p class="text-xs font-weight-bold mx-auto mb-0">${item.role.value}</p>
                                         </div>
                                     </div>
                                 </td>
                                 <!-- Action -->
                                 <td class="align-middle">
-                                    <a class="btn btn-link text-dark px-1 mb-0" ><i class="material-icons text-sm me-1">edit</i>Edit</a>
-                                    <a class="btn btn-link text-danger text-gradient px-1 mb-0"  data-bs-toggle="modal" href="#deleteModal" onclick="setId(${item.id})"><i class="material-icons text-sm me-1">delete</i>Delete</a>
+                                    <a class="btn btn-link text-dark px-1 mb-0" data-bs-toggle="modal" href="#roleModal" onclick="setIdUserUpdateRole(${item.id},'${item.role.value}')"><i class="material-icons text-sm me-1">edit</i>Edit</a>
+                                    <a class="btn btn-link text-danger text-gradient px-1 mb-0"  data-bs-toggle="modal" href="#deleteModal" onclick="setIdDelete(${item.id})"><i class="material-icons text-sm me-1">delete</i>Delete</a>
                                 </td>
                                 <!-- End action -->
                             </tr>
@@ -126,10 +126,52 @@
         </div>
     </div>
 </div>
+<%-- Change Role Model--%>
+<div class="modal fade" id="roleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <form method="POST">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-normal" id="updateModalLabel">Change role of user</h5>
+                    <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Current role is <strong id="currentRole">user</strong> role. Choose your role you wanna change:
+                    </p>
+                    <div class="input-group mb-3">
+                        <select name="roleId" class="form-select" aria-label="Select role">
+                            <option selected>Choose role</option>
+                            <c:if test="${not empty LIST_ROLE}">
+                                <c:forEach var="item" items="${LIST_ROLE}">
+                                    <option value="${item.id}" class="text-uppercase">${item.value}</option>
+                                </c:forEach>
+                            </c:if>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-block btn-light" data-bs-dismiss="modal">Close</button>
+                    <input type="hidden" name="action" value="put">
+                    <input type="hidden" name="id" id="idUser">
+                    <input type="hidden" name="detailAccount" value="changeRole">
+                    <button type="submit" class="btn bg-gradient-primary">Change</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 <script>
-    const setId = (id) => {
+    const setIdDelete = (id) => {
         $("#deleteModalLabel").text("Delete User Id "+id+"?");
         $("#idDelete").val(id);
+    }
+    const setIdUserUpdateRole = (id,currentRole) => {
+        $("#currentRole").text(currentRole);
+        $("#updateModalLabel").text("Change Role Of User Id "+id+"?");
+        $("#roleModal #idUser").val(id);
     }
 </script>
 <!-- End Delete Modal -->

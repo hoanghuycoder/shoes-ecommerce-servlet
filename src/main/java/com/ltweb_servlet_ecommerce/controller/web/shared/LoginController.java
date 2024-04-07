@@ -53,7 +53,7 @@ public class LoginController extends HttpServlet {
                 tmpUser.setEmail(userModel.getEmail());
                 tmpUser = userService.findWithFilter(tmpUser);
                 if (tmpUser != null && BCrypt.verifyer().verify(userModel.getPassword().toCharArray(), tmpUser.getPassword()).verified) {
-                    SessionUtil.getInstance().putValue(req, "USER_MODEL", tmpUser);
+                    SessionUtil.getInstance().putValue(req, SystemConstant.USER_MODEL, tmpUser);
                     CartUtil.setCartFromSessionForUser(SessionUtil.getInstance(), req, orderDetailsService, cartService, tmpUser.getId());
                     UserModel updateUserLogged = new UserModel();
                     updateUserLogged.setLastLogged(new Timestamp(System.currentTimeMillis()));
@@ -66,7 +66,7 @@ public class LoginController extends HttpServlet {
                     logValue.put(SystemConstant.VALUE_LOG, new JSONObject().put("email", tmpUser.getEmail()).put("id", tmpUser.getId()));
                     LoggerHelper.log(SystemConstant.INFO_LEVEL, "SELECT", RuntimeInfo.getCallerClassNameAndLineNumber(), logValue);
 
-                    if (tmpUser.getRole().equals("admin"))
+                    if (tmpUser.getRole().getValue().equalsIgnoreCase(SystemConstant.ADMIN_ROLE) || tmpUser.getRole().getValue().equalsIgnoreCase(SystemConstant.MODERATOR_ROLE))
                         resp.sendRedirect(req.getContextPath() + "/admin/home");
                     else
                         resp.sendRedirect(req.getContextPath() + "/home");

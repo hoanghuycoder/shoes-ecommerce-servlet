@@ -42,9 +42,11 @@ public class ForgotPasswordController extends HttpServlet {
                 SessionUtil.putValue(request, "OTP", OTP);
                 SessionUtil.getInstance().putValue(request, "FORGET_PASS", tmpUser);
                 response.sendRedirect("/vertify-email");
-//            } catch (MessagingException mex) {
-//                mex.printStackTrace();
-//            }
+
+            } catch (Exception mex) {
+                mex.printStackTrace();
+            }
+
         } else {
             RequestDispatcher rd = request.getRequestDispatcher("/views/shared/forgot-pass.jsp");
             rd.forward(request, response);

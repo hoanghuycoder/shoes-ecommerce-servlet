@@ -42,8 +42,7 @@ public class OrderController extends HttpServlet {
             String slug = UrlUtil.getIdFromUrl(req, resp);
             List<Object> params = new ArrayList<>();
             params.add(slug);
-            Map<String,Object> result = orderService.findWithCustomSQL("select id from `order` where slug=?",params);
-
+            Map<String,Object> result = orderService.findIdBySlug(params);
             if (result.get("id")!=null) {
                 OrderModel order = orderService.findById((Long) result.get("id"));
                 req.setAttribute("ORDER_MODEL",order);

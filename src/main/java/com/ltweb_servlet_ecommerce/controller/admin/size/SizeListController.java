@@ -3,6 +3,7 @@ package com.ltweb_servlet_ecommerce.controller.admin.size;
 import com.ltweb_servlet_ecommerce.constant.SystemConstant;
 import com.ltweb_servlet_ecommerce.model.SizeModel;
 import com.ltweb_servlet_ecommerce.service.ISizeService;
+import com.ltweb_servlet_ecommerce.utils.AuthRole;
 import com.ltweb_servlet_ecommerce.utils.FormUtil;
 import com.ltweb_servlet_ecommerce.utils.NotifyUtil;
 
@@ -40,6 +41,7 @@ public class SizeListController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
+            if(!AuthRole.checkPermission(resp, req, SystemConstant.ADMIN_ROLE)) return;
             String action = req.getParameter("action");
             if (action!=null && action.equals("delete")){
                 Long id = Long.parseLong(req.getParameter("id"));

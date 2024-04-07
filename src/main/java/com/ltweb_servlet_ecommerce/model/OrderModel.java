@@ -17,4 +17,11 @@ public class OrderModel extends  AbstractModel<OrderModel>{
     private Long addressId;
 
 
+    public boolean getIsPaid() {
+        return isPaid;
+    }
+
+    public void setIsPaid(boolean paid) {
+        isPaid = paid;
+    }
 }
