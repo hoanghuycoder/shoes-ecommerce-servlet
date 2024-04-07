@@ -83,7 +83,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <span class="h5">$${MODEL.price}</span>
+                            <span class="h5 product-price">$${MODEL.price}</span>
                             <span class="text-muted">/per shoes</span>
                         </div>
 
@@ -205,6 +205,17 @@
     </c:if>
     <script !src="">
         window.addEventListener("DOMContentLoaded",function (){
+            // Update price
+            const listProductSize = JSON.parse(('${LIST_PRODUCT_SIZE}'));
+            function updatePriceWhenChangeSize() {
+                const sizeId =  $("#sizeId").val();
+                const productSizePrice =listProductSize.filter((productSize) => productSize.sizeId+'' ==sizeId)[0];
+                $(".product-price").text("$"+productSizePrice.price)
+            }
+            $("#sizeId").on("change",function () {
+                updatePriceWhenChangeSize();
+            })
+            updatePriceWhenChangeSize();
 
             const maxPageItemOpinion = 3;
             let totalCurrentItem = 0;
