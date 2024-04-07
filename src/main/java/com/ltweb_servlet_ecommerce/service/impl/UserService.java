@@ -51,7 +51,7 @@ public class UserService implements IUserService {
     @Override
     public UserModel findWithFilter(UserModel model) throws SQLException {
         UserModel user = userDAO.findWithFilter(model);
-        if (user != null) {
+        if (user!=null) {
             RoleModel role = roleDAO.findById(user.getRoleId());
             user.setRole(role);
         }
@@ -120,8 +120,10 @@ public class UserService implements IUserService {
     @Override
     public UserModel findById(Long id) throws SQLException {
         UserModel user = userDAO.findById(id);
-        RoleModel role = roleDAO.findById(user.getRoleId());
-        user.setRole(role);
+        if (user!=null) {
+            RoleModel role = roleDAO.findById(user.getRoleId());
+            user.setRole(role);
+        }
         return user;
     }
 
