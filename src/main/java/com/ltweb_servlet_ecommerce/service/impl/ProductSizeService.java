@@ -23,8 +23,12 @@ public class ProductSizeService implements IProductSizeService {
     }
 
     @Override
-    public ProductSizeModel findWithFilter(ProductSizeModel model) throws SQLException {
-        return productSizeDAO.findWithFilter(model);
+    public ProductSizeModel findWithFilter(ProductSizeModel model)  {
+        try {
+            return productSizeDAO.findWithFilter(model);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

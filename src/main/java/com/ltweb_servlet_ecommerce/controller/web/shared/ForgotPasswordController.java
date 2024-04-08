@@ -35,7 +35,7 @@ public class ForgotPasswordController extends HttpServlet {
         tmpUser.setEmail(email);
         tmpUser = userService.findWithFilter(tmpUser);
         if (tmpUser != null) {
-//            try {
+            try {
                 Random random = new Random();
                 Integer OTP = 100_000 + random.nextInt(900_000);
                 SendMailUtil.sendMail(email, "Vertify your email", SendMailUtil.templateOTPMail(OTP + ""));

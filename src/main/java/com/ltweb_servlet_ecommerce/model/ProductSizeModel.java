@@ -1,5 +1,6 @@
 package com.ltweb_servlet_ecommerce.model;
 
+
 public class ProductSizeModel extends AbstractModel<ProductSizeModel>{
     private Long sizeId;
     private Long productId;

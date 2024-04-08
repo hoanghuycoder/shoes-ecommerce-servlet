@@ -174,7 +174,7 @@
                     // Nếu số lượng vượt quá tồn kho, hiển thị số lượng tối đa có sẵn
                     if (value > max){
                         flag = true;
-                        inStockLabel.text('In stock: ' + max);
+                        inStockLabel.text('In stock: ' + (max < 0 ? 0 : max));
                     }else
                         inStockLabel.text('');
                 });
