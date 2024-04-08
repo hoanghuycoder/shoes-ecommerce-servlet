@@ -100,9 +100,14 @@
                                 </div>
                                 <input type="hidden" name="productId" value="${MODEL.id}">
                             </div>
-                            <button class="btn btn-warning shadow-0" id="buyNow"> Buy now </button>
-                            <button  class="btn btn-primary shadow-0" id="addToCart"> <i class="me-1 fa fa-shopping-basket"></i> Add to cart </button>
-                            <a href="#" class="btn btn-light border border-secondary py-2 icon-hover px-3"> <i class="me-1 fa fa-heart fa-lg"></i> Save </a>
+                            <div id="inOfStock">
+                                <button class="btn btn-warning shadow-0" id="buyNow"> Buy now </button>
+                                <button  class="btn btn-primary shadow-0" id="addToCart"> <i class="me-1 fa fa-shopping-basket"></i> Add to cart </button>
+                            </div>
+                            <div id="outOfStock">
+                                <button class="btn shadow-0" style="opacity: 0.8; cursor: no-drop;"> Out of stock </button>
+                            </div>
+                        <%--                            <a href="#" class="btn btn-light border border-secondary py-2 icon-hover px-3"> <i class="me-1 fa fa-heart fa-lg"></i> Save </a>--%>
                     </div>
                 </main>
             </div>
@@ -214,8 +219,40 @@
             }
             $("#sizeId").on("change",function () {
                 updatePriceWhenChangeSize();
+                checkQuantity();
             })
             updatePriceWhenChangeSize();
+
+
+            // checking quantity in DB
+            const checkQuantity = ()=> {
+                const sizeId = parseInt($("#sizeId").val());
+                $.ajax({
+                    url : '<c:url value="/ajax/product-quantity"/>',
+                    type : 'GET',
+                    data : {
+                        productId: ${MODEL.id},
+                        sizeId: sizeId
+                    },
+                    success : function (data) {
+                        const inStockElement = $('#inOfStock');
+                        const outStockElement = $('#outOfStock');
+                        if(data > 0) {
+                            inStockElement.show();
+                            outStockElement.hide();
+                        }else {
+                            outStockElement.show();
+                            inStockElement.hide();
+                        }
+                    },
+                    error : function (e) {
+                        console.log('error', e)
+                    }
+                })
+            }
+            checkQuantity();
+
+
 
             const maxPageItemOpinion = 3;
             let totalCurrentItem = 0;
