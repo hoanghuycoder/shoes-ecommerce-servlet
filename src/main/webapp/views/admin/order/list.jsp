@@ -9,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Admin Nai - Danh sách đơn hàng</title>
 </head>
 <body>
 <div class="row">
@@ -17,7 +17,7 @@
         <div class="card my-4">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                 <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-                    <h6 class="text-white text-capitalize ps-3">Orders Table</h6>
+                    <h6 class="text-white text-capitalize ps-3">Danh sách đơn hàng</h6>
                 </div>
             </div>
             <div class="card-body px-0 pb-2">
@@ -26,13 +26,13 @@
                         <thead>
                         <tr>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Customer Info</th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Address</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Product</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Total</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Note</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Create At</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Thông tin khách hàng</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Địa chỉ</th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Trạng thái</th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sản phẩm</th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tổng tiền</th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ghi chú</th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Được tạo lúc</th>
                             <th class="text-secondary opacity-7"></th>
                         </tr>
                         </thead>
@@ -81,10 +81,10 @@
                                     <div class="d-flex">
                                         <p class="text-xs font-weight-bold mx-auto mb-0">
                                             <c:if test="${not empty order_item.note || order_item.note != ''}">
-                                                Detail note...
+                                                Chi tiết ghi chú...
                                             </c:if>
                                             <c:if test="${ empty order_item.note || order_item.note == ''}">
-                                                Empty note...
+                                                Không có ghi chú
                                             </c:if>
                                         </p>
                                     </div>
@@ -99,13 +99,13 @@
                                 <td class="align-middle">
                                     <p class="m-0 p-0">GHTK</p>
                                     <div class="d-flex">
-                                        <a class="btn btn-link text-success px-1 mb-0" id="pushOrder${order_item.id}" href="javascript:;"><i class="fa-solid fa-truck me-1"></i>Push</a>
-                                        <a class="btn btn-link text-primary px-1 mb-0" id="pushOrder${order_item.id}" href="javascript:;"><i class="fa-solid fa-rectangle-xmark me-1"></i>Cancel</a>
+                                        <a class="btn btn-link text-success px-1 mb-0" id="pushOrder${order_item.id}" href="javascript:;"><i class="fa-solid fa-truck me-1"></i>Đẩy đơn</a>
+                                        <a class="btn btn-link text-primary px-1 mb-0" id="pushOrder${order_item.id}" href="javascript:;"><i class="fa-solid fa-rectangle-xmark me-1"></i>Hủy đơn</a>
                                     </div>
                                     <p class="m-0 p-0">CRM</p>
                                     <div class="d-flex">
-                                        <a class="btn btn-link text-dark px-1 mb-0" id="editOrder${order_item.id}" href="javascript:;"><i class="material-icons text-sm me-1">edit</i>Edit</a>
-                                        <a class="btn btn-link text-danger text-gradient px-1 mb-0" id="removeOrder${order_item.id}" href="javascript:;"><i class="material-icons text-sm me-1">delete</i>Delete</a>
+                                        <a class="btn btn-link text-dark px-1 mb-0" id="editOrder${order_item.id}" href="javascript:;"><i class="material-icons text-sm me-1">edit</i>Sửa</a>
+                                        <a class="btn btn-link text-danger text-gradient px-1 mb-0" id="removeOrder${order_item.id}" href="javascript:;"><i class="material-icons text-sm me-1">delete</i>Xóa</a>
                                     </div>
 
                                 </td>

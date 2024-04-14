@@ -19,9 +19,9 @@
                 <div class="d-table-cell align-middle">
 
                     <div class="text-center mt-4">
-                        <h1 class="h2">Reset password</h1>
+                        <h1 class="h2">Đặt lại mật khẩu</h1>
                         <p class="lead">
-                            Enter your email to reset your password.
+                            Nhập email của tài khoản cần đặt lại mật khẩu
                         </p>
                     </div>
                     <div></div>
@@ -32,11 +32,11 @@
                                 <form method="post" action="/forgot-password">
                                     <div class="form-group">
                                         <label>Email</label>
-                                        <input class="form-control form-control-lg" type="email" name="email" placeholder="Enter your email">
+                                        <input class="form-control form-control-lg" type="email" name="email" placeholder="Nhập địa chỉ email ">
                                     </div>
                                     <div class="text-center mt-3">
 <%--                                        <a href="#" class="btn btn-lg btn-primary">Reset password</a>--%>
-                                        <button type="submit" class="btn btn-lg btn-primary">Reset password</button>
+                                        <button type="submit" class="btn btn-lg btn-primary">Đặt lại mật khẩu</button>
                                     </div>
                                 </form>
                             </div>
