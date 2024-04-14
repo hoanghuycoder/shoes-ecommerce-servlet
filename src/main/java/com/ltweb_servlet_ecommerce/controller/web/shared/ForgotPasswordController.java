@@ -30,27 +30,27 @@ public class ForgotPasswordController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-        String email = (String) request.getParameter("email");
-        UserModel tmpUser = new UserModel();
-        tmpUser.setEmail(email);
-        tmpUser = userService.findWithFilter(tmpUser);
-        if (tmpUser != null) {
-            try {
-                Random random = new Random();
-                Integer OTP = 100_000 + random.nextInt(900_000);
-                SendMailUtil.sendMail(email, "Vertify your email", SendMailUtil.templateOTPMail(OTP + ""));
-                SessionUtil.putValue(request, "OTP", OTP);
-                SessionUtil.getInstance().putValue(request, "FORGET_PASS", tmpUser);
-                response.sendRedirect("/vertify-email");
+            String email = (String) request.getParameter("email");
+            UserModel tmpUser = new UserModel();
+            tmpUser.setEmail(email);
+            tmpUser = userService.findWithFilter(tmpUser);
+            if (tmpUser != null) {
+                try {
+                    Random random = new Random();
+                    Integer OTP = 100_000 + random.nextInt(900_000);
+                    SendMailUtil.sendMail(email, "Vertify your email", SendMailUtil.templateOTPMail(OTP + ""));
+                    SessionUtil.putValue(request, "OTP", OTP);
+                    SessionUtil.getInstance().putValue(request, "FORGET_PASS", tmpUser);
+                    response.sendRedirect("/vertify-email");
 
-            } catch (Exception mex) {
-                mex.printStackTrace();
+                } catch (Exception mex) {
+                    mex.printStackTrace();
+                }
+
+            } else {
+                RequestDispatcher rd = request.getRequestDispatcher("/views/shared/forgot-pass.jsp");
+                rd.forward(request, response);
             }
-
-        } else {
-            RequestDispatcher rd = request.getRequestDispatcher("/views/shared/forgot-pass.jsp");
-            rd.forward(request, response);
-        }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

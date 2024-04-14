@@ -70,6 +70,16 @@ public class SendMailUtil {
         content.append("<p><strong>Nai Shoes &amp; Sneakers</strong><br /><br /></p>");
         return content.toString();
     }
+    public static String templateMailOrderNotProcess(String orderSlug) {
+        StringBuilder contentHtml = new StringBuilder();
+        contentHtml.append("<p><strong>Dear Admin,</strong></p>");
+        contentHtml.append("<p>I hope this email finds you well. I am writing to bring to your attention an issue regarding pending orders that have not been processed for over five days.<a href='localhost:8080/order-details/'"+orderSlug+">Check here</a></p>");
+        contentHtml.append("<p>Please find attached a detailed report listing the orders that are currently pending processing for over five days. The report includes relevant information such as order numbers, dates of placement, and any pertinent notes.</p>");
+        contentHtml.append("<p>Thank you for your attention and cooperation.</p>");
+        contentHtml.append("<p>Sincerely,</p>");
+        contentHtml.append("<p><strong>Nai Shoes &amp; Sneakers</strong><br /><br /></p>");
+        return contentHtml.toString();
+    }
 
     public static String templateMailContact(String fullName, String email, String message) {
         return "<!DOCTYPE html>\n" +

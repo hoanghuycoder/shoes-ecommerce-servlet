@@ -29,11 +29,11 @@
                     <thead>
                     <tr>
                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Full Name</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Họ và tên</th>
                         <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Association</th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Birthday</th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Role</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Liên kết</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ngày sinh</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vai trò</th>
                         <th class="text-secondary opacity-7"></th>
                     </tr>
                     </thead>
@@ -89,8 +89,8 @@
                                 </td>
                                 <!-- Action -->
                                 <td class="align-middle">
-                                    <a class="btn btn-link text-dark px-1 mb-0" data-bs-toggle="modal" href="#roleModal" onclick="setIdUserUpdateRole(${item.id},'${item.role.value}')"><i class="material-icons text-sm me-1">edit</i>Edit</a>
-                                    <a class="btn btn-link text-danger text-gradient px-1 mb-0"  data-bs-toggle="modal" href="#deleteModal" onclick="setIdDelete(${item.id})"><i class="material-icons text-sm me-1">delete</i>Delete</a>
+                                    <a class="btn btn-link text-dark px-1 mb-0" data-bs-toggle="modal" href="#roleModal" onclick="setIdUserUpdateRole(${item.id},'${item.role.value}')"><i class="material-icons text-sm me-1">edit</i>Thay đổi vai trò</a>
+                                    <a class="btn btn-link text-danger text-gradient px-1 mb-0"  data-bs-toggle="modal" href="#deleteModal" onclick="setIdDelete(${item.id})"><i class="material-icons text-sm me-1">delete</i>Xóa</a>
                                 </td>
                                 <!-- End action -->
                             </tr>
@@ -113,14 +113,14 @@
                 </button>
             </div>
             <div class="modal-body">
-                Are you sure to delete?
+                Bạn có chắc chắn muốn xóa?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-block btn-light" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-block btn-light" data-bs-dismiss="modal">Đóng</button>
                 <form method="POST">
                     <input type="hidden" name="action" value="delete">
                     <input type="hidden" name="id" id="idDelete">
-                    <button type="submit" class="btn bg-gradient-danger">Delete</button>
+                    <button type="submit" class="btn bg-gradient-danger">Xóa</button>
                 </form>
             </div>
         </div>
@@ -132,18 +132,18 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title font-weight-normal" id="updateModalLabel">Change role of user</h5>
+                    <h5 class="modal-title font-weight-normal" id="updateModalLabel">Đổi vai trò người dùng</h5>
                     <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <p>
-                        Current role is <strong id="currentRole">user</strong> role. Choose your role you wanna change:
+                        Vai trò hiện tại của người dùng là <strong id="currentRole">user</strong>. Chọn vai trò muốn thay đổi:
                     </p>
                     <div class="input-group mb-3">
                         <select name="roleId" class="form-select" aria-label="Select role">
-                            <option selected>Choose role</option>
+                            <option selected>Chọn vai trò</option>
                             <c:if test="${not empty LIST_ROLE}">
                                 <c:forEach var="item" items="${LIST_ROLE}">
                                     <option value="${item.id}" class="text-uppercase">${item.value}</option>
@@ -153,11 +153,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-block btn-light" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-block btn-light" data-bs-dismiss="modal">Đóng</button>
                     <input type="hidden" name="action" value="put">
                     <input type="hidden" name="id" id="idUser">
                     <input type="hidden" name="detailAccount" value="changeRole">
-                    <button type="submit" class="btn bg-gradient-primary">Change</button>
+                    <button type="submit" class="btn bg-gradient-primary">Lưu thay đổi</button>
                 </div>
             </div>
         </div>
@@ -165,12 +165,12 @@
 </div>
 <script>
     const setIdDelete = (id) => {
-        $("#deleteModalLabel").text("Delete User Id "+id+"?");
+        $("#deleteModalLabel").text("Xóa người dùng id "+id+"?");
         $("#idDelete").val(id);
     }
     const setIdUserUpdateRole = (id,currentRole) => {
         $("#currentRole").text(currentRole);
-        $("#updateModalLabel").text("Change Role Of User Id "+id+"?");
+        $("#updateModalLabel").text("Cập nhật vai trò người dùng id "+id+"?");
         $("#roleModal #idUser").val(id);
     }
 </script>
