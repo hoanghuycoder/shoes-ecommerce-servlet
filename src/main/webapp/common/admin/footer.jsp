@@ -17,13 +17,13 @@
                         <a href="#" class="nav-link text-muted" target="_blank">Creative Tim</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link text-muted" target="_blank">About Us</a>
+                        <a href="#" class="nav-link text-muted" target="_blank">Giới thiệu</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link text-muted" target="_blank">Blog</a>
+                        <a href="#" class="nav-link text-muted" target="_blank">Bài viết</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link pe-0 text-muted" target="_blank">License</a>
+                        <a href="#" class="nav-link pe-0 text-muted" target="_blank">Chính sách</a>
                     </li>
                 </ul>
             </div>

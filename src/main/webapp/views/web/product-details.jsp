@@ -79,9 +79,9 @@
                                 </div>
                                 <span class="ms-1 text-primary averageRating">5</span>
                             </div>
-                            <span class="text-muted">${CATEGORY.name}</span>
+<%--                            <span class="text-muted">${CATEGORY.name}</span>--%>
                         </div>
-
+                        <p class="text-muted" style="font-size: 16px; font-weight: 600;">Loại: <span>${CATEGORY.name}</span></p>
                         <div class="mb-3">
                             <span class="h5 product-price">$${MODEL.price}</span>
                             <span class="text-muted">/per shoes</span>
