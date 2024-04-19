@@ -33,6 +33,7 @@
                                 </label>
                             </th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">IP</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Quốc gia</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Cấp độ</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Hành động</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 text-center">Giá trị cũ</th>
@@ -52,6 +53,11 @@
                                 <td>
                                     <div class="d-flex text-center">
                                         <p class="text-xs font-weight-bold mx-auto mb-0">${item.ip}</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex text-center">
+                                        <p class="text-xs font-weight-bold mx-auto mb-0">${item.location}</p>
                                     </div>
                                 </td>
                                 <td>
@@ -105,6 +111,7 @@
     window.addEventListener("DOMContentLoaded",function (){
         $(document).ready(function(){
             new DataTable('#dataTable', {
+                order: [[7, 'desc']],
                 pagingType: 'simple_numbers',
                 language: {
                     paginate: {

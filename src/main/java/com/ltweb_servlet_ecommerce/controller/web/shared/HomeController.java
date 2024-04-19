@@ -26,8 +26,10 @@ public class HomeController extends HttpServlet {
     @Inject
     IProductService productService;
 
+    //9488
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         req.setAttribute("tab", SystemConstant.HOME_TAB);
         Pageble pagebleProduct = new PageRequest(1,3,new Sorter("totalViewAndSearch", "desc"));
         try {

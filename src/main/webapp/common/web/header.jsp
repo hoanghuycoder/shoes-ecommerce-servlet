@@ -37,7 +37,7 @@
                             <li><a class="dropdown-item" href="/sign-out"><i class="fa-solid fa-person-walking-dashed-line-arrow-right me-2"></i>Đăng xuất</a></li>
                         </c:if>
                         <c:if test="${empty USER_MODEL}">
-                            <li class="m-0"><a class="dropdown-item" href="/sign-in"><i class="fa-solid fa-right-to-bracket me-2"></i>Đăng nhập</a></li> nhập
+                            <li class="m-0"><a class="dropdown-item" href="/sign-in"><i class="fa-solid fa-right-to-bracket me-2"></i>Đăng nhập</a></li>
                             <li><a class="dropdown-item" href="/sign-up"><i class="fa-solid fa-user-pen me-2"></i>Đăng ký</a></li>
                         </c:if>
                     </ul>

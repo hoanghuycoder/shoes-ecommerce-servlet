@@ -65,6 +65,7 @@ public class LogDAO extends AbstractDAO<LogModel> implements ILogDAO {
             while (rs.next()) {
                 long id = rs.getLong("id");
                 String ip = rs.getString("ip");
+                String location = rs.getString("location");
                 String level = rs.getString("level");
                 String action = rs.getString("action");
                 String resource = rs.getString("resource");
@@ -75,7 +76,7 @@ public class LogDAO extends AbstractDAO<LogModel> implements ILogDAO {
                 JSONObject value = new JSONObject(rs.getString("value"));
                 Timestamp createdAt = rs.getTimestamp("createAt");
                 Timestamp updatedAt = rs.getTimestamp("updateAt");
-                LogModel logModel = LogModel.builder().ip(ip).level(level).action(action).resource(resource)
+                LogModel logModel = LogModel.builder().ip(ip).location(location).level(level).action(action).resource(resource)
                         .preValue(preValue).value(value).build();
                 logModel.setId(id);
                 logModel.setCreateAt(createdAt);

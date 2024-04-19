@@ -97,8 +97,8 @@ public class CronJob implements ServletContextListener {
                 roleAdmin = roleDAO.findWithFilter(roleAdmin);
                 UserModel adminModel = new UserModel();
                 adminModel.setRoleId(roleAdmin.getId());
-                List<OrderModel> listOrderNotProcess = orderDAO.findByColumnValues(subQueryList, null);
-                List<UserModel> listAdmin = userDAO.findAllWithFilter(adminModel, null);
+//                List<OrderModel> listOrderNotProcess = orderDAO.findByColumnValues(subQueryList, null);
+//                List<UserModel> listAdmin = userDAO.findAllWithFilter(adminModel, null);
 //            for (UserModel user : listAdmin) {
 //                for (OrderModel orderNotProcess : listOrderNotProcess) {
 //                    SendMailUtil.sendMail(user.getEmail(),"Urgent Report: Orders Pending Processing for Over 5 Days",SendMailUtil.templateMailOrderNotProcess(orderNotProcess.getSlug()));

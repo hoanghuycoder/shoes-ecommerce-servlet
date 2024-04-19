@@ -91,6 +91,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
             return results;
         } catch (Exception e) {
             LoggerHelper.logDetailedDangerMessage(e, "SELECT");
+            e.printStackTrace();
             return null;
         } finally {
             JDBCUtil.closeConnection(connection, preparedStatement, resultSet);
