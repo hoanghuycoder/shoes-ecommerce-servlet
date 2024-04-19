@@ -31,7 +31,7 @@ public class UserDAO extends AbstractDAO<UserModel> implements IUserDAO {
     }
     @Override
     public List<UserModel> findAll(Pageble pageble) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM `users`");
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM `users` WHERE isDeleted=0 ");
         SqlPagebleUtil.addSQlPageble(sqlStrBuilder,pageble);
         return query(sqlStrBuilder.toString(),new UserMapper(),null, UserModel.class);
     }

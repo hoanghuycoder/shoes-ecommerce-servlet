@@ -42,7 +42,7 @@
                                 </div>
                                 <div class="form-outline mb-4">
                                     <input type="text" id="userName" class="form-control" name="userName"/>
-                                    <label class="form-label" for="userName">Tên người dùng</label>
+                                    <label class="form-label" for="userName">Tên đăng nhập</label>
                                 </div>
 
                                 <!-- Email input -->

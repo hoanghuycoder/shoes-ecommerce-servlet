@@ -15,9 +15,8 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Dependent
 @Alternative
@@ -84,12 +83,47 @@ public class LogDAO extends AbstractDAO<LogModel> implements ILogDAO {
                 results.add((T) logModel);
             }
             return results;
+        } catch (
+                Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            JDBCUtil.closeConnection(connection, preparedStatement, rs);
+        }
+
+    }
+
+    @Override
+    public List<LogModel> checkAccessCount() {
+        List<LogModel> results = new ArrayList<>();
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet rs = null;
+        String sql = "SELECT ip, resource, COUNT(ip) AS accessCount, createAt " +
+                "FROM logs " +
+                "WHERE createAt > DATE_SUB(NOW() , INTERVAL 1 MINUTE) " +
+                "GROUP BY ip, resource, createAt " +
+                "HAVING COUNT(ip) > 2";
+        try {
+            connection = JDBCUtil.getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                String ip = rs.getString("ip");
+                String resource = rs.getString("resource");
+                int accessCount = rs.getInt("accessCount");
+                Timestamp createAt = rs.getTimestamp("createAt");
+                LogModel logModel = LogModel.builder().ip(ip).resource(resource).accessCount(accessCount).build();
+                logModel.setCreateAt(createAt);
+                results.add(logModel);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         } finally {
             JDBCUtil.closeConnection(connection, preparedStatement, rs);
         }
+        return results;
     }
 
     @Override

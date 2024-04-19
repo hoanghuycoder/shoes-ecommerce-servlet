@@ -40,7 +40,7 @@ public class CategoryListController extends HttpServlet {
             String action = req.getParameter("action");
             if (action!=null && action.equals("delete")){
                 Long id = Long.parseLong(req.getParameter("id"));
-                categoryService.delete(id);
+                categoryService.softDelete(id);
                 resp.sendRedirect("/admin/category/list?message=delete_success&toast=success");
             } else if (action!=null && action.equals("add")) {
                 CategoryModel categoryModel = FormUtil.toModel(CategoryModel.class,req);

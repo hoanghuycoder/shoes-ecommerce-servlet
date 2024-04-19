@@ -18,5 +18,5 @@ public class LogModel extends AbstractModel<LogModel>{
     private String resource;
     private JSONObject preValue;
     private JSONObject value;
-
+    private Integer accessCount;
 }
