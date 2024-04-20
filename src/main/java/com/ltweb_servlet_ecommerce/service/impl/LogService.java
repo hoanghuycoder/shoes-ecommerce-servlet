@@ -6,7 +6,7 @@ import com.ltweb_servlet_ecommerce.model.LogModel;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.service.ILogService;
 import com.ltweb_servlet_ecommerce.subquery.SubQuery;
-import com.ltweb_servlet_ecommerce.utils.LocationCache;
+import com.ltweb_servlet_ecommerce.cacheMemory.LocationCache;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
