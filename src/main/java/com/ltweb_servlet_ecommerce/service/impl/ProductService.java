@@ -75,4 +75,10 @@ public class ProductService implements IProductService {
         Long productId = productDAO.save(model);
         return productDAO.findById(productId);
     }
+
+    @Override
+    public ProductModel updateProductTotalView(Long id) throws SQLException {
+        productDAO.updateProductTotalView(id);
+        return productDAO.findById(id);
+    }
 }

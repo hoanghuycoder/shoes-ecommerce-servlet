@@ -29,7 +29,7 @@
                 </div>
                 <div class="input-group input-group-outline my-3">
                   <label class="form-label">Giá hiển thị</label>
-                  <input type="number" step="0.01" class="form-control" name="price" required>
+                  <input type="number" id="price"  min="500000" step="1000" class="form-control" name="price" required>
                 </div>
                 <div class="input-group input-group-static mb-4">
                   <label for="category" class="ms-0">Danh mục</label>
@@ -135,13 +135,14 @@
           const arrListSizeSelected = $(this).val();
           $('.list-price-sizes').empty();
           const objListSizeSelected = listSize.filter((size)=> arrListSizeSelected.includes(size.id))
+          const defaultPrice = $('#price').val()
           console.log(objListSizeSelected)
           for (let i = 0; i < objListSizeSelected.length ; i++) {
             const size = objListSizeSelected[i];
             $('.list-price-sizes').append(`
                 <div class="my-3">
                     <label class="form-label bg-white">Nhập giá tiền cho kích thước `+size.name+`</label>
-                    <input type="number" class="ms-3" min="10000" value="1000000" step="10000" name="sizePrice[]" required/>
+                    <input type="number" class="ms-3" min="10000" value="`+defaultPrice+`" step="1000" name="sizePrice[]" required/>
                     <input type="hidden" name="sizeIdForPrice[]" value="`+size.id+`" required/>
                   </div>
             `)

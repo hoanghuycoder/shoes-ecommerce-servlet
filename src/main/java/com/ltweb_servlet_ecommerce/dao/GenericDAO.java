@@ -10,6 +10,7 @@ import java.util.Map;
 
 public interface GenericDAO<T> {
     Map<String,Object> queryCustom(String sql,List<Object> parameters) throws SQLException;
+    int updateCustom(String sql,List<Object> parameters) throws SQLException;
     <T> List<T> queryWithSubQuery(StringBuilder sqlBuilder, RowMapper<T> rowMapper, List<SubQuery> subQueryList, String type, Class<T> modelClass, Pageble pageble) throws SQLException;
     <T> List<T> query(String sql, RowMapper<T> rowMapper, List<Object> parameters, Class<T> modelClass) throws SQLException;
     Long insert(String sql, List<Object> parameters) throws SQLException;

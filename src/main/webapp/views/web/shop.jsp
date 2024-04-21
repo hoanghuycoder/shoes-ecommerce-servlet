@@ -97,7 +97,7 @@
             if (!isDone){
                 const scrollContainer = $('#listProduct');
                 const scrollPosition = $(window).scrollTop() + $(window).height();
-                const containerPosition = scrollContainer.offset().top + 500; // Adjust as needed
+                const containerPosition = scrollContainer.offset().top + 200; // Adjust as needed
                 if (scrollPosition >= containerPosition) {
                     renderMoreProduct(productName);
                 }
