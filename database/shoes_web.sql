@@ -14,7 +14,6 @@
 
 
 -- Dumping database structure for shoes_web
-DROP DATABASE IF EXISTS `shoes_web`;
 CREATE DATABASE IF NOT EXISTS `shoes_web` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 USE `shoes_web`;
 
@@ -94,16 +93,17 @@ INSERT INTO `categories` (`id`, `name`, `code`, `createAt`, `updateAt`, `isDelet
 -- Dumping structure for table shoes_web.import_orders
 CREATE TABLE IF NOT EXISTS `import_orders` (
   `id` bigint(20) NOT NULL DEFAULT 0,
-  `supplierName` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `supplier` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `createAt` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `isDeleted` tinyint(4) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table shoes_web.import_orders: ~0 rows (approximately)
+-- Dumping data for table shoes_web.import_orders: ~2 rows (approximately)
 /*!40000 ALTER TABLE `import_orders` DISABLE KEYS */;
-INSERT INTO `import_orders` (`id`, `supplierName`, `createAt`, `isDeleted`) VALUES
-	(1, 'Supplier XYZ', '2024-04-07 19:04:52', 0);
+INSERT INTO `import_orders` (`id`, `supplier`, `createAt`, `isDeleted`) VALUES
+	(1, 'Supplier XYZ', '2024-04-20 17:40:06', 0),
+	(2, 'ZX', '2024-04-20 17:40:06', 0);
 /*!40000 ALTER TABLE `import_orders` ENABLE KEYS */;
 
 -- Dumping structure for table shoes_web.import_order_details
@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `import_order_details` (
   `importOrderId` bigint(20) NOT NULL,
   `productSizeId` bigint(20) NOT NULL,
   `quantityImport` int(11) NOT NULL DEFAULT 0,
-  `priceImport` decimal(20,1) NOT NULL DEFAULT 0.0,
+  `priceImport` double(15,1) NOT NULL DEFAULT 0.0,
   `isDeleted` tinyint(4) DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `FK__product` (`productSizeId`) USING BTREE,
@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `import_order_details` (
   CONSTRAINT `FK_import_order_details_product_sizes` FOREIGN KEY (`productSizeId`) REFERENCES `product_sizes` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table shoes_web.import_order_details: ~55 rows (approximately)
+-- Dumping data for table shoes_web.import_order_details: ~56 rows (approximately)
 /*!40000 ALTER TABLE `import_order_details` DISABLE KEYS */;
 INSERT INTO `import_order_details` (`id`, `importOrderId`, `productSizeId`, `quantityImport`, `priceImport`, `isDeleted`) VALUES
 	(2, 1, 1, 10, 918000.0, 0),
@@ -178,7 +178,9 @@ INSERT INTO `import_order_details` (`id`, `importOrderId`, `productSizeId`, `qua
 	(53, 1, 53, 10, 1944000.0, 0),
 	(54, 1, 54, 10, 1953000.0, 0),
 	(55, 1, 55, 10, 1962000.0, 0),
-	(56, 1, 56, 10, 1971000.0, 0);
+	(56, 1, 56, 10, 1971000.0, 0),
+	(57, 2, 1, 1, 1000000.0, 0),
+	(58, 2, 2, 2, 1000000.0, 0);
 /*!40000 ALTER TABLE `import_order_details` ENABLE KEYS */;
 
 -- Dumping structure for table shoes_web.logs
@@ -195,9 +197,9 @@ CREATE TABLE IF NOT EXISTS `logs` (
   `updateAt` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `isDeleted` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=599 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=650 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table shoes_web.logs: ~44 rows (approximately)
+-- Dumping data for table shoes_web.logs: ~71 rows (approximately)
 /*!40000 ALTER TABLE `logs` DISABLE KEYS */;
 INSERT INTO `logs` (`id`, `ip`, `location`, `level`, `action`, `resource`, `preValue`, `value`, `createAt`, `updateAt`, `isDeleted`) VALUES
 	(466, '14.187.164.148', 'Ho Chi Minh City,<br/>Viet Nam', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:72', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-18 20:08:01', '2024-04-18 22:36:05', 0),
@@ -218,12 +220,63 @@ INSERT INTO `logs` (`id`, `ip`, `location`, `level`, `action`, `resource`, `preV
 	(546, '203.122.58.18', 'Gurgaon,<br/>India', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.CartController:70', NULL, '{"status":"Access the path http://localhost:8080/cart"}', '2024-04-18 23:26:10', '2024-04-18 23:26:10', 0),
 	(547, '203.122.58.18', 'Gurgaon,<br/>India', 'WARN', 'UPDATE', 'com.ltweb_servlet_ecommerce.service.impl.UserService:94', '{"value":{"lastLogged":"2024-04-18 23:13:38.0"}}', '{"value":{"lastLogged":"2024-04-18 23:26:26.0"},"status":"UpdatedAt and lastLogged fields successfully updated"}', '2024-04-18 23:26:26', '2024-04-18 23:26:26', 0),
 	(548, '203.122.58.18', 'Gurgaon,<br/>India', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.LoginController:67', NULL, '{"value":{"id":14,"email":"vophihoang252003@gmail.com"},"status":"Authentication successful"}', '2024-04-18 23:26:26', '2024-04-18 23:26:28', 0),
-	(578, '8.8.4.4', NULL, NULL, NULL, 'com.ltweb_servlet_ecommerce.service.impl.UserService:94', NULL, NULL, '2024-04-19 22:54:44', '2024-04-19 22:54:44', NULL),
-	(579, '8.8.4.4', NULL, NULL, NULL, 'com.ltweb_servlet_ecommerce.service.impl.UserService:94', NULL, NULL, '2024-04-19 22:54:44', '2024-04-19 22:54:44', NULL),
-	(580, '8.8.4.4', NULL, NULL, NULL, 'com.ltweb_servlet_ecommerce.service.impl.UserService:94', NULL, NULL, '2024-04-19 22:54:44', '2024-04-19 22:54:44', NULL),
-	(581, '5.6.7.8', NULL, NULL, NULL, 'com.ltweb_servlet_ecommerce.controller.web.shared.LoginController:67', NULL, NULL, '2024-04-19 22:54:44', '2024-04-19 22:54:44', NULL),
-	(582, '5.6.7.8', NULL, NULL, NULL, 'com.ltweb_servlet_ecommerce.controller.web.shared.LoginController:67', NULL, NULL, '2024-04-19 22:54:44', '2024-04-19 22:54:44', NULL),
-	(583, '5.6.7.8', NULL, NULL, NULL, 'com.ltweb_servlet_ecommerce.controller.web.shared.LoginController:67', NULL, NULL, '2024-04-19 22:54:44', '2024-04-19 22:54:44', NULL);
+	(578, '8.8.4.4', NULL, NULL, NULL, 'com.ltweb_servlet_ecommerce.service.impl.UserService:94', NULL, NULL, '2024-04-20 15:56:37', '2024-04-20 15:56:37', NULL),
+	(579, '8.8.4.4', NULL, NULL, NULL, 'com.ltweb_servlet_ecommerce.service.impl.UserService:94', NULL, NULL, '2024-04-20 15:56:37', '2024-04-20 15:56:37', NULL),
+	(580, '8.8.4.4', NULL, NULL, NULL, 'com.ltweb_servlet_ecommerce.service.impl.UserService:94', NULL, NULL, '2024-04-20 15:56:37', '2024-04-20 15:56:37', NULL),
+	(581, '5.6.7.8', NULL, NULL, NULL, 'com.ltweb_servlet_ecommerce.controller.web.shared.LoginController:67', NULL, NULL, '2024-04-20 15:56:39', '2024-04-20 15:56:54', NULL),
+	(582, '5.6.7.8', NULL, NULL, NULL, 'com.ltweb_servlet_ecommerce.controller.web.shared.LoginController:67', NULL, NULL, '2024-04-20 15:56:37', '2024-04-20 15:56:37', NULL),
+	(583, '5.6.7.8', NULL, NULL, NULL, 'com.ltweb_servlet_ecommerce.controller.web.shared.LoginController:67', NULL, NULL, '2024-04-20 15:56:37', '2024-04-20 15:56:37', NULL),
+	(599, '127.0.0.1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:39:00', '2024-04-20 09:39:05', 0),
+	(600, '127.0.0.1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:39:01', '2024-04-20 09:39:05', 0),
+	(601, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:39:03', '2024-04-20 09:39:06', 0),
+	(602, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:39:27', '2024-04-20 09:39:27', 0),
+	(603, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:39:28', '2024-04-20 09:39:30', 0),
+	(604, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:39:37', '2024-04-20 09:39:37', 0),
+	(605, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:39:37', '2024-04-20 09:39:40', 0),
+	(606, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:39:37', '2024-04-20 09:39:40', 0),
+	(607, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:39:38', '2024-04-20 09:39:40', 0),
+	(608, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:39:38', '2024-04-20 09:39:40', 0),
+	(609, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:39:38', '2024-04-20 09:39:40', 0),
+	(610, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:39:38', '2024-04-20 09:39:40', 0),
+	(611, '127.0.0.1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:42:24', '2024-04-20 09:42:27', 0),
+	(612, '127.0.0.1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:42:25', '2024-04-20 09:42:27', 0),
+	(613, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:42:25', '2024-04-20 09:42:27', 0),
+	(614, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:42:27', '2024-04-20 09:42:27', 0),
+	(615, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:42:27', '2024-04-20 09:42:30', 0),
+	(616, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:42:28', '2024-04-20 09:42:30', 0),
+	(617, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:42:28', '2024-04-20 09:42:30', 0),
+	(618, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:42:28', '2024-04-20 09:42:30', 0),
+	(619, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:42:29', '2024-04-20 09:42:30', 0),
+	(620, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:42:29', '2024-04-20 09:42:30', 0),
+	(621, '127.0.0.1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:44:02', '2024-04-20 09:44:05', 0),
+	(622, '127.0.0.1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:44:03', '2024-04-20 09:44:05', 0),
+	(623, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:44:03', '2024-04-20 09:44:05', 0),
+	(624, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:44:05', '2024-04-20 09:44:07', 0),
+	(625, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:44:05', '2024-04-20 09:44:07', 0),
+	(626, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:44:05', '2024-04-20 09:44:07', 0),
+	(627, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:44:06', '2024-04-20 09:44:07', 0),
+	(628, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:44:06', '2024-04-20 09:44:07', 0),
+	(629, '127.0.0.1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:47:26', '2024-04-20 09:47:29', 0),
+	(630, '127.0.0.1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:47:27', '2024-04-20 09:47:30', 0),
+	(631, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:47:27', '2024-04-20 09:47:30', 0),
+	(632, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:47:31', '2024-04-20 09:47:31', 0),
+	(633, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:47:31', '2024-04-20 09:47:31', 0),
+	(634, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:47:31', '2024-04-20 09:47:32', 0),
+	(635, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:47:32', '2024-04-20 09:47:34', 0),
+	(636, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:47:32', '2024-04-20 09:47:34', 0),
+	(637, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:47:32', '2024-04-20 09:47:34', 0),
+	(638, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:47:33', '2024-04-20 09:47:34', 0),
+	(639, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:47:33', '2024-04-20 09:47:34', 0),
+	(640, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:47:33', '2024-04-20 09:47:34', 0),
+	(641, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:47:34', '2024-04-20 09:47:34', 0),
+	(642, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:47:34', '2024-04-20 09:47:36', 0),
+	(643, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:47:34', '2024-04-20 09:47:36', 0),
+	(644, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 09:47:34', '2024-04-20 09:47:36', 0),
+	(645, '127.0.0.1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 16:39:31', '2024-04-20 16:39:33', 0),
+	(646, '127.0.0.1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 16:39:31', '2024-04-20 16:39:33', 0),
+	(647, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.HomeController:43', NULL, '{"status":"Access the path http://localhost:8080/home"}', '2024-04-20 16:39:32', '2024-04-20 16:39:33', 0),
+	(648, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'WARN', 'UPDATE', 'com.ltweb_servlet_ecommerce.service.impl.UserService:94', '{"value":{"lastLogged":"2024-04-19 15:58:46.0"}}', '{"value":{"lastLogged":"2024-04-20 16:39:42.0"},"status":"UpdatedAt and lastLogged fields successfully updated"}', '2024-04-20 16:39:42', '2024-04-20 16:39:42', 0),
+	(649, '0:0:0:0:0:0:0:1', 'null , <br/>null', 'INFO', 'SELECT', 'com.ltweb_servlet_ecommerce.controller.web.shared.LoginController:67', NULL, '{"value":{"id":14,"email":"vophihoang252003@gmail.com"},"status":"Authentication successful"}', '2024-04-20 16:39:42', '2024-04-20 16:39:44', 0);
 /*!40000 ALTER TABLE `logs` ENABLE KEYS */;
 
 -- Dumping structure for table shoes_web.opinions
@@ -561,7 +614,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 INSERT INTO `users` (`id`, `userName`, `email`, `password`, `fullName`, `birthDay`, `association`, `lastLogged`, `roleId`, `createAt`, `updateAt`, `isDeleted`) VALUES
 	(6, 'hoanghuydev', 'tranvohoanghuy12ab@gmail.com', '$2a$12$n1ZRw5rmlRGU0uqK6USVR.p8i66degNqeanwUZK9j0hdgDF8gfvVm', 'Tran Vo Hoang Huy', NULL, 'none', '2024-04-06 18:14:15', 1, '2023-12-27 15:23:38', '2024-04-06 18:14:15', 0),
 	(8, '111635119529567317993', '21130386@st.hcmuaf.edu.vn', NULL, 'Trần Võ Hoàng Huy', NULL, 'google', '2024-04-06 18:21:10', 2, '2023-12-28 11:21:13', '2024-04-06 18:21:10', 0),
-	(14, 'a', 'vophihoang252003@gmail.com', '$2a$12$9szEjqLykjaQVvPTnccyRuPLqAfBwCUMRNut8OECjLXLS4HW0LyiG', 'Vo Hoang', NULL, 'none', '2024-04-19 15:58:46', 1, '2024-03-13 15:14:47', '2024-04-19 15:58:46', 0),
+	(14, 'a', 'vophihoang252003@gmail.com', '$2a$12$9szEjqLykjaQVvPTnccyRuPLqAfBwCUMRNut8OECjLXLS4HW0LyiG', 'Vo Hoang', NULL, 'none', '2024-04-21 16:55:40', 1, '2024-03-13 15:14:47', '2024-04-21 16:55:40', 0),
 	(16, 'b', 'vophihoang@gmail.com', '$2a$12$9szEjqLykjaQVvPTnccyRuPLqAfBwCUMRNut8OECjLXLS4HW0LyiG', 'Vo Hoang', NULL, 'none', '2024-04-07 19:15:04', 3, '2024-03-13 15:14:47', '2024-04-07 19:15:05', 0),
 	(17, 'zxc', '21130363@st.hcmuaf.edu.vn', '$2a$12$TxpeSfw/IbB2lQQBKRL1xOPAouLae87JhEYs7uodTc.CZA5G.57Ea', 'Phi Nhan', NULL, 'none', '2024-04-19 15:42:01', 3, '2024-04-19 15:42:01', '2024-04-19 16:24:13', 1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;

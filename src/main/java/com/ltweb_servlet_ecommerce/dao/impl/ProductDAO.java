@@ -9,15 +9,22 @@ import com.ltweb_servlet_ecommerce.mapper.impl.ProductMapper;
 import com.ltweb_servlet_ecommerce.model.ProductModel;
 import com.ltweb_servlet_ecommerce.model.ProductModel;
 import com.ltweb_servlet_ecommerce.model.ProductModel;
+import com.ltweb_servlet_ecommerce.model.SizeModel;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.subquery.SubQuery;
+import com.ltweb_servlet_ecommerce.utils.JDBCUtil;
 import com.ltweb_servlet_ecommerce.utils.SqlPagebleUtil;
 import org.apache.commons.lang3.StringUtils;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO {
     @Override
@@ -90,5 +97,27 @@ public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO
     @Override
     public Map<String, Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException {
         return queryCustom(sql,params);
+    }
+
+    @Override
+    public Map<Long, ProductModel> findProductsByProductSizeIds(List<Long> productSizeIds) {
+        Map<Long, ProductModel> result = new HashMap<>();
+        String sql = "SELECT ps.id AS productSizeId, p.id, p.name FROM products p " +
+                "INNER JOIN product_sizes ps ON p.id = ps.productId WHERE ps.id IN (" +
+                productSizeIds.stream().map(Object::toString).collect(Collectors.joining(",")) + ")";
+        try (Connection connection = JDBCUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                long productSizeId = resultSet.getLong("productSizeId");
+                ProductModel productModel = new ProductModel();
+                productModel.setId(resultSet.getLong("id"));
+                productModel.setName(resultSet.getString("name"));
+                result.put(productSizeId, productModel);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

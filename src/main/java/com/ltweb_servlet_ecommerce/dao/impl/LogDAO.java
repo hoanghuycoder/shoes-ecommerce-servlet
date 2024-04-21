@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Dependent
-@Alternative
+//@Dependent
+//@Alternative
 public class LogDAO extends AbstractDAO<LogModel> implements ILogDAO {
 
     @Override
@@ -103,7 +103,7 @@ public class LogDAO extends AbstractDAO<LogModel> implements ILogDAO {
                 "FROM logs " +
                 "WHERE createAt > DATE_SUB(NOW() , INTERVAL 1 MINUTE) " +
                 "GROUP BY ip, resource, createAt " +
-                "HAVING COUNT(ip) > 2";
+                "HAVING COUNT(ip) > 10";
         try {
             connection = JDBCUtil.getConnection();
             preparedStatement = connection.prepareStatement(sql);
