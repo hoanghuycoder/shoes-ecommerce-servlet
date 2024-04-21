@@ -74,6 +74,7 @@ public class ProductListController  extends HttpServlet {
         ));
         cloudinary.config.secure = true;
         try {
+
             ProductModel productModel = FormUtil.toModel(ProductModel.class,req);
             Part thumbnailPart = req.getPart("thumbnailProduct");
             String thumbnailProduct = encodeFileToBase64(thumbnailPart);
@@ -83,10 +84,14 @@ public class ProductListController  extends HttpServlet {
             productModel = productService.save(productModel);
             if (productModel!=null) {
                 String[] sizesId = req.getParameterValues("sizeId[]");
-                for (String sizeId : sizesId) {
+                String[] listSizePrice = req.getParameterValues("sizePrice[]");
+                for (int i = 0; i < sizesId.length; i++) {
+                    String sizeId = sizesId[i];
+                    String price = listSizePrice[i];
                     ProductSizeModel productSizeModel = new ProductSizeModel();
                     productSizeModel.setProductId(productModel.getId());
                     productSizeModel.setSizeId(Long.parseLong(sizeId));
+                    productSizeModel.setPrice(Double.parseDouble(price));
                     productSizeModel = productSizeService.save(productSizeModel);
                     if (productSizeModel==null) {
                         resp.sendRedirect("/admin/product/list?message=error&toast=danger");

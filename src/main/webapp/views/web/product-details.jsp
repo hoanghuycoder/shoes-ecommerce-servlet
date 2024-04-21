@@ -83,7 +83,7 @@
                         </div>
                         <p class="text-muted" style="font-size: 16px; font-weight: 600;">Loại: <span>${CATEGORY.name}</span></p>
                         <div class="mb-3">
-                            <span class="h5 product-price">$${MODEL.price}</span>
+                            <span class="h5 product-price"><fmt:formatNumber type="currency" value="${MODEL.price}"/></span>
                             <span class="text-muted">/per shoes</span>
                         </div>
 
@@ -215,7 +215,8 @@
             function updatePriceWhenChangeSize() {
                 const sizeId =  $("#sizeId").val();
                 const productSizePrice =listProductSize.filter((productSize) => productSize.sizeId+'' ==sizeId)[0];
-                $(".product-price").text("$"+productSizePrice.price)
+                console.log(productSizePrice)
+                $(".product-price").text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(productSizePrice.price));
             }
             $("#sizeId").on("change",function () {
                 updatePriceWhenChangeSize();
