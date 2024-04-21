@@ -28,7 +28,7 @@
                   <input type="text" class="form-control" name="shortDescription" required/>
                 </div>
                 <div class="input-group input-group-outline my-3">
-                  <label class="form-label">Giá</label>
+                  <label class="form-label">Giá hiển thị</label>
                   <input type="number" step="0.01" class="form-control" name="price" required>
                 </div>
                 <div class="input-group input-group-static mb-4">
@@ -40,6 +40,7 @@
                    </c:forEach>
                   </select>
                 </div>
+
                 <div class="input-group input-group-static mb-4">
                   <label for="size" class="ms-0">Kích thước</label>
                   <select multiple class="form-control" id="size" name="sizeId[]" required>
@@ -47,6 +48,9 @@
                       <option value="${size_item.id}">${size_item.name}</option>
                     </c:forEach>
                   </select>
+                </div>
+                <div class="list-price-sizes">
+
                 </div>
                 <div class="input-group input-group-static mb-4">
                   <label for="thumbnailProduct" class="me-2">Ảnh bia sản phẩm:</label>
@@ -121,6 +125,28 @@
     </div>
     <script>
       window.addEventListener("DOMContentLoaded", function () {
+        // handle change size
+        const listSize = [
+          <c:forEach items="${LIST_SIZE}" var="item" varStatus="loop">
+          {id: '${item.id}', name: '${item.name}'}<c:if test="${!loop.last}">,</c:if>
+          </c:forEach>
+        ];
+        $('#size').change(function (){
+          const arrListSizeSelected = $(this).val();
+          $('.list-price-sizes').empty();
+          const objListSizeSelected = listSize.filter((size)=> arrListSizeSelected.includes(size.id))
+          console.log(objListSizeSelected)
+          for (let i = 0; i < objListSizeSelected.length ; i++) {
+            const size = objListSizeSelected[i];
+            $('.list-price-sizes').append(`
+                <div class="my-3">
+                    <label class="form-label bg-white">Nhập giá tiền cho kích thước `+size.name+`</label>
+                    <input type="number" class="ms-3" min="10000" value="1000000" step="10000" name="sizePrice[]" required/>
+                    <input type="hidden" name="sizeIdForPrice[]" value="`+size.id+`" required/>
+                  </div>
+            `)
+          }
+        })
         ClassicEditor
                 .create( document.querySelector( '#content' ))
                 .catch( error => {
