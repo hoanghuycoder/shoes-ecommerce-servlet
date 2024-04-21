@@ -1,8 +1,10 @@
 package com.ltweb_servlet_ecommerce.model;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString
 public class ProductModel extends  AbstractModel<ProductModel> {
     private String name;
     private String content;

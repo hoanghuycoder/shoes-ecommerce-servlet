@@ -210,6 +210,11 @@
     </c:if>
     <script !src="">
         window.addEventListener("DOMContentLoaded",function (){
+            // Update total view product to stat
+            $.ajax({
+                url : '/product/view/${MODEL.id}',
+                method : 'POST'
+            })
             // Update price
             const listProductSize = JSON.parse(('${LIST_PRODUCT_SIZE}'));
             function updatePriceWhenChangeSize() {
@@ -515,6 +520,7 @@
 <%--Socket Opinion Real-time--%>
 <script>
     window.addEventListener("DOMContentLoaded",function (){
+
         $(".item-thumb").hover(function (){
             const idMainImage = $(this).attr("data-bs-mainimageproduct");
             $(".preview-image-product").css("display","none");

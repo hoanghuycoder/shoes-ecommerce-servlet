@@ -21,5 +21,5 @@ public interface IProductDAO {
     void delete(Long id) throws SQLException;
     Map<String,Object> findWithCustomSQL(String sql,List<Object> params) throws SQLException;
     Map<Long, ProductModel> findProductsByProductSizeIds(List<Long> productSizeIds);
-
+    void updateProductTotalView(Long id) throws SQLException;
 }

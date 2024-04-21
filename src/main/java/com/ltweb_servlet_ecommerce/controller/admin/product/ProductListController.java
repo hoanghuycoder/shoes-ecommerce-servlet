@@ -114,7 +114,7 @@ public class ProductListController  extends HttpServlet {
                         }
                     } else if (part.getName().equals("model")) {
                         if (part!=null) {
-                            productModel.setModelUrl(uploadFileToFirebase(part));
+                            productModel.setModelUrl("");
                             productModel = productService.update(productModel);
                         }
                     }
@@ -124,6 +124,7 @@ public class ProductListController  extends HttpServlet {
                 resp.sendRedirect("/admin/product/list?message=error&toast=danger");
             }
         } catch ( Exception e) {
+            System.out.println(e.getMessage());
             resp.sendRedirect("/admin/product/list?message=error&toast=danger");
         }
     }
