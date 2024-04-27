@@ -5,7 +5,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Logs</title>
+    <title>Nhật ký</title>
 </head>
 <body>
 <div class="row">
@@ -13,7 +13,7 @@
         <div class="card my-4">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                 <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-                    <h6 class="text-white text-capitalize ps-3">Logs Table</h6>
+                    <h6 class="text-white text-capitalize ps-3">Bảng nhật ký</h6>
                 </div>
             </div>
             <div class="card-body px-0 pb-2">
@@ -33,11 +33,12 @@
                                 </label>
                             </th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">IP</th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">LEVEL</th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">ACTION</th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 text-center">PREVIOUS VALUE</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">VALUE</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Create At</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Quốc gia</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Cấp độ</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Hành động</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 text-center">Giá trị cũ</th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Giá trị mới</th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Thời gian tạo</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -52,6 +53,11 @@
                                 <td>
                                     <div class="d-flex text-center">
                                         <p class="text-xs font-weight-bold mx-auto mb-0">${item.ip}</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex text-center">
+                                        <p class="text-xs font-weight-bold mx-auto mb-0">${item.location}</p>
                                     </div>
                                 </td>
                                 <td>
@@ -105,6 +111,7 @@
     window.addEventListener("DOMContentLoaded",function (){
         $(document).ready(function(){
             new DataTable('#dataTable', {
+                order: [[7, 'desc']],
                 pagingType: 'simple_numbers',
                 language: {
                     paginate: {
@@ -122,14 +129,14 @@
 
             $('#btnDelete').on('click', function () {
                 Swal.fire({
-                    title: "Delete ?",
-                    text: "Do you want to delete these logs ?",
+                    title: "Xóa ?",
+                    text: "Bạn có muốn xóa những nhật ký này?",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",
                     cancelButtonColor: "#d33",
-                    cancelButtonText: "Cancel",
-                    confirmButtonText: "Yes"
+                    cancelButtonText: "Hủy",
+                    confirmButtonText: "Xóa"
                 }).then((result) => {
                     if (result.isConfirmed) {
                         var ids = [];
@@ -148,7 +155,7 @@
                             success: function (response) {
                                 Swal.fire({
                                     icon: "success",
-                                    title: "Successfully",
+                                    title: "Thành công",
                                     toast: true,
                                     position: "top-end",
                                     showConfirmButton: false,
@@ -167,7 +174,7 @@
                                 console.log('that bai')
                                 Swal.fire({
                                     icon: "warning",
-                                    title: "Failed!",
+                                    title: "Có lỗi xảy ra!",
                                     toast: true,
                                     position: "top-end",
                                     showConfirmButton: false,

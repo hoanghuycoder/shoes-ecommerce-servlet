@@ -51,7 +51,7 @@ public class UserService implements IUserService {
     @Override
     public UserModel findWithFilter(UserModel model) throws SQLException {
         UserModel user = userDAO.findWithFilter(model);
-        if (user != null) {
+        if (user!=null) {
             RoleModel role = roleDAO.findById(user.getRoleId());
             user.setRole(role);
         }
@@ -78,16 +78,17 @@ public class UserService implements IUserService {
         userDAO.update(model);
         UserModel newModel = findById(model.getId());
         LinkedHashMap<String, String>[] results = ObjectComparator.compareObjects(oldModel, newModel);
+
         // Logging
         JSONObject preValue = new JSONObject();
         JSONObject preValueObject = new JSONObject(results[0]);
-        JSONObjectUtil.removeKeys(preValueObject, List.of("password","userName"));
+        JSONObjectUtil.removeKeys(preValueObject, List.of("password","userName","role"));
         preValue.put(SystemConstant.VALUE_LOG, preValueObject);
 
         JSONObject value = new JSONObject();
         value.put(SystemConstant.STATUS_LOG, "UpdatedAt and lastLogged fields successfully updated");
         JSONObject valueObject = new JSONObject(results[1]);
-        JSONObjectUtil.removeKeys(valueObject, List.of("password","userName"));
+        JSONObjectUtil.removeKeys(valueObject, List.of("password","userName","role"));
         value.put(SystemConstant.VALUE_LOG, valueObject);
 
         LoggerHelper.log(SystemConstant.WARN_LEVEL, "UPDATE", RuntimeInfo.getCallerClassNameAndLineNumber(), preValue, value);
@@ -120,8 +121,10 @@ public class UserService implements IUserService {
     @Override
     public UserModel findById(Long id) throws SQLException {
         UserModel user = userDAO.findById(id);
-        RoleModel role = roleDAO.findById(user.getRoleId());
-        user.setRole(role);
+        if (user!=null) {
+            RoleModel role = roleDAO.findById(user.getRoleId());
+            user.setRole(role);
+        }
         return user;
     }
 

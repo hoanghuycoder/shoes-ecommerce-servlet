@@ -55,7 +55,6 @@ public class CartController extends HttpServlet {
                 CartModel cartModelSql = new CartModel();
                 cartModelSql.setUserId(user.getId());
                 List<CartModel> cartModelList = cartService.findAllWithFilter(cartModelSql, null);
-//                List<OrderDetailsModel> orderDetailsModelList = new ArrayList<>();
                 List<ProductModel> productModelList = new ArrayList<>();
                 for (CartModel cart : cartModelList) {
                     OrderDetailsModel orderDetailsModel = orderDetailsService.findById(cart.getOrderDetailsId());

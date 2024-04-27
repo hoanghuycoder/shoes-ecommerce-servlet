@@ -11,7 +11,7 @@ import java.util.Map;
 
 public interface IProductSizeService {
     List<ProductSizeModel> findAllWithFilter(ProductSizeModel model, Pageble pageble) throws SQLException;
-    ProductSizeModel findWithFilter(ProductSizeModel model) throws SQLException;
+    ProductSizeModel findWithFilter(ProductSizeModel model) ;
     List<ProductSizeModel> findByColumnValues(List<SubQuery> subQueryList,Pageble pageble) throws SQLException;
     ProductSizeModel save(ProductSizeModel model) throws SQLException;
     ProductSizeModel delete(Long id) throws SQLException;
@@ -19,5 +19,6 @@ public interface IProductSizeService {
     ProductSizeModel findById(Long id) throws SQLException;
     List<ProductSizeModel> findAll(Pageble pageble) throws SQLException;
     ProductSizeModel softDelete(Long id) throws SQLException;
+    int getAvailableProducts(Long productSizeId);
     Map<String,Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException;
 }

@@ -79,12 +79,14 @@
                                 </div>
                                 <span class="ms-1 text-primary averageRating">5</span>
                             </div>
-                            <span class="text-muted">${CATEGORY.name}</span>
+<%--                            <span class="text-muted">${CATEGORY.name}</span>--%>
                         </div>
-
+                        <p class="text-muted" style="font-size: 16px; font-weight: 600;">Loại: <span>${CATEGORY.name}</span></p>
                         <div class="mb-3">
+
                             <span class="h5">${MODEL.price} đ</span>
                             <span class="text-muted">/ đôi</span>
+
                         </div>
 
                         <c:out value="${MODEL.content}" escapeXml="false"/>
@@ -100,9 +102,11 @@
                                 </div>
                                 <input type="hidden" name="productId" value="${MODEL.id}">
                             </div>
+
                             <button class="btn btn-warning shadow-0" id="buyNow"> Mua ngay </button>
                             <button  class="btn btn-primary shadow-0" id="addToCart"> <i class="me-1 fa fa-shopping-basket"></i> Thêm vào giỏ hàng </button>
                             <a href="#" class="btn btn-light border border-secondary py-2 icon-hover px-3"> <i class="me-1 fa fa-heart fa-lg"></i> Lưu </a>
+
                     </div>
                 </main>
             </div>
@@ -205,6 +209,55 @@
     </c:if>
     <script !src="">
         window.addEventListener("DOMContentLoaded",function (){
+            // Update total view product to stat
+            $.ajax({
+                url : '/product/view/${MODEL.id}',
+                method : 'POST'
+            })
+            // Update price
+            const listProductSize = JSON.parse(('${LIST_PRODUCT_SIZE}'));
+            function updatePriceWhenChangeSize() {
+                const sizeId =  $("#sizeId").val();
+                const productSizePrice =listProductSize.filter((productSize) => productSize.sizeId+'' ==sizeId)[0];
+                console.log(productSizePrice)
+                $(".product-price").text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(productSizePrice.price));
+            }
+            $("#sizeId").on("change",function () {
+                updatePriceWhenChangeSize();
+                checkQuantity();
+            })
+            updatePriceWhenChangeSize();
+
+
+            // checking quantity in DB
+            const checkQuantity = ()=> {
+                const sizeId = parseInt($("#sizeId").val());
+                $.ajax({
+                    url : '<c:url value="/ajax/product-quantity"/>',
+                    type : 'GET',
+                    data : {
+                        productId: ${MODEL.id},
+                        sizeId: sizeId
+                    },
+                    success : function (data) {
+                        const inStockElement = $('#inOfStock');
+                        const outStockElement = $('#outOfStock');
+                        if(data > 0) {
+                            inStockElement.show();
+                            outStockElement.hide();
+                        }else {
+                            outStockElement.show();
+                            inStockElement.hide();
+                        }
+                    },
+                    error : function (e) {
+                        console.log('error', e)
+                    }
+                })
+            }
+            checkQuantity();
+
+
 
             const maxPageItemOpinion = 3;
             let totalCurrentItem = 0;
@@ -466,6 +519,7 @@
 <%--Socket Opinion Real-time--%>
 <script>
     window.addEventListener("DOMContentLoaded",function (){
+
         $(".item-thumb").hover(function (){
             const idMainImage = $(this).attr("data-bs-mainimageproduct");
             $(".preview-image-product").css("display","none");

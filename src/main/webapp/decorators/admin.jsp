@@ -39,65 +39,65 @@
         </div>
 
     </main>
-<%@ include file="/common/admin/plugin-setting.jsp" %>
-<div class="position-fixed top-5 end-1 z-index-2">
-    <div class="toast fade hide p-2 bg-white" role="alert" aria-live="assertive" id="successToast" aria-atomic="true">
-        <div class="toast-header border-0">
-            <i class="material-icons text-success me-2">
-                check
-            </i>
-            <span class="me-auto font-weight-bold" id="successToastTitle">Material Dashboard </span>
-            <small class="text-body" id="successToastTimeAgo">11 mins ago</small>
-            <i class="fas fa-times text-md ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>
-        </div>
-        <hr class="horizontal dark m-0">
-        <div class="toast-body" id="successToastMessage">
-            Hello, world! This is a notification message.
-        </div>
-    </div>
-    <div class="toast fade hide p-2 mt-2 bg-gradient-info" role="alert" aria-live="assertive" id="infoToast" aria-atomic="true">
-        <div class="toast-header bg-transparent border-0">
-            <i class="material-icons text-white me-2">
-                notifications
-            </i>
-            <span class="me-auto text-white font-weight-bold" id="infoToastTitle">Material Dashboard </span>
-            <small class="text-white" id="infoToastTimeAgo">11 mins ago</small>
-            <i class="fas fa-times text-md text-white ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>
-        </div>
-        <hr class="horizontal light m-0">
-        <div class="toast-body text-white" id="infoToastMessage">
-            Hello, world! This is a notification message.
-        </div>
-    </div>
-    <div class="toast fade hide p-2 mt-2 bg-white" role="alert" aria-live="assertive" id="warningToast" aria-atomic="true">
-        <div class="toast-header border-0">
-            <i class="material-icons text-warning me-2">
-                travel_explore
-            </i>
-            <span class="me-auto font-weight-bold" id="warningToastTitle"> </span>
-            <small class="text-body" id="warningToastTimeAgo">11 mins ago</small>
-            <i class="fas fa-times text-md ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>
-        </div>
-        <hr class="horizontal dark m-0">
-        <div class="toast-body" id="warningToastMessage">
-            Hello, world! This is a notification message.
-        </div>
-    </div>
-    <div class="toast fade hide p-2 mt-2 bg-white" role="alert" aria-live="assertive" id="dangerToast" aria-atomic="true">
-        <div class="toast-header border-0">
-            <i class="material-icons text-danger me-2">
-                campaign
-            </i>
-            <span class="me-auto text-gradient text-danger font-weight-bold" id="dangerToastTitle">Material Dashboard </span>
-            <small class="text-body" id="dangerToastTimeAgo">11 mins ago</small>
-            <i class="fas fa-times text-md ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>
-        </div>
-        <hr class="horizontal dark m-0">
-        <div class="toast-body" id="dangerToastMessage">
-            Hello, world! This is a notification message.
-        </div>
-    </div>
-</div>
+<%--<%@ include file="/common/admin/plugin-setting.jsp" %>--%>
+<%--<div class="position-fixed top-5 end-1 z-index-2">--%>
+<%--    <div class="toast fade hide p-2 bg-white" role="alert" aria-live="assertive" id="successToast" aria-atomic="true">--%>
+<%--        <div class="toast-header border-0">--%>
+<%--            <i class="material-icons text-success me-2">--%>
+<%--                check--%>
+<%--            </i>--%>
+<%--            <span class="me-auto font-weight-bold" id="successToastTitle">Material Dashboard </span>--%>
+<%--            <small class="text-body" id="successToastTimeAgo">11 mins ago</small>--%>
+<%--            <i class="fas fa-times text-md ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>--%>
+<%--        </div>--%>
+<%--        <hr class="horizontal dark m-0">--%>
+<%--        <div class="toast-body" id="successToastMessage">--%>
+<%--            Hello, world! This is a notification message.--%>
+<%--        </div>--%>
+<%--    </div>--%>
+<%--    <div class="toast fade hide p-2 mt-2 bg-gradient-info" role="alert" aria-live="assertive" id="infoToast" aria-atomic="true">--%>
+<%--        <div class="toast-header bg-transparent border-0">--%>
+<%--            <i class="material-icons text-white me-2">--%>
+<%--                notifications--%>
+<%--            </i>--%>
+<%--            <span class="me-auto text-white font-weight-bold" id="infoToastTitle">Material Dashboard </span>--%>
+<%--            <small class="text-white" id="infoToastTimeAgo">11 mins ago</small>--%>
+<%--            <i class="fas fa-times text-md text-white ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>--%>
+<%--        </div>--%>
+<%--        <hr class="horizontal light m-0">--%>
+<%--        <div class="toast-body text-white" id="infoToastMessage">--%>
+<%--            Hello, world! This is a notification message.--%>
+<%--        </div>--%>
+<%--    </div>--%>
+<%--    <div class="toast fade hide p-2 mt-2 bg-white" role="alert" aria-live="assertive" id="warningToast" aria-atomic="true">--%>
+<%--        <div class="toast-header border-0">--%>
+<%--            <i class="material-icons text-warning me-2">--%>
+<%--                travel_explore--%>
+<%--            </i>--%>
+<%--            <span class="me-auto font-weight-bold" id="warningToastTitle"> </span>--%>
+<%--            <small class="text-body" id="warningToastTimeAgo">11 mins ago</small>--%>
+<%--            <i class="fas fa-times text-md ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>--%>
+<%--        </div>--%>
+<%--        <hr class="horizontal dark m-0">--%>
+<%--        <div class="toast-body" id="warningToastMessage">--%>
+<%--            Hello, world! This is a notification message.--%>
+<%--        </div>--%>
+<%--    </div>--%>
+<%--    <div class="toast fade hide p-2 mt-2 bg-white" role="alert" aria-live="assertive" id="dangerToast" aria-atomic="true">--%>
+<%--        <div class="toast-header border-0">--%>
+<%--            <i class="material-icons text-danger me-2">--%>
+<%--                campaign--%>
+<%--            </i>--%>
+<%--            <span class="me-auto text-gradient text-danger font-weight-bold" id="dangerToastTitle">Material Dashboard </span>--%>
+<%--            <small class="text-body" id="dangerToastTimeAgo">11 mins ago</small>--%>
+<%--            <i class="fas fa-times text-md ms-3 cursor-pointer" data-bs-dismiss="toast" aria-label="Close"></i>--%>
+<%--        </div>--%>
+<%--        <hr class="horizontal dark m-0">--%>
+<%--        <div class="toast-body" id="dangerToastMessage">--%>
+<%--            Hello, world! This is a notification message.--%>
+<%--        </div>--%>
+<%--    </div>--%>
+<%--</div>--%>
 <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -137,9 +137,9 @@
         const opinionData = JSON.parse(message.data);
         console.log(opinionData)
         if (opinionData.isDeleted) {
-            showToastAdmin("warning","A Review Has Been Deleted","User "+opinionData.userName+ " deleted them review product id : "+opinionData.productId,opinionData.createAt);
+            showToastAdmin("warning","Một đánh giá đã bị xóa","Người dùng "+opinionData.userName+ " đã xóa đánh giá của sản phẩm có mã là : "+opinionData.productId,opinionData.createAt);
         } else {
-            showToastAdmin("info","New Review Has Been Added","User "+opinionData.userName+ " added them review product id : "+opinionData.productId,opinionData.createAt);
+            showToastAdmin("info","Đánh giá mới đã được thêm","Người dùng "+opinionData.userName+ " đã thêm đánh giá cho sản phẩm có mã là : "+opinionData.productId,opinionData.createAt);
         }
     }
 </script>

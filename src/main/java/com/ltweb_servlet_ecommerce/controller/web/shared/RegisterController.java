@@ -41,6 +41,7 @@ public class RegisterController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         String password = (String) req.getParameter("password");
         if (password.length() < 6) {
             resp.sendRedirect(req.getContextPath()+"/sign-up?message=short_length_password&toast=danger");
@@ -52,19 +53,22 @@ public class RegisterController extends HttpServlet {
                 tmpUser.setEmail(userModel.getEmail());
                 tmpUser = userService.findWithFilter(tmpUser);
                 if (tmpUser == null) {
-//                try {
+                try {
+
                     Random random = new Random();
                     Integer OTP = 100_000 + random.nextInt(900_000);
                     SendMailUtil.sendMail(userModel.getEmail(), "Vertify your email", SendMailUtil.templateOTPMail(OTP + ""));
                     SessionUtil.putValue(req, "OTP", OTP);
                     SessionUtil.getInstance().putValue(req, "REGISTER_USER", userModel);
                     resp.sendRedirect("/vertify-email");
-//                } catch (MessagingException mex) {
-//                    mex.printStackTrace();
-//                }
+
+                } catch (MessagingException mex) {
+                    mex.printStackTrace();
+                }
                 } else {
                     resp.sendRedirect(req.getContextPath() + "/sign-up?message=exist_user&toast=danger");
                 }
+
 
 
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | SQLException e) {

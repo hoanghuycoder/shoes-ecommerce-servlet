@@ -6,7 +6,7 @@ import java.util.List;
 
 @Data
 public class OrderModel extends  AbstractModel<OrderModel>{
-    private String status;
+    private Integer status;
     private String note;
     private Double totalAmount;
     private String slug;

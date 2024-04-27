@@ -12,11 +12,11 @@ import org.json.JSONObject;
 @Builder
 public class LogModel extends AbstractModel<LogModel>{
     private String ip;
+    private String location;
     private String level;
     private String action;
     private String resource;
     private JSONObject preValue;
     private JSONObject value;
-
+    private Integer accessCount;
 }
-// research xem ip được gửi từ quốc gia nào; trong ip2location

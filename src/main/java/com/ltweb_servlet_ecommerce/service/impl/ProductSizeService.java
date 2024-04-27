@@ -23,8 +23,12 @@ public class ProductSizeService implements IProductSizeService {
     }
 
     @Override
-    public ProductSizeModel findWithFilter(ProductSizeModel model) throws SQLException {
-        return productSizeDAO.findWithFilter(model);
+    public ProductSizeModel findWithFilter(ProductSizeModel model)  {
+        try {
+            return productSizeDAO.findWithFilter(model);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -63,6 +67,11 @@ public class ProductSizeService implements IProductSizeService {
         model.setIsDeleted(true);
         productSizeDAO.update(model);
         return productSizeDAO.findById(model.getId());
+    }
+
+    @Override
+    public int getAvailableProducts(Long productSizeId) {
+        return productSizeDAO.getAvailableProducts(productSizeId);
     }
 
     @Override

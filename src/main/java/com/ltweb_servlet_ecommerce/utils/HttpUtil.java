@@ -132,7 +132,6 @@ public class HttpUtil {
         jsonError.put("error_desc", error);
         objectMapper.writeValue(resp.getOutputStream(), jsonError);
     }
-
     public static void returnError404Json(ObjectMapper objectMapper, HttpServletResponse resp, String error) throws IOException {
         resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         ObjectNode jsonError = objectMapper.createObjectNode();

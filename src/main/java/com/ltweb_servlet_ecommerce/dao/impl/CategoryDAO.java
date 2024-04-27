@@ -33,7 +33,7 @@ public class CategoryDAO extends AbstractDAO<CategoryModel> implements ICategory
     }
     @Override
     public List<CategoryModel> findAll(Pageble pageble) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM categories");
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM categories where isDeleted = 0 ");
         SqlPagebleUtil.addSQlPageble(sqlStrBuilder,pageble);
         return query(sqlStrBuilder.toString(),new CategoryMapper(),null, CategoryModel.class);
     }

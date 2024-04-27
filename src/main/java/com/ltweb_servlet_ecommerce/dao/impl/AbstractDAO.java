@@ -1,18 +1,15 @@
 package com.ltweb_servlet_ecommerce.dao.impl;
 
 
-import com.ltweb_servlet_ecommerce.constant.SystemConstant;
 import com.ltweb_servlet_ecommerce.dao.GenericDAO;
 import com.ltweb_servlet_ecommerce.log.LoggerHelper;
 import com.ltweb_servlet_ecommerce.mapper.RowMapper;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.subquery.SubQuery;
 import com.ltweb_servlet_ecommerce.utils.JDBCUtil;
-import com.ltweb_servlet_ecommerce.utils.RuntimeInfo;
 import com.ltweb_servlet_ecommerce.utils.SqlPagebleUtil;
 import org.json.JSONObject;
 
-import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,6 +60,30 @@ public class AbstractDAO<T> implements GenericDAO<T> {
             JDBCUtil.closeConnection(connection, preparedStatement, resultSet);
         }
     }
+    @Override
+    public int updateCustom(String sql, List<Object> parameters) throws SQLException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        int affectedRows = 0;
+        try {
+            connection = JDBCUtil.getConnection();
+            connection.setAutoCommit(false);
+            preparedStatement = connection.prepareStatement(sql);
+            if (parameters != null) {
+                setParameter(preparedStatement, parameters);
+            }
+            affectedRows = preparedStatement.executeUpdate();
+            connection.commit();
+        } catch (SQLException e) {
+            LoggerHelper.logDetailedDangerMessage(e, "UPDATE");
+            if (connection != null) {
+                connection.rollback();
+            }
+        } finally {
+            JDBCUtil.closeConnection(connection, preparedStatement, null);
+        }
+        return affectedRows;
+    }
 
     @Override
     public <T> List<T> queryWithSubQuery(StringBuilder sqlBuilder, RowMapper<T> rowMapper, List<SubQuery> subQueryList, String type, Class<T> modelClass, Pageble pageble) {
@@ -94,6 +115,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
             return results;
         } catch (Exception e) {
             LoggerHelper.logDetailedDangerMessage(e, "SELECT");
+            e.printStackTrace();
             return null;
         } finally {
             JDBCUtil.closeConnection(connection, preparedStatement, resultSet);
@@ -118,7 +140,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
             }
             return results;
         } catch (Exception e) {
-            LoggerHelper.logDetailedDangerMessage(e,"SELECT");
+            LoggerHelper.logDetailedDangerMessage(e, "SELECT");
             e.printStackTrace();
             return null;
         } finally {
@@ -144,7 +166,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
                 return rs.getLong(1);
             }
         } catch (SQLException e) {
-            LoggerHelper.logDetailedDangerMessage(e,"INSERT");
+            LoggerHelper.logDetailedDangerMessage(e, "INSERT");
             if (connection != null) {
                 connection.rollback();
             }

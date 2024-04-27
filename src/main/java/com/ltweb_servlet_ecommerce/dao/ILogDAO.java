@@ -5,6 +5,7 @@ import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.subquery.SubQuery;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ILogDAO {
     List<LogModel> findAll(Pageble pageble) ;
@@ -16,4 +17,5 @@ public interface ILogDAO {
     int update(LogModel model) ;
     boolean delete(Long id) ;
     boolean softDelete(Long id) ;
+    List<LogModel> checkAccessCount();
 }

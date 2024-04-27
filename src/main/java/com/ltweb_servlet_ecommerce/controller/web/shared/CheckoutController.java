@@ -93,10 +93,14 @@ public class CheckoutController extends HttpServlet {
     private void setListProductOfCart(List<ProductModel> productModelList, Long productId, Long sizeId, int quantity) throws SQLException {
         SizeModel sizeModel = sizeService.findById(sizeId);
         ProductModel productModel = productService.findById(productId);
+        ProductSizeModel productSizeModel = new ProductSizeModel();
+        productSizeModel.setSizeId(sizeId);
+        productSizeModel.setProductId(productId);
+        productSizeModel = productSizeService.findWithFilter(productSizeModel);
         productModel.setQuantity(quantity);
         productModel.setSizeName(sizeModel.getName());
         productModel.setSizeId(sizeModel.getId());
-        productModel.setSubTotal(productModel.getPrice() * quantity);
+        productModel.setSubTotal(productSizeModel.getPrice() * quantity);
         productModelList.add(productModel);
     }
 
@@ -127,7 +131,7 @@ public class CheckoutController extends HttpServlet {
                 Long sizeId = Long.parseLong(productStrSplit[1]);
                 int quantity = Integer.parseInt(productStrSplit[2]);
                 //Find product size and price
-                String sqlProductSizeId = " select product_sizes.id as productSizeId, products.price as priceProduct from product_sizes,products where product_sizes.productId = products.id and product_sizes.productId = ? and product_sizes.sizeId = ?";
+                String sqlProductSizeId = " select product_sizes.id as productSizeId, product_sizes.price as priceProduct from product_sizes,products where product_sizes.productId = products.id and product_sizes.productId = ? and product_sizes.sizeId = ?";
                 List<Object> params = new ArrayList<>();
                 params.add(productId);
                 params.add(sizeId);

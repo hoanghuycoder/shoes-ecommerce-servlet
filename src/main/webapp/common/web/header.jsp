@@ -12,11 +12,11 @@
         <div class="collapse navbar-collapse" id="navbarsFurni">
             <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
                 <li class="nav-item <c:if test="${tab eq 'Home'}">active</c:if>">
-                    <a class="nav-link" href="/home">Home</a>
+                    <a class="nav-link" href="/home">Trang chủ</a>
                 </li>
-                <li class="<c:if test="${tab eq 'Shop'}">active</c:if>"><a class="nav-link" href="/shop">Shop</a></li>
-                <li class="<c:if test="${tab eq 'Services'}">active</c:if>"><a class="nav-link" href="/services">Services</a></li>
-                <li class="<c:if test="${tab eq 'Contact us'}">active</c:if>"><a class="nav-link" href="/contact">Contact us</a></li>
+                <li class="<c:if test="${tab eq 'Shop'}">active</c:if>"><a class="nav-link" href="/shop">Cửa hàng</a></li>
+                <li class="<c:if test="${tab eq 'Services'}">active</c:if>"><a class="nav-link" href="/services">Dich vụ</a></li>
+                <li class="<c:if test="${tab eq 'Contact us'}">active</c:if>"><a class="nav-link" href="/contact">Liên hệ</a></li>
                 <c:if test="${USER_MODEL.admin}">
                     <li><a class="nav-link" href="/admin">Admin</a></li>
                 </c:if>
@@ -34,11 +34,11 @@
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                         <c:if test="${not empty USER_MODEL}">
                             <li class="m-0"><a class="dropdown-item" href="#">${USER_MODEL.fullName}</a></li>
-                            <li><a class="dropdown-item" href="/sign-out"><i class="fa-solid fa-person-walking-dashed-line-arrow-right me-2"></i>Sign out</a></li>
+                            <li><a class="dropdown-item" href="/sign-out"><i class="fa-solid fa-person-walking-dashed-line-arrow-right me-2"></i>Đăng xuất</a></li>
                         </c:if>
                         <c:if test="${empty USER_MODEL}">
-                            <li class="m-0"><a class="dropdown-item" href="/sign-in"><i class="fa-solid fa-right-to-bracket me-2"></i>Sign In</a></li>
-                            <li><a class="dropdown-item" href="/sign-up"><i class="fa-solid fa-user-pen me-2"></i>Sign Up</a></li>
+                            <li class="m-0"><a class="dropdown-item" href="/sign-in"><i class="fa-solid fa-right-to-bracket me-2"></i>Đăng nhập</a></li>
+                            <li><a class="dropdown-item" href="/sign-up"><i class="fa-solid fa-user-pen me-2"></i>Đăng ký</a></li>
                         </c:if>
                     </ul>
                 </li>
@@ -56,9 +56,9 @@
                 <svg aria-hidden="true" class="pre-logo-svg" focusable="false" viewBox="0 0 24 24" role="img" width="55px" height="55px" fill="none"><path fill="currentColor" fill-rule="evenodd" d="M21 8.719L7.836 14.303C6.74 14.768 5.818 15 5.075 15c-.836 0-1.445-.295-1.819-.884-.485-.76-.273-1.982.559-3.272.494-.754 1.122-1.446 1.734-2.108-.144.234-1.415 2.349-.025 3.345.275.2.666.298 1.147.298.386 0 .829-.063 1.316-.19L21 8.719z" clip-rule="evenodd"></path></svg>
                <div style="display: flex; border-radius: 30px; background-color: #e5e5e5; width: 70%;padding: 5px 10px">
                    <i class="fa-solid fa-magnifying-glass m-2"></i>
-                   <input id="nameProductSearch" placeholder="Enter product name to search" style="outline: none; border: none;background-color: transparent;width: 100%"/>
+                   <input id="nameProductSearch" placeholder="Nhập tên sản phẩm" style="outline: none; border: none;background-color: transparent;width: 100%"/>
                </div>
-                <a data-bs-dismiss="modal" aria-label="Close" style="cursor: pointer">Cancel</a>
+                <a data-bs-dismiss="modal" aria-label="Close" style="cursor: pointer">Hủy</a>
             </div>
             <div class="modal-body"  >
                 <div class="row justify-content-around" id="resultSearch">
@@ -97,14 +97,14 @@
             if (listProduct.length==0){
                 topSearch = `
                             <div class="d-flex">
-                                <p class="mx-auto">Not found product with name is `+name+`</p>
+                                <p class="mx-auto">Không tìm thấy sản phẩm có tên `+name+`</p>
                             </div>
                         `
             } else {
                 if (name==="") {
                     topSearch += `
                     <div class="row">
-                        <p style="font-weight: 600">Popular Search Terms</p>
+                        <p style="font-weight: 600">Cụm từ tìm kiếm phổ biến</p>
                     </div>
                     `;
                 }

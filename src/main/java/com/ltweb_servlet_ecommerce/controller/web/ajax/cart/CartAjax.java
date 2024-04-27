@@ -61,7 +61,7 @@ public class CartAjax extends HttpServlet {
             UserModel user = (UserModel) SessionUtil.getInstance().getValue(req, "USER_MODEL");
             List<OrderDetailsModel> orderDetailsModelList = null;
             //Get id product size and subTotal
-            String sqlProductSizeId = " select product_sizes.id as productSizeId, products.price as priceProduct from product_sizes,products where product_sizes.productId = products.id and product_sizes.productId = ? and product_sizes.sizeId = ?";
+            String sqlProductSizeId = " select product_sizes.id as productSizeId, product_sizes.price as priceProduct from product_sizes,products where product_sizes.productId = products.id and product_sizes.productId = ? and product_sizes.sizeId = ?";
 
             List<Object> params = new ArrayList<>();
             params.add(productId);
