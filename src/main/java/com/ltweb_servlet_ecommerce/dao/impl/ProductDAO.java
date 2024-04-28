@@ -98,7 +98,12 @@ public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO
     public Map<String, Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException {
         return queryCustom(sql,params);
     }
-
+    @Override
+    public void updateProductTotalView(Long id) throws SQLException {
+        List<Object> params = new ArrayList<>();
+        params.add(id);
+        updateCustom("UPDATE `products` SET totalViewAndSearch=totalViewAndSearch+1 WHERE id=?",params);
+    }
     @Override
     public Map<Long, ProductModel> findProductsByProductSizeIds(List<Long> productSizeIds) {
         Map<Long, ProductModel> result = new HashMap<>();
@@ -120,7 +125,6 @@ public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO
         }
         return result;
     }
-
     @Override
     public void updateThumbnail(long productId, String url) {
         String sql = "UPDATE products SET thumbnail=? WHERE id=?";
@@ -133,4 +137,5 @@ public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO
             e.printStackTrace();
         }
     }
+
 }

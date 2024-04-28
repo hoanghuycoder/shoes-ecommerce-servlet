@@ -37,7 +37,7 @@ public class ProductSearchAjax extends HttpServlet {
         ObjectMapper objectMapper = new ObjectMapper();
         Integer page = req.getParameter("page")==null ? 1 : Integer.parseInt(req.getParameter("page").toString());
         Integer maxPageItem =req.getParameter("maxPageItem")==null ? 10 : Integer.parseInt(req.getParameter("maxPageItem").toString());
-        String sortName = req.getParameter("sortName")==null ? "createAt" : req.getParameter("sortName");
+        String sortName = req.getParameter("sortName")==null ? "totalViewAndSearch" : req.getParameter("sortName");
         String sortBy = req.getParameter("sortBy")==null ? "desc" : req.getParameter("sortBy");
         Pageble pageble = new PageRequest(page,maxPageItem,new Sorter(sortName, sortBy));
         try {

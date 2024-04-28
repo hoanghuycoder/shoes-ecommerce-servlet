@@ -9,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Nai - Checkout</title>
+    <title>Nai - Thanh toán</title>
 </head>
 <body>
 <!-- Container for demo purpose -->
@@ -33,17 +33,17 @@
 
                 <div class="col-lg-6 pe-lg-4 mb-5 mb-lg-0">
                     <form method="POST" id="formCheckout">
-                        <h5 class="mb-4">Your information</h5>
+                        <h5 class="mb-4">Thông tin của bạn</h5>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-outline mb-4">
-                                    <label class="form-label" for="fullName">Full name<sup style="color :red;">*</sup></label>
+                                    <label class="form-label" for="fullName">Họ và tên<sup style="color :red;">*</sup></label>
                                     <input type="text" id="fullName" name="fullName" class="form-control" required />
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-outline mb-4">
-                                    <label class="form-label" for="phoneNumber">Phone number<sup style="color :red;">*</sup></label>
+                                    <label class="form-label" for="phoneNumber">Số điện thoại<sup style="color :red;">*</sup></label>
                                     <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" required />
                                     <p style="color : red; font-size: 12px" id="phoneNumberValidate"></p>
                                 </div>
@@ -51,19 +51,19 @@
                         </div>
                         <div class="row justify-content-between">
                             <div class="col-md-4">
-                                <label for="province" class="form-label">Province<sup style="color :red;">*</sup></label>
+                                <label for="province" class="form-label">Tỉnh/ Thành phố<sup style="color :red;">*</sup></label>
                                 <select class="form-select" name="province" id="province" required>
 
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <label for="district" class="form-label">District<sup style="color :red;">*</sup></label>
+                                <label for="district" class="form-label">Quận/ Huyện<sup style="color :red;">*</sup></label>
                                 <select class="form-select" name="district" id="district" required disabled>
 
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <label for="commune" class="form-label">Commune<sup style="color :red;">*</sup></label>
+                                <label for="commune" class="form-label">Phường/ Xã<sup style="color :red;">*</sup></label>
                                 <select class="form-select" name="commune" id="commune" required disabled>
 
                                 </select>
@@ -71,29 +71,31 @@
                         </div>
                         <div class="row justify-content-between mt-4">
                             <div class="col-md-4">
-                                <label for="hamlet1" class="form-label">Ward - Street<sup style="color :red;">*</sup></label>
+                                <label for="hamlet1" class="form-label">Ấp/ Đường<sup style="color :red;">*</sup></label>
                                 <select class="form-select" name="hamlet1" id="hamlet1" required disabled>
 
                                 </select>
                             </div>
                             <div class="col-md-8">
-                                <label for="hamlet2" class="form-label">More Address</label>
-                                <input class="form-control" type="text" id="hamlet2" name="hamlet2" placeholder="Enter your detail address...">
-                                <p>Ex : House number 28/12</p>
+                                <label for="hamlet2" class="form-label">Thêm địa chỉ</label>
+                                <input class="form-control" type="text" id="hamlet2" name="hamlet2" placeholder="Thêm địa chỉ...">
+                                <p>Ví dụ : Số nhà 28/12</p>
                             </div>
 
                         </div>
                         <div class="form-group">
-                            <label for="note" class="form-label">Note for shop</label>
-                            <input class="form-control" type="text" id="note" name="note" placeholder="Enter your note..." required>
+                            <label for="note" class="form-label">Ghi chú</label>
+                            <input class="form-control" type="text" id="note" name="note" placeholder="Ghi chú của bạn..." required>
                         </div>
 
                         <c:forEach var="product_item" items="${LIST_PRODUCT_OF_CART}">
                             <input type="hidden" name="product[]" value="${product_item.id}-${product_item.sizeId}-${product_item.quantity}">
                         </c:forEach>
                         <div class="pt-1 mb-3">
-                            <button type="submit" class="btn btn-dark btn-lg px-5">Pay order</button>
-                            <p class="small text-muted mt-4 mb-0">By clicking "Proceed to PayPal" I confirm I have read <a href="#!">Privacy Notice</a> and <a href="#!">Cookie Notice</a>. I agree to the <a href="#!">terms & conditions</a> of the store. "I also accept that the store will process my personal data to manage my order, in accordance with the store's <a href="#!">privacy notice</a>"</p>
+                            <button type="submit" class="btn btn-dark btn-lg px-5">Thanh toán đơn hàng</button>
+<%--                            <p class="small text-muted mt-4 mb-0">Bằng cách nhấp vào "Tiếp tục với PayPal", tôi xác nhận rằng tôi đã đọc <a href="#!">Privacy Notice</a> và <a href="#!">Cookie Notice</a>. I agree to the <a href="#!">terms & conditions</a> of the store. "I also accept that the store will process my personal data to manage my order, in accordance with the store's <a href="#!">privacy notice</a>"</p>--%>
+                                <p class="small text-muted mt-4 mb-0">Bằng cách nhấp vào "Tiếp tục với PayPal", tôi xác nhận rằng tôi đã đọc <a href="#!">Thông báo về Quyền riêng tư</a> và <a href="#!">Thông báo về Cookie</a>. Tôi đồng ý với <a href="#!">điều khoản & điều kiện</a> của cửa hàng. "Tôi cũng chấp nhận rằng cửa hàng sẽ xử lý dữ liệu cá nhân của tôi để quản lý đơn hàng, theo đúng <a href="#!">thông báo quyền riêng tư</a> của cửa hàng."</p>
+
                         </div>
                     </form>
 
@@ -116,11 +118,11 @@
                         <div class="flex-grow-1 ms-md-3 d-flex justify-content-between h-100">
                             <div>
                                 <p class="h6 mb-2">${product_item.name}</p>
-                                <p class="mb-1">$${product_item.price}</p>
-                                <p class="mb-0">Quantity: <span>${product_item.quantity}</span></p>
+                                <p class="mb-1">${product_item.price} đ</p>
+                                <p class="mb-0">Số lượng: <span>${product_item.quantity}</span></p>
                             </div>
                             <div class="d-flex flex-column ms-3">
-                                <p class="mb-0">Sub total</p>
+                                <p class="mb-0">Giá</p>
                                 <p class="mt-auto mb-0">${product_item.subTotal}</p>
                             </div>
                         </div>
@@ -132,21 +134,25 @@
                     <c:set var="temporaryPrice" value="${temporaryPrice + item.subTotal}" />
                 </c:forEach>
                 <div class="d-flex justify-content-between">
-                    <p class="mb-2">Order value</p>
-                    <p class="mb-2">$${temporaryPrice}</p>
+                    <p class="mb-2">Giá trị đơn hàng</p>
+                    <p class="mb-2">${temporaryPrice} đ</p>
                 </div>
                 <div class="d-flex justify-content-between border-bottom border-2 pb-2 mb-4" style="border-color: hsl(0,0%, 96%) !important;">
-                    <p>Delivery</p>
-                    <p>5$</p>
+                    <p>Vận chuyển</p>
+                    <p>5 đ</p>
                 </div>
                 <div class="d-flex justify-content-between">
-                    <p class="h5 mb-5">Total</p>
-                    <p class="h5 mb-5">$${temporaryPrice+5}</p>
+                    <p class="h5 mb-5">Tổng</p>
+                    <p class="h5 mb-5">${temporaryPrice+5} đ</p>
                 </div>
                 <div class="small">
-                    <p class="text-muted mb-4">Our returns are free and easy. If something isn't quite right, you have 14 days to send it back to us. Read more in our <a class="#!">return and refund policy</a>.</p>
-                    <p class="text-warning mb-4">FREE SHIPPING ON ORDERS OVER €100 AND FREE RETURNS</p>
-                    <p class="text-muted mb-0">In accordance with our <a class="#!">Privacy Notice</a>, if you are signed in to your store account, we will share personal data from your account with company for order checkout and payment purposes.</p>
+<%--                    <p class="text-muted mb-4">Our returns are free and easy. If something isn't quite right, you have 14 days to send it back to us. Read more in our <a class="#!">return and refund policy</a>.</p>--%>
+<%--                    <p class="text-warning mb-4">FREE SHIPPING ON ORDERS OVER €100 AND FREE RETURNS</p>--%>
+<%--                    <p class="text-muted mb-0">In accordance with our <a class="#!">Privacy Notice</a>, if you are signed in to your store account, we will share personal data from your account with company for order checkout and payment purposes.</p>--%>
+                        <p class="text-muted mb-4">Chính sách đổi trả của chúng tôi miễn phí và dễ dàng. Nếu có điều gì không hoàn hảo, bạn có 14 ngày để gửi lại sản phẩm cho chúng tôi. Đọc thêm trong <a class="#!">chính sách đổi trả và hoàn tiền</a> của chúng tôi.</p>
+                        <p class="text-warning mb-4">MIỄN PHÍ VẬN CHUYỂN CHO ĐƠN HÀNG TRÊN 1.000.000đ VÀ ĐỔI TRẢ MIỄN PHÍ</p>
+                        <p class="text-muted mb-0">Theo đúng <a class="#!">Thông báo về Quyền riêng tư</a> của chúng tôi, nếu bạn đã đăng nhập vào tài khoản của cửa hàng, chúng tôi sẽ chia sẻ dữ liệu cá nhân từ tài khoản của bạn với công ty để thanh toán và thanh toán đơn hàng.</p>
+
                 </div>
             </div>
         </div>

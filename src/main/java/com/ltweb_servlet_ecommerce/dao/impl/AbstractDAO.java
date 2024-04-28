@@ -60,6 +60,30 @@ public class AbstractDAO<T> implements GenericDAO<T> {
             JDBCUtil.closeConnection(connection, preparedStatement, resultSet);
         }
     }
+    @Override
+    public int updateCustom(String sql, List<Object> parameters) throws SQLException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        int affectedRows = 0;
+        try {
+            connection = JDBCUtil.getConnection();
+            connection.setAutoCommit(false);
+            preparedStatement = connection.prepareStatement(sql);
+            if (parameters != null) {
+                setParameter(preparedStatement, parameters);
+            }
+            affectedRows = preparedStatement.executeUpdate();
+            connection.commit();
+        } catch (SQLException e) {
+            LoggerHelper.logDetailedDangerMessage(e, "UPDATE");
+            if (connection != null) {
+                connection.rollback();
+            }
+        } finally {
+            JDBCUtil.closeConnection(connection, preparedStatement, null);
+        }
+        return affectedRows;
+    }
 
     @Override
     public <T> List<T> queryWithSubQuery(StringBuilder sqlBuilder, RowMapper<T> rowMapper, List<SubQuery> subQueryList, String type, Class<T> modelClass, Pageble pageble) {

@@ -10,7 +10,7 @@
 <%@include file="/common/taglib.jsp" %>
 <html>
 <head>
-    <title>Nai - Shop</title>
+    <title>Nai - Cửa hàng</title>
 </head>
 <body>
 <!-- Start Hero Section -->
@@ -23,8 +23,8 @@
         <div class="row justify-content-between">
             <div class="col-lg-5">
                 <div class="intro-excerpt">
-                    <h1>Shop</h1>
-                    <p class="mb-4">Push your pace and stride with precision to reach your best 10k yet.</p>
+                    <h1>Cửa hàng</h1>
+                    <p class="mb-4">Đẩy nhanh tốc độ và bước chân của bạn một cách chính xác để đạt được kỷ lục tốt nhất!</p>
                 </div>
             </div>
         </div>
@@ -35,7 +35,7 @@
     <div class="container">
         <c:if test="${not empty productName}">
             <div>
-                <p style="font-weight: 600; font-size: ">Result for "${productName}"</p>
+                <p style="font-weight: 600; font-size: ">Kết quả cho "${productName}"</p>
             </div>
         </c:if>
         <div class="row" id="listProduct"></div>
@@ -77,7 +77,7 @@
                         <a class="product-item" href="/product-details/`+product.id+`">
                             <img loading="lazy" src="`+product.thumbnail+`" class="img-fluid product-thumbnail">
                             <h3 class="product-title">`+product.name+`</h3>
-                            <strong class="product-price">$`+product.price+`</strong>
+                            <strong class="product-price">`+product.price+` đ</strong>
                             <span class="icon-cross"><img loading="lazy" src="/template/web/images/cross.svg" class="img-fluid"></span>
                         </a>
                     </div>
@@ -85,7 +85,7 @@
                 }
             } else if (listProduct.length==0 && productName!="" && page==2) {
                 const notFoundHtml = `<div class="d-flex">
-                        <p class="mx-auto">Not found product</p>
+                        <p class="mx-auto">Không tìm thấy sản phẩm</p>
                     </div>`
                 $("#listProduct").append(notFoundHtml);
             } else if (listProduct.length==0) {
@@ -97,7 +97,7 @@
             if (!isDone){
                 const scrollContainer = $('#listProduct');
                 const scrollPosition = $(window).scrollTop() + $(window).height();
-                const containerPosition = scrollContainer.offset().top + 500; // Adjust as needed
+                const containerPosition = scrollContainer.offset().top + 200; // Adjust as needed
                 if (scrollPosition >= containerPosition) {
                     renderMoreProduct(productName);
                 }
