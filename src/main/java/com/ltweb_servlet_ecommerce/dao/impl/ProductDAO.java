@@ -120,4 +120,17 @@ public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO
         }
         return result;
     }
+
+    @Override
+    public void updateThumbnail(long productId, String url) {
+        String sql = "UPDATE products SET thumbnail=? WHERE id=?";
+        List<Object> params = new ArrayList<>();
+        params.add(url);
+        params.add(productId);
+        try {
+            update(sql,params);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

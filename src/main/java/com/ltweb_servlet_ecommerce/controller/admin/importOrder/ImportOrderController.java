@@ -2,6 +2,7 @@ package com.ltweb_servlet_ecommerce.controller.admin.importOrder;
 
 import com.ltweb_servlet_ecommerce.constant.SystemConstant;
 import com.ltweb_servlet_ecommerce.model.ImportOrderModel;
+import com.ltweb_servlet_ecommerce.service.IImportOrderDetailService;
 import com.ltweb_servlet_ecommerce.service.IImportOrderService;
 import com.ltweb_servlet_ecommerce.utils.AuthRole;
 import com.ltweb_servlet_ecommerce.utils.HttpUtil;
@@ -17,9 +18,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+
 @MultipartConfig(
         maxFileSize = 1024 * 1024,// 1MB
         maxRequestSize = 1024 * 1024 * 10//10MB
@@ -28,6 +32,8 @@ import java.util.List;
 public class ImportOrderController extends HttpServlet {
     @Inject
     private IImportOrderService importOrderService;
+    @Inject
+    private IImportOrderDetailService detailService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -40,35 +46,82 @@ public class ImportOrderController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Collection<Part> parts = request.getParts();
-        String realPath = request.getServletContext().getRealPath("/images/blogs");
+        long start = System.currentTimeMillis();
         //validate
-//        boolean hasError = validate(blog);
-//        if (!hasError) {
-//            // if image isn't null
-//            boolean isImageProvided = !image.getSubmittedFileName().isEmpty();
-//            if (isImageProvided) {
-//                newFileName = WriteImage.generateFileName(image.getSubmittedFileName(), realPath);
-//                blog.setImage(newFileName);
-//            }
-//            blog.setCreatedBy(user.fullName());
-//
-//            boolean isOperationSuccessful = blog.getId() != 0 ? blogService.update(blog) : blogService.save(blog);
-//            if (isOperationSuccessful && isImageProvided) {
-//                //write image
-//                WriteImage.writeImage(image.getInputStream(), realPath, newFileName);
-//            }
-//            int statusCode = isOperationSuccessful ? HttpServletResponse.SC_NO_CONTENT : HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-//            response.setStatus(statusCode);
-//        } else {
-//            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-//        }
+        boolean hasError = validate(request);
+        // Check if there are no validation errors
+        if (!hasError) {
+            // Retrieve supplier and importId from the request parameters
+            String supplier = request.getParameter("supplier");
+            String importId = request.getParameter("importId");
+
+            // Initialize importDate and parse it from the request parameter
+            Date importDate = null;
+            try {
+                importDate = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("importDate"));
+            } catch (ParseException e) {
+                // If parsing fails, throw a RuntimeException
+                throw new RuntimeException(e);
+            }
+
+            // Create a new ImportOrderModel with the supplier, set its id and createAt, and save it
+            ImportOrderModel importOrderModel = ImportOrderModel.builder().supplier(supplier).build();
+            importOrderModel.setId(importId);
+            importOrderModel.setCreateAt(new Timestamp(importDate.getTime()));
+            importOrderModel = importOrderService.save(importOrderModel);
+
+            // If the ImportOrderModel was saved successfully
+            if (importOrderModel != null) {
+                // Retrieve the importFile from the request part
+                Part importFile = request.getPart("importFile");
+
+                // Import the Excel file and check if it was imported successfully
+                boolean isImported = detailService.importFileExcel(importOrderModel.getId(), importFile, request.getParts());
+                if (!isImported) {
+                    // If the import was not successful, redirect to the error page and return
+                    redirectToErrorPage(response);
+                    return;
+                }
+            } else {
+                // If the ImportOrderModel was not saved successfully, redirect to the error page and return
+                redirectToErrorPage(response);
+                return;
+            }
+            System.out.println("Time main: " + (System.currentTimeMillis() - start) + "ms");
+            // If everything was successful, redirect to the success page
+            response.sendRedirect("/admin/import-order?message=add_success&toast=success");
+        } else {
+            // If there were validation errors, redirect to the error page
+            redirectToErrorPage(response);
+        }
+    }
+
+    private void redirectToErrorPage(HttpServletResponse response) throws IOException {
+        response.sendRedirect("/admin/import-order?message=error&toast=danger");
+    }
+
+    private boolean validate(HttpServletRequest request) throws ServletException, IOException {
+        return request.getParameter("supplier").isEmpty() ||
+                request.getParameter("importId").isEmpty() ||
+                request.getParameter("importDate").isEmpty() ||
+                !isValidDate(request.getParameter("importDate")) ||
+                request.getPart("importFile") == null ||
+                request.getPart("importFile").getSize() == 0;
+    }
+
+    private boolean isValidDate(String value) {
+        try {
+            new SimpleDateFormat("yyyy-MM-dd").parse(value);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
     }
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if(!AuthRole.checkPermission(response, request, SystemConstant.ADMIN_ROLE)) return;
-        Long[] ids = HttpUtil.of(request.getReader()).toModel(Long[].class);
+        if (!AuthRole.checkPermission(response, request, SystemConstant.ADMIN_ROLE)) return;
+        String[] ids = HttpUtil.of(request.getReader()).toModel(String[].class);
         if (ids.length != 0) {
             boolean result = importOrderService.delete(ids);
             response.setStatus(result ? HttpServletResponse.SC_OK : HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

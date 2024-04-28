@@ -22,4 +22,5 @@ public interface IProductDAO {
     Map<String,Object> findWithCustomSQL(String sql,List<Object> params) throws SQLException;
     Map<Long, ProductModel> findProductsByProductSizeIds(List<Long> productSizeIds);
 
+    void updateThumbnail(long productId, String url);
 }
