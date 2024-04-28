@@ -53,7 +53,6 @@ public class RegisterController extends HttpServlet {
                 tmpUser.setEmail(userModel.getEmail());
                 tmpUser = userService.findWithFilter(tmpUser);
                 if (tmpUser == null) {
-                try {
 
                     Random random = new Random();
                     Integer OTP = 100_000 + random.nextInt(900_000);
@@ -62,9 +61,6 @@ public class RegisterController extends HttpServlet {
                     SessionUtil.getInstance().putValue(req, "REGISTER_USER", userModel);
                     resp.sendRedirect("/vertify-email");
 
-                } catch (MessagingException mex) {
-                    mex.printStackTrace();
-                }
                 } else {
                     resp.sendRedirect(req.getContextPath() + "/sign-up?message=exist_user&toast=danger");
                 }

@@ -27,6 +27,7 @@ public class OrderDAO extends AbstractDAO<OrderModel> implements IOrderDAO {
         List<OrderModel> result = query(sql.toString(), new OrderMapper(),params,OrderModel.class);
         return result;
     }
+
     @Override
     public List<OrderModel> findAll(Pageble pageble) throws SQLException {
         StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM `orders`");
@@ -42,6 +43,16 @@ public class OrderDAO extends AbstractDAO<OrderModel> implements IOrderDAO {
         List<OrderModel> result =  query(sql,new OrderMapper(),params,OrderModel.class);
         return result.isEmpty() ? null : result.get(0);
     }
+
+    public List<OrderModel> findByYear(String year, String month) throws SQLException {
+        String sql = "select * from `orders` where YEAR(createAt) = ? AND MONTH(createAt) = ?";
+        List<Object> params = new ArrayList<>();
+        params.add(year);
+        params.add(month);
+        List<OrderModel> result =  query(sql,new OrderMapper(),params,OrderModel.class);
+        return result.isEmpty() ? null : result;
+    }
+
     @Override
     public OrderModel findWithFilter(OrderModel model) throws SQLException {
         StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM `orders` WHERE 1=1 ");
@@ -89,6 +100,7 @@ public class OrderDAO extends AbstractDAO<OrderModel> implements IOrderDAO {
     public Map<String, Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException {
         return queryCustom(sql,params);
     }
+
 
     @Override
     public Map<String, Object> findIdBySlug(List<Object> params) throws SQLException {

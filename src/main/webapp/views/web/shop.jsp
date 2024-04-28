@@ -35,7 +35,7 @@
     <div class="container">
         <c:if test="${not empty productName}">
             <div>
-                <p style="font-weight: 600; font-size: ">Kết quả cho "${productName}"</p>
+                <p style="font-weight: 600; font-size: 30px">Kết quả cho "${productName}"</p>
             </div>
         </c:if>
         <div class="row" id="listProduct"></div>

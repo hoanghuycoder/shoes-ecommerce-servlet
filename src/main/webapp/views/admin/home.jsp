@@ -7,6 +7,12 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="com.ltweb_servlet_ecommerce.service.impl.OrderService" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="com.google.gson.Gson" %>
 <fmt:setLocale value="vi_VN"/>
 <!doctype html>
 <html lang="en">
@@ -22,6 +28,7 @@
         Chart.defaults.global.defaultFontFamily = 'Nunito, -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
         Chart.defaults.global.defaultFontColor = '#858796';
     </script>
+
 </head>
 <body>
 
@@ -118,19 +125,50 @@
 <!-- Bar Chart -->
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Lợi nhuận từng năm</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Thống kê đơn hàng:</h6>
         <hr>
         <div>
             <label for="yearSelect">Chọn năm:</label>
-            <select id="yearSelect" onchange="updateBarChart()">
-                <option value="2020">2020</option>
-                <option value="2021">2021</option>
-                <option value="2022">2022</option>
-            </select>
+            <form action="/admin/dashboard" method="post"> <!-- Thay đổi your_action.jsp thành tên của file JSP bạn muốn gửi dữ liệu đến -->
+                <select id="yearSelect" name="selectYear" onchange="updateYear()">
+                    <option value="năm">Năm</option>
+                    <option value="2020">2020</option>
+                    <option value="2021">2021</option>
+                    <option value="2022">2022</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                </select>
+
+<%--                <select id="monthSelect" name="selectMonth" onchange="updateMonth()">--%>
+<%--                    <option value="1" selected>Tháng 1</option>--%>
+<%--                    <option value="2">Tháng 2</option>--%>
+<%--                    <option value="3">Tháng 3</option>--%>
+<%--                    <option value="4">Tháng 4</option>--%>
+<%--                    <option value="5">Tháng 5</option>--%>
+<%--                    <option value="6">Tháng 6</option>--%>
+<%--                    <option value="7">Tháng 7</option>--%>
+<%--                    <option value="8">Tháng 8</option>--%>
+<%--                    <option value="9">Tháng 9</option>--%>
+<%--                    <option value="10">Tháng 10</option>--%>
+<%--                    <option value="11">Tháng 11</option>--%>
+<%--                    <option value="12">Tháng 12</option>--%>
+<%--                </select>--%>
+
+                <!-- Thêm input hidden để lưu giá trị năm đã chọn -->
+                <input type="hidden" id="selectedYear" name="selectedYear" />
+<%--                <input type="hidden" id="selectedMonth" name="selectedMonth" />--%>
+
+                <input type="submit" value="Submit" />
+            </form>
         </div>
         <hr>
+        <%
+            String currentYear = (String) request.getAttribute("year");
+            List<Integer> list = (List<Integer>) request.getAttribute("listOrder");
+        %>
     </div>
     <div class="card-body">
+        <p>Kết quả của: <%= currentYear %></p>
         <div class="chart-bar">
             <canvas id="myBarChart2"></canvas>
         </div>
@@ -258,41 +296,103 @@
         data: {
             labels: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4","Tháng 5","Tháng 6","Tháng 7","Tháng 8","Tháng 9","Tháng 10","Tháng 11","Tháng 12",],
             datasets: [{
-                label: "Sales",
+                label: "Số đơn hàng ",
                 backgroundColor: "#e74a3b",
                 hoverBackgroundColor: "#e74a3b",
                 borderColor: "#e74a3b",
-                data: [2500, 3200, 4100, 5500, 6200, 7300],
+                data: [0,0,0,0,0,0,0,0,0,0,0,0],
             }],
         },
         options: {
             // Các tùy chọn...
+            maintainAspectRatio: false,
+            layout: {
+                padding: {
+                    left: 10,
+                    right: 25,
+                    top: 25,
+                    bottom: 0
+                }
+            },
+            scales: {
+                xAxes: [{
+                    time: {
+                        unit: 'month'
+                    },
+                    gridLines: {
+                        display: false,
+                        drawBorder: false
+                    },
+                    ticks: {
+                        maxTicksLimit: 6
+                    },
+                    maxBarThickness: 25,
+                }],
+                yAxes: [{
+                    ticks: {
+                        min: 0,
+                        max: 15000,
+                        maxTicksLimit: 5,
+                        padding: 10,
+                        // Include a dollar sign in the ticks
+                        callback: function(value, index, values) {
+                            return  number_format(value);
+                        }
+                    },
+                    gridLines: {
+                        color: "rgb(234, 236, 244)",
+                        zeroLineColor: "rgb(234, 236, 244)",
+                        drawBorder: false,
+                        borderDash: [2],
+                        zeroLineBorderDash: [2]
+                    }
+                }],
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                titleMarginBottom: 10,
+                titleFontColor: '#6e707e',
+                titleFontSize: 14,
+                backgroundColor: "rgb(255,255,255)",
+                bodyFontColor: "#858796",
+                borderColor: '#dddfeb',
+                borderWidth: 1,
+                xPadding: 15,
+                yPadding: 15,
+                displayColors: false,
+                caretPadding: 10,
+                callbacks: {
+                    label: function(tooltipItem, chart) {
+                        var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                        return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
+                    }
+                }
+            },
         }
     });
+    window.onload = updateBarChart();
     function updateBarChart() {
-        // Lấy giá trị của năm được chọn từ menu dropdown
-        var selectedYear = document.getElementById("yearSelect").value;
+        <%Gson gson = new Gson();
+        String json = gson.toJson(list);%>
 
         // Dựa vào năm được chọn, cập nhật dữ liệu cho biểu đồ cột
-        var newData = getSalesDataForYear(selectedYear);
-        myBarChart2.data.datasets[0].data = newData;
+        var listData = JSON.parse("<%= json %>");
+        var newData = listData;
 
-        // Cập nhật biểu đồ để hiển thị dữ liệu mới
+        // Update the chart with the parsed data
+        myBarChart2.data.datasets[0].data = newData;
         myBarChart2.update();
     }
 
-    // Hàm lấy dữ liệu doanh số cho một năm cụ thể
-    function getSalesDataForYear(year) {
-        // Dữ liệu mẫu, bạn có thể thay thế bằng dữ liệu thực từ cơ sở dữ liệu hoặc API
-        var salesData = {
-            2020: [2500, 3200, 4100, 5500, 6200, 7300,2500, 3200, 4100, 5500, 6200, 7300],
-            2021: [2800, 3400, 4300, 5600, 6300, 7400,2800, 3400, 4300, 5600, 6300, 7400],
-            2022: [2700, 3300, 4200, 5500, 6200, 7300,2700, 3300, 4200, 5500, 6200, 7300],
-            // Thêm dữ liệu cho các năm khác vào đây nếu cần
-        };
-
-        // Trả về dữ liệu cho năm được chọn
-        return salesData[year];
+    function updateYear() {
+        var selectedYear = document.getElementById("yearSelect").value;
+        document.getElementById("selectedYear").value = selectedYear;
+    }
+    function updateMonth() {
+        var selectedMonth = document.getElementById("monthSelect").value;
+        document.getElementById("selectedMonth").value = selectedMonth;
     }
 </script>
 </body>
