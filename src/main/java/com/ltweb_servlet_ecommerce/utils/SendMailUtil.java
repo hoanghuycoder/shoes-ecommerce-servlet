@@ -28,6 +28,7 @@ public class SendMailUtil {
 
     public static void sendMail(String toEmailAddress, String titleMail, String templateMail) {
         executorService.submit(() -> {
+            
             ResourceBundle resourceBundle = ResourceBundle.getBundle("env");
 //            String fromEmail = resourceBundle.getString("EMAIL_ADDRESS");
             String username = resourceBundle.getString("EMAIL_ADDRESS");
