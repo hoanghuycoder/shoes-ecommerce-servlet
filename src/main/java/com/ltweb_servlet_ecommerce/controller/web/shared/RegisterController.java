@@ -62,7 +62,7 @@ public class RegisterController extends HttpServlet {
                     SessionUtil.getInstance().putValue(req, "REGISTER_USER", userModel);
                     resp.sendRedirect("/vertify-email");
 
-                } catch (MessagingException mex) {
+                } catch (Exception mex) {
                     mex.printStackTrace();
                 }
                 } else {
