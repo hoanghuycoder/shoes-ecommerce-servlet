@@ -14,6 +14,7 @@
 
 
 -- Dumping database structure for shoes_web
+DROP DATABASE IF EXISTS `shoes_web`;
 CREATE DATABASE IF NOT EXISTS `shoes_web` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 USE `shoes_web`;
 
@@ -92,24 +93,27 @@ INSERT INTO `categories` (`id`, `name`, `code`, `createAt`, `updateAt`, `isDelet
 
 -- Dumping structure for table shoes_web.import_orders
 CREATE TABLE IF NOT EXISTS `import_orders` (
-  `id` bigint(20) NOT NULL DEFAULT 0,
+  `id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `supplier` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `createAt` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `isDeleted` tinyint(4) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table shoes_web.import_orders: ~2 rows (approximately)
+-- Dumping data for table shoes_web.import_orders: ~4 rows (approximately)
 /*!40000 ALTER TABLE `import_orders` DISABLE KEYS */;
 INSERT INTO `import_orders` (`id`, `supplier`, `createAt`, `isDeleted`) VALUES
-	(1, 'Supplier XYZ', '2024-04-20 17:40:06', 0),
-	(2, 'ZX', '2024-04-20 17:40:06', 0);
+	('1', 'Supplier XYZ', '2024-04-20 17:40:06', 0),
+	('2', 'ZX', '2024-04-25 17:17:46', 0),
+	('5', 'a', '2024-04-25 17:32:43', 0),
+	('6', 'ad', '2024-04-28 00:00:00', 0),
+	('7', 'ad', '2024-04-28 00:00:00', 0);
 /*!40000 ALTER TABLE `import_orders` ENABLE KEYS */;
 
 -- Dumping structure for table shoes_web.import_order_details
 CREATE TABLE IF NOT EXISTS `import_order_details` (
-  `id` bigint(20) NOT NULL,
-  `importOrderId` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `importOrderId` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `productSizeId` bigint(20) NOT NULL,
   `quantityImport` int(11) NOT NULL DEFAULT 0,
   `priceImport` double(15,1) NOT NULL DEFAULT 0.0,
@@ -119,68 +123,77 @@ CREATE TABLE IF NOT EXISTS `import_order_details` (
   KEY `FK_purchase_order_details_purchase_order_details` (`importOrderId`) USING BTREE,
   CONSTRAINT `FK_import_order_details_import_orders` FOREIGN KEY (`importOrderId`) REFERENCES `import_orders` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_import_order_details_product_sizes` FOREIGN KEY (`productSizeId`) REFERENCES `product_sizes` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table shoes_web.import_order_details: ~56 rows (approximately)
+-- Dumping data for table shoes_web.import_order_details: ~61 rows (approximately)
 /*!40000 ALTER TABLE `import_order_details` DISABLE KEYS */;
 INSERT INTO `import_order_details` (`id`, `importOrderId`, `productSizeId`, `quantityImport`, `priceImport`, `isDeleted`) VALUES
-	(2, 1, 1, 10, 918000.0, 0),
-	(3, 1, 2, 10, 927000.0, 0),
-	(4, 1, 3, 10, 936000.0, 0),
-	(5, 1, 4, 10, 945000.0, 0),
-	(6, 1, 5, 10, 1044000.0, 0),
-	(7, 1, 6, 10, 1053000.0, 0),
-	(8, 1, 7, 10, 1062000.0, 0),
-	(9, 1, 8, 10, 1071000.0, 0),
-	(10, 1, 9, 10, 1080000.0, 0),
-	(11, 1, 10, 10, 1089000.0, 0),
-	(12, 1, 11, 10, 791000.0, 0),
-	(13, 1, 12, 10, 800000.0, 0),
-	(14, 1, 13, 10, 809000.0, 0),
-	(15, 1, 14, 10, 818000.0, 0),
-	(16, 1, 15, 10, 827000.0, 0),
-	(17, 1, 16, 10, 1492000.0, 0),
-	(18, 1, 17, 10, 1501000.0, 0),
-	(19, 1, 18, 10, 1510000.0, 0),
-	(20, 1, 19, 10, 1519000.0, 0),
-	(21, 1, 20, 10, 1528000.0, 0),
-	(22, 1, 21, 10, 1854000.0, 0),
-	(23, 1, 22, 10, 1863000.0, 0),
-	(24, 1, 23, 10, 1872000.0, 0),
-	(25, 1, 25, 10, 576000.0, 0),
-	(26, 1, 26, 10, 581000.0, 0),
-	(27, 1, 27, 10, 585000.0, 0),
-	(28, 1, 28, 10, 594000.0, 0),
-	(29, 1, 29, 10, 819000.0, 0),
-	(30, 1, 30, 10, 828000.0, 0),
-	(31, 1, 31, 10, 837000.0, 0),
-	(32, 1, 32, 10, 846000.0, 0),
-	(33, 1, 33, 10, 855000.0, 0),
-	(34, 1, 34, 10, 864000.0, 0),
-	(35, 1, 35, 10, 666000.0, 0),
-	(36, 1, 36, 10, 675000.0, 0),
-	(37, 1, 37, 10, 684000.0, 0),
-	(38, 1, 38, 10, 693000.0, 0),
-	(39, 1, 39, 10, 1440000.0, 0),
-	(40, 1, 40, 10, 1445000.0, 0),
-	(41, 1, 41, 10, 1449000.0, 0),
-	(42, 1, 42, 10, 1458000.0, 0),
-	(43, 1, 43, 10, 1467000.0, 0),
-	(44, 1, 44, 10, 1476000.0, 0),
-	(45, 1, 45, 10, 1224000.0, 0),
-	(46, 1, 46, 10, 1233000.0, 0),
-	(47, 1, 47, 10, 1242000.0, 0),
-	(48, 1, 48, 10, 1251000.0, 0),
-	(49, 1, 49, 10, 1404000.0, 0),
-	(50, 1, 50, 10, 1413000.0, 0),
-	(51, 1, 51, 10, 1422000.0, 0),
-	(52, 1, 52, 10, 1431000.0, 0),
-	(53, 1, 53, 10, 1944000.0, 0),
-	(54, 1, 54, 10, 1953000.0, 0),
-	(55, 1, 55, 10, 1962000.0, 0),
-	(56, 1, 56, 10, 1971000.0, 0),
-	(57, 2, 1, 1, 1000000.0, 0),
-	(58, 2, 2, 2, 1000000.0, 0);
+	(2, '1', 1, 10, 918000.0, 0),
+	(3, '1', 2, 10, 927000.0, 0),
+	(4, '1', 3, 10, 936000.0, 0),
+	(5, '1', 4, 10, 945000.0, 0),
+	(6, '1', 5, 10, 1044000.0, 0),
+	(7, '1', 6, 10, 1053000.0, 0),
+	(8, '1', 7, 10, 1062000.0, 0),
+	(9, '1', 8, 10, 1071000.0, 0),
+	(10, '1', 9, 10, 1080000.0, 0),
+	(11, '1', 10, 10, 1089000.0, 0),
+	(12, '1', 11, 10, 791000.0, 0),
+	(13, '1', 12, 10, 800000.0, 0),
+	(14, '1', 13, 10, 809000.0, 0),
+	(15, '1', 14, 10, 818000.0, 0),
+	(16, '1', 15, 10, 827000.0, 0),
+	(17, '1', 16, 10, 1492000.0, 0),
+	(18, '1', 17, 10, 1501000.0, 0),
+	(19, '1', 18, 10, 1510000.0, 0),
+	(20, '1', 19, 10, 1519000.0, 0),
+	(21, '1', 20, 10, 1528000.0, 0),
+	(22, '1', 21, 10, 1854000.0, 0),
+	(23, '1', 22, 10, 1863000.0, 0),
+	(24, '1', 23, 10, 1872000.0, 0),
+	(25, '1', 25, 10, 576000.0, 0),
+	(26, '1', 26, 10, 581000.0, 0),
+	(27, '1', 27, 10, 585000.0, 0),
+	(28, '1', 28, 10, 594000.0, 0),
+	(29, '1', 29, 10, 819000.0, 0),
+	(30, '1', 30, 10, 828000.0, 0),
+	(31, '1', 31, 10, 837000.0, 0),
+	(32, '1', 32, 10, 846000.0, 0),
+	(33, '1', 33, 10, 855000.0, 0),
+	(34, '1', 34, 10, 864000.0, 0),
+	(35, '1', 35, 10, 666000.0, 0),
+	(36, '1', 36, 10, 675000.0, 0),
+	(37, '1', 37, 10, 684000.0, 0),
+	(38, '1', 38, 10, 693000.0, 0),
+	(39, '1', 39, 10, 1440000.0, 0),
+	(40, '1', 40, 10, 1445000.0, 0),
+	(41, '1', 41, 10, 1449000.0, 0),
+	(42, '1', 42, 10, 1458000.0, 0),
+	(43, '1', 43, 10, 1467000.0, 0),
+	(44, '1', 44, 10, 1476000.0, 0),
+	(45, '1', 45, 10, 1224000.0, 0),
+	(46, '1', 46, 10, 1233000.0, 0),
+	(47, '1', 47, 10, 1242000.0, 0),
+	(48, '1', 48, 10, 1251000.0, 0),
+	(49, '1', 49, 10, 1404000.0, 0),
+	(50, '1', 50, 10, 1413000.0, 0),
+	(51, '1', 51, 10, 1422000.0, 0),
+	(52, '1', 52, 10, 1431000.0, 0),
+	(53, '1', 53, 10, 1944000.0, 0),
+	(54, '1', 54, 10, 1953000.0, 0),
+	(55, '1', 55, 10, 1962000.0, 0),
+	(56, '1', 56, 10, 1971000.0, 0),
+	(57, '2', 1, 1, 1000000.0, 0),
+	(58, '2', 2, 2, 1000000.0, 0),
+	(62, '5', 66, 10, 500000.0, 0),
+	(63, '5', 67, 10, 500000.0, 0),
+	(64, '5', 68, 10, 200000.0, 0),
+	(92, '6', 75, 10, 500000.0, 0),
+	(93, '6', 76, 10, 500000.0, 0),
+	(94, '6', 77, 10, 200000.0, 0),
+	(95, '7', 75, 10, 500000.0, 0),
+	(96, '7', 76, 10, 500000.0, 0),
+	(97, '7', 77, 10, 200000.0, 0);
 /*!40000 ALTER TABLE `import_order_details` ENABLE KEYS */;
 
 -- Dumping structure for table shoes_web.logs
@@ -359,7 +372,7 @@ CREATE TABLE IF NOT EXISTS `products` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(350) DEFAULT NULL,
   `content` text DEFAULT NULL,
-  `thumbnail` varchar(3000) NOT NULL,
+  `thumbnail` varchar(3000) DEFAULT NULL,
   `shortDescription` varchar(500) DEFAULT NULL,
   `price` decimal(10,1) DEFAULT NULL,
   `modelUrl` varchar(255) DEFAULT NULL,
@@ -372,9 +385,9 @@ CREATE TABLE IF NOT EXISTS `products` (
   PRIMARY KEY (`id`),
   KEY `product_category_id_fk` (`categoryId`),
   CONSTRAINT `product_category_id_fk` FOREIGN KEY (`categoryId`) REFERENCES `categories` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table shoes_web.products: ~12 rows (approximately)
+-- Dumping data for table shoes_web.products: ~16 rows (approximately)
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
 INSERT INTO `products` (`id`, `name`, `content`, `thumbnail`, `shortDescription`, `price`, `modelUrl`, `slug`, `categoryId`, `createAt`, `updateAt`, `isDeleted`, `totalViewAndSearch`) VALUES
 	(1, 'Nike Air Max 90', '&lt;p&gt;Bạn muốn thoải mái suốt ngày, mỗi ngày đúng không? Chúng tôi có sản phẩm cho bạn. Phiên bản AJ1 Low mang lại vẻ đẹp của phiên bản gốc dành cho bóng rổ, nhưng nhẹ hơn và có hình dáng mảnh mai hơn. Ngoài ra, chúng phù hợp với mọi trang phục chỉ cần ràng buộc dây giày và đi.&lt;/p&gt;&lt;p&gt;&lt;br&gt;&amp;nbsp;&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Lợi ích&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Công nghệ Nike Air hấp thụ va chạm để mang lại sự êm ái mỗi bước đi.&lt;/li&gt;&lt;li&gt;Chất liệu da thật và da tổng hợp kết hợp với vật liệu dệt nhẹ nhàng mang lại độ bền cao và sự vừa vặn tốt.&lt;/li&gt;&lt;li&gt;Đế cao su cung cấp độ bám đầy đủ.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;br&gt;&amp;nbsp;&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Thông tin sản phẩm&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Logo Jumpman trên lưỡi giày&lt;/li&gt;&lt;li&gt;Logo Swoosh được may chắc&lt;ul&gt;&lt;li&gt;Hiển thị: Đen/Đen/Trắng&lt;/li&gt;&lt;li&gt;Kiểu dáng: DV0990-001&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;/ul&gt;', 'http://res.cloudinary.com/da5wewzih/image/upload/v1704212059/zdyy9vcookwn8pe9cgh6.png', 'Lấy cảm hứng từ phiên bản gốc ra mắt năm 1985, Air Jordan 1 Low mang đến vẻ ngoài cổ điển, gọn gàng, quen thuộc nhưng luôn mới mẻ.', 1020000.0, NULL, NULL, 1, '2024-01-02 23:14:19', '2024-01-02 23:14:19', 0, 0),
@@ -388,7 +401,11 @@ INSERT INTO `products` (`id`, `name`, `content`, `thumbnail`, `shortDescription`
 	(10, 'Nike Air Max 270', '&lt;p&gt;Giao hàng miễn phí*&lt;/p&gt;&lt;p&gt;Để có được thông tin giao hàng chính xác &lt;a href=&quot;/user/address&quot;&gt;Chỉnh sửa vị trí&lt;/a&gt;&lt;/p&gt;&lt;p&gt; &lt;strong&gt;KHÍ HUYỀN THOẠI ĐƯỢC NÂNG CAO.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Phong cách sống đầu tiên của Nike Air Max mang đến cho bạn phong cách, sự thoải mái và không khí lớn trong Nike Air Max 270. Thiết kế lấy cảm hứng từ Air Max các biểu tượng, thể hiện sự đổi mới to lớn của Nike với cửa sổ lớn và các chi tiết mới mẻ.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Lợi ích&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Thiết bị Max Air 270 mang lại sự thoải mái cả ngày.&lt;/li&gt;&lt;li&gt;Vải dệt kim và tổng hợp ở phía trên mang lại cảm giác vừa vặn nhẹ và thoáng khí.&lt;/li&gt;&lt;li&gt;Đế giữa bằng xốp tạo cảm giác mềm mại và thoải mái.&lt;/li&gt ;&lt;li&gt;Tay áo bên trong co giãn tạo cảm giác vừa vặn cá nhân.&lt;/li&gt;&lt;li&gt;Cao su ở đế ngoài tăng thêm lực kéo và độ bền.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;strong&gt;Sản phẩm Chi tiết&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Các chi tiết lưới mang lại cảm giác thoáng mát&lt;/li&gt;&lt;li&gt;Tổng hợp và dệt&lt;/li&gt;&lt;li&gt;Đế giữa 2 mảnh&lt;ul&gt; &lt;li&gt;Hiển thị: Summit White/Sa mạc Sand/Kem đào/Đen&lt;/li&gt;&lt;li&gt;Phong cách: DH3050-100&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;/ul&gt;&lt; p&gt;&lt;strong&gt;Nike Air Max Origins&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Công nghệ Revolutionary Air lần đầu tiên được đưa vào giày Nike vào năm 1978. Năm 1987, Air Max 1 ra mắt với công nghệ Air có thể nhìn thấy được trong gót chân, mang đến cho người hâm mộ nhiều điều hơn là chỉ cảm giác về đệm khí&mdash;đột nhiên họ có thể nhìn thấy nó. Kể từ đó, giày Air Max thế hệ tiếp theo đã trở thành điểm nhấn với các vận động viên và nhà sưu tập nhờ mang đến sự kết hợp màu sắc nổi bật và lớp đệm nhẹ, đáng tin cậy.&lt;/p&gt;', 'http://res.cloudinary.com/da5wewzih/image/upload/v1704269813/ftllqqdrl0sveehjomp9.png', 'Phong cách sống đầu tiên của Nike Air Max mang đến cho bạn phong cách, sự thoải mái và Air lớn trong Nike Air Max 270.', 1600000.0, NULL, NULL, 3, '2024-01-03 15:16:52', '2024-01-03 15:16:52', 0, 0),
 	(11, 'Nike Air Max 90', '&lt;p&gt;Giao hàng miễn phí*&lt;/p&gt;&lt;p&gt;Để có được thông tin giao hàng chính xác &lt;a href=&quot;/user/address&quot;&gt;Chỉnh sửa vị trí&lt;/a&gt;&lt;/p&gt;&lt;p&gt; &lt;mạnh&gt;THOẢI MÁI, DI SẢN. KHÔNG CÓ GÌ TỐT HƠN.&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Không gì bằng bay, không gì thoải mái bằng, không gì bằng đã được chứng minh. Nike Air Max 90 vẫn đúng với nguồn gốc chạy OG của nó với đế Waffle mang tính biểu tượng, lớp phủ được khâu và các chi tiết TPU cổ điển. Màu sắc cổ điển tôn vinh vẻ ngoài tươi mới của bạn trong khi đệm Max Air tăng thêm sự thoải mái cho hành trình.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Hiệu suất Thoải mái&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Được thiết kế ban đầu để chạy hiệu suất, bộ phận Max Air ở gót chân bổ sung khả năng giảm chấn đáng kinh ngạc.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Phong cách đa năng&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Thiết kế cổ thấp kết hợp với cổ áo có đệm cho kiểu dáng đẹp, tạo cảm giác mềm mại và thoải mái.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Retro Vibes&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Các lớp phủ được khâu và các điểm nhấn TPU tăng thêm độ bền, sự thoải mái và tính biểu tượng Những năm 90 nhìn bạn yêu quá.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Chi tiết sản phẩm&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Phần trên dệt với da và lớp phủ tổng hợp&lt;/li&gt;&lt ;li&gt;Đế giữa bằng xốp&lt;/li&gt;&lt;li&gt;Đế ngoài bằng cao su hình bánh quế tăng thêm lực kéo và độ bền&lt;ul&gt;&lt;li&gt;Hiển thị: Xám sói/Đen/Trắng/Đen&lt;/li&gt;&lt;li&gt;Phong cách: CN8490-001&lt ;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;strong&gt;Nike Air Max Origins&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Công nghệ Revolutionary Air lần đầu tiên xuất hiện được đưa vào giày Nike vào năm 1978. Năm 1987, Air Max 1 ra mắt với công nghệ Air có thể nhìn thấy ở gót chân, mang đến cho người hâm mộ nhiều thứ hơn là chỉ cảm giác về đệm Air&mdash;đột nhiên họ có thể nhìn thấy nó. Kể từ đó, giày Air Max thế hệ tiếp theo đã trở thành điểm nhấn với các vận động viên và nhà sưu tập nhờ mang đến sự kết hợp màu sắc nổi bật và lớp đệm nhẹ, đáng tin cậy.&lt;/p&gt;', 'http://res.cloudinary.com/da5wewzih/image/upload/v1704270012/njsatpli7rviso6zqtp1.png', 'Không có gì bằng bay, không có gì thoải mái bằng, không có gì được chứng minh.', 1360000.0, NULL, NULL, 4, '2024-01-03 15:20:11', '2024-01-03 15:20:11', 0, 0),
 	(12, 'Jordan Spizike Low', '&lt;p&gt;&lt;strong&gt;Giao hàng miễn phí*&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Để có được thông tin giao hàng chính xác &lt;a href=&quot;/user/address&quot;&gt;Chỉnh sửa Địa điểm&lt;/a&gt; &lt;/p&gt;&lt;p&gt;Spizike lấy các yếu tố của bốn đôi Jordan cổ điển, kết hợp chúng và mang đến cho bạn một đôi giày sneaker mang tính biểu tượng. Đó là sự tôn kính đối với Spike Lee khi chính thức giới thiệu Hollywood và giới thiệu về một khoảnh khắc văn hóa. Bạn sẽ có được một đôi đá đẹp mắt với một số lịch sử. Bạn có thể yêu cầu gì hơn nữa? Ya dig?&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Lợi ích&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Đế Nike Air-Sole có thể nhìn thấy được cung cấp lớp đệm nhẹ.&lt;/li&gt;&lt ;li&gt;Đế ngoài bằng cao su mang lại cho bạn lực kéo dồi dào.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;strong&gt;Chi tiết sản phẩm&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Không dành cho sử dụng làm Thiết bị bảo hộ cá nhân (PPE)&lt;ul&gt;&lt;li&gt;Hiển thị: Xanh quân đoàn/Nâu quân đội/Đỏ đại học/Đen&lt;/li&gt;&lt;li&gt;Phong cách: FD4653-300&lt;/li&gt;&lt;/ul&gt; &lt;/li&gt;&lt;/ul&gt;', 'http://res.cloudinary.com/da5wewzih/image/upload/v1704270190/ucfxuf0zmifaezmbitp0.png', 'Spizike lấy các yếu tố của bốn đôi Jordan cổ điển, kết hợp chúng và mang đến cho bạn một đôi giày sneaker mang tính biểu tượng.', 1560000.0, NULL, NULL, 1, '2024-01-03 15:23:10', '2024-01-03 15:23:10', 0, 0),
-	(13, 'Air Jordan 1 High G NRG', '&lt;p&gt;&lt;strong&gt;Giao hàng miễn phí*&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Để có được thông tin giao hàng chính xác &lt;a href=&quot;/user/address&quot;&gt;Chỉnh sửa Địa điểm&lt;/a&gt; &lt;/p&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;&lt;p&gt;Một trong những lý do khiến MJ yêu thích chơi gôn đến vậy: Giống như việc nhìn vào gương. Đối thủ duy nhất mà anh ta nhìn thấy đang nhìn chằm chằm vào anh ta. Không có đồng đội để chơi. Không có hậu vệ nào để tấn công. Chỉ có anh ấy, cú swing của anh ấy và sân golf. Chiếc AJ1 High đặc biệt này, với lớp hoàn thiện bằng kim loại, các móc mạ crôm và các chi tiết Air Jordan bóng loáng, lấy cảm hứng từ động lực bên trong đã truyền cảm hứng cho cả MJ và chúng tôi không ngừng hoàn thiện hơn mỗi ngày.&lt;/p&gt;&lt;p&gt;&lt;strong&gt; AJ1 Design nguyên bản&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Da thật và tổng hợp cùng với khối màu đậm tái tạo lại vẻ cổ điển.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Đệm khí&lt;/strong&gt;&lt ;/p&gt;&lt;p&gt;Không khí được bao bọc ở đệm gót chân mỗi bước đi.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Heritage Traction&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Dựa trên thiết kế của đế ngoài nguyên bản, mô hình lực kéo tích hợp cao su bao gồm một vòng tròn xoay bàn chân trước.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Chi tiết sản phẩm&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;1- năm bảo hành chống thấm nước&lt;/li&gt;&lt;li&gt;2 bộ dây buộc&lt;ul&gt;&lt;li&gt;Hiển thị: Bạc kim loại/Bụi Photon/Trắng/Bạc kim loại&lt;/li&gt;&lt;li&gt;Phong cách: FD6815-001&lt;/li&gt ;&lt;/ul&gt;&lt;/li&gt;&lt;/ul&gt;', 'http://res.cloudinary.com/da5wewzih/image/upload/v1704270515/vzqfnuxgyczzazte698u.png', 'Một trong những lý do khiến MJ yêu thích chơi gôn đến vậy: Giống như việc nhìn vào gương.', 2160000.0, NULL, NULL, 1, '2024-01-03 15:28:34', '2024-01-03 15:28:34', 0, 0);
+	(13, 'Air Jordan 1 High G NRG', '&lt;p&gt;&lt;strong&gt;Giao hàng miễn phí*&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Để có được thông tin giao hàng chính xác &lt;a href=&quot;/user/address&quot;&gt;Chỉnh sửa Địa điểm&lt;/a&gt; &lt;/p&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;&lt;p&gt;Một trong những lý do khiến MJ yêu thích chơi gôn đến vậy: Giống như việc nhìn vào gương. Đối thủ duy nhất mà anh ta nhìn thấy đang nhìn chằm chằm vào anh ta. Không có đồng đội để chơi. Không có hậu vệ nào để tấn công. Chỉ có anh ấy, cú swing của anh ấy và sân golf. Chiếc AJ1 High đặc biệt này, với lớp hoàn thiện bằng kim loại, các móc mạ crôm và các chi tiết Air Jordan bóng loáng, lấy cảm hứng từ động lực bên trong đã truyền cảm hứng cho cả MJ và chúng tôi không ngừng hoàn thiện hơn mỗi ngày.&lt;/p&gt;&lt;p&gt;&lt;strong&gt; AJ1 Design nguyên bản&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Da thật và tổng hợp cùng với khối màu đậm tái tạo lại vẻ cổ điển.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Đệm khí&lt;/strong&gt;&lt ;/p&gt;&lt;p&gt;Không khí được bao bọc ở đệm gót chân mỗi bước đi.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Heritage Traction&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;Dựa trên thiết kế của đế ngoài nguyên bản, mô hình lực kéo tích hợp cao su bao gồm một vòng tròn xoay bàn chân trước.&lt;/p&gt;&lt;p&gt;&lt;strong&gt;Chi tiết sản phẩm&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;&lt;li&gt;1- năm bảo hành chống thấm nước&lt;/li&gt;&lt;li&gt;2 bộ dây buộc&lt;ul&gt;&lt;li&gt;Hiển thị: Bạc kim loại/Bụi Photon/Trắng/Bạc kim loại&lt;/li&gt;&lt;li&gt;Phong cách: FD6815-001&lt;/li&gt ;&lt;/ul&gt;&lt;/li&gt;&lt;/ul&gt;', 'http://res.cloudinary.com/da5wewzih/image/upload/v1704270515/vzqfnuxgyczzazte698u.png', 'Một trong những lý do khiến MJ yêu thích chơi gôn đến vậy: Giống như việc nhìn vào gương.', 2160000.0, NULL, NULL, 1, '2024-01-03 15:28:34', '2024-01-03 15:28:34', 0, 0),
+	(17, 'Nike Cortez', NULL, 'http://res.cloudinary.com/da5wewzih/image/upload/v1714231988/oqsh0bpaiccqaw1vvqe7.webp', NULL, NULL, NULL, NULL, 6, '2024-04-25 17:35:28', '2024-04-25 17:35:28', 0, 0),
+	(18, 'Nike Tiempo', NULL, 'http://res.cloudinary.com/da5wewzih/image/upload/v1714231998/j356kan41bfkkya0jwil.webp', NULL, NULL, NULL, NULL, 7, '2024-04-25 17:36:07', '2024-04-25 17:36:07', 0, 0),
+	(19, 'Nike Cortez12', NULL, 'http://res.cloudinary.com/da5wewzih/image/upload/v1714275586/cqkdsu6cj1xcigyyruiu.webp', NULL, NULL, NULL, NULL, 6, '2024-04-27 23:59:06', '2024-04-27 23:59:06', 0, 0),
+	(20, 'Nike Tiempo12', NULL, 'http://res.cloudinary.com/da5wewzih/image/upload/v1714275588/ufy4kjojbegvdcudyzfo.webp', NULL, NULL, NULL, NULL, 7, '2024-04-27 23:59:17', '2024-04-27 23:59:17', 0, 0);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 
 -- Dumping structure for table shoes_web.product_images
@@ -402,9 +419,9 @@ CREATE TABLE IF NOT EXISTS `product_images` (
   PRIMARY KEY (`id`),
   KEY `productImage_fk0` (`productId`),
   CONSTRAINT `productImage_fk0` FOREIGN KEY (`productId`) REFERENCES `products` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table shoes_web.product_images: ~40 rows (approximately)
+-- Dumping data for table shoes_web.product_images: ~48 rows (approximately)
 /*!40000 ALTER TABLE `product_images` DISABLE KEYS */;
 INSERT INTO `product_images` (`id`, `imageUrl`, `productId`, `createAt`, `updateAt`, `isDeleted`) VALUES
 	(1, 'http://res.cloudinary.com/da5wewzih/image/upload/v1704212062/tud3vdjpcvo3xduowkki.webp', 1, '2024-01-02 23:14:22', '2024-01-02 23:14:22', 0),
@@ -446,7 +463,17 @@ INSERT INTO `product_images` (`id`, `imageUrl`, `productId`, `createAt`, `update
 	(38, 'http://res.cloudinary.com/da5wewzih/image/upload/v1704270518/fgotplqnjlr9ybsjtntd.jpg', 13, '2024-01-03 15:28:37', '2024-01-03 15:28:37', 0),
 	(39, 'http://res.cloudinary.com/da5wewzih/image/upload/v1704270521/ta793baehabbjuitflqc.jpg', 13, '2024-01-03 15:28:40', '2024-01-03 15:28:40', 0),
 	(40, 'http://res.cloudinary.com/da5wewzih/image/upload/v1704270524/etuas4oioeiekancagio.jpg', 13, '2024-01-03 15:28:44', '2024-01-03 15:28:44', 0),
-	(41, 'http://res.cloudinary.com/da5wewzih/image/upload/v1704270527/j6ac5uvwlw1phf5uqdch.jpg', 13, '2024-01-03 15:28:47', '2024-01-03 15:28:47', 0);
+	(41, 'http://res.cloudinary.com/da5wewzih/image/upload/v1704270527/j6ac5uvwlw1phf5uqdch.jpg', 13, '2024-01-03 15:28:47', '2024-01-03 15:28:47', 0),
+	(42, 'http://res.cloudinary.com/da5wewzih/image/upload/v1714231967/j5leuxgqn4ilppjsgjtj.webp', 17, '2024-04-27 22:32:55', '2024-04-27 22:32:55', 0),
+	(43, 'http://res.cloudinary.com/da5wewzih/image/upload/v1714231975/xlhp4wvmvjw4onm3ihx4.jpg', 17, '2024-04-27 22:33:06', '2024-04-27 22:33:06', 0),
+	(44, 'http://res.cloudinary.com/da5wewzih/image/upload/v1714231988/oqsh0bpaiccqaw1vvqe7.webp', 17, '2024-04-27 22:33:13', '2024-04-27 22:33:13', 0),
+	(45, 'http://res.cloudinary.com/da5wewzih/image/upload/v1714231993/vy1wq9udoh9wksui65e1.jpg', 17, '2024-04-27 22:33:13', '2024-04-27 22:33:13', 0),
+	(46, 'http://res.cloudinary.com/da5wewzih/image/upload/v1714231998/j356kan41bfkkya0jwil.webp', 18, '2024-04-27 22:33:22', '2024-04-27 22:33:22', 0),
+	(47, 'http://res.cloudinary.com/da5wewzih/image/upload/v1714232002/kge9esz0wlrcikzaxhti.webp', 18, '2024-04-27 22:33:22', '2024-04-27 22:33:22', 0),
+	(58, 'http://res.cloudinary.com/da5wewzih/image/upload/v1714275586/cqkdsu6cj1xcigyyruiu.webp', 19, '2024-04-28 10:39:47', '2024-04-28 10:39:47', 0),
+	(59, 'http://res.cloudinary.com/da5wewzih/image/upload/v1714275586/v96vgklmhrajdgyj8dw9.jpg', 19, '2024-04-28 10:39:47', '2024-04-28 10:39:47', 0),
+	(60, 'http://res.cloudinary.com/da5wewzih/image/upload/v1714275588/ufy4kjojbegvdcudyzfo.webp', 20, '2024-04-28 10:39:50', '2024-04-28 10:39:50', 0),
+	(61, 'http://res.cloudinary.com/da5wewzih/image/upload/v1714275588/bgzl6ocogb18ogyzqigr.webp', 20, '2024-04-28 10:39:50', '2024-04-28 10:39:50', 0);
 /*!40000 ALTER TABLE `product_images` ENABLE KEYS */;
 
 -- Dumping structure for table shoes_web.product_sizes
@@ -463,9 +490,9 @@ CREATE TABLE IF NOT EXISTS `product_sizes` (
   KEY `productSize_fk1` (`productId`),
   CONSTRAINT `productSize_fk0` FOREIGN KEY (`sizeId`) REFERENCES `sizes` (`id`),
   CONSTRAINT `productSize_fk1` FOREIGN KEY (`productId`) REFERENCES `products` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table shoes_web.product_sizes: ~55 rows (approximately)
+-- Dumping data for table shoes_web.product_sizes: ~61 rows (approximately)
 /*!40000 ALTER TABLE `product_sizes` DISABLE KEYS */;
 INSERT INTO `product_sizes` (`id`, `sizeId`, `productId`, `price`, `createAt`, `updateAt`, `isDeleted`) VALUES
 	(1, 22, 1, 1020000.0, '2024-01-02 23:14:19', '2024-01-02 23:14:19', 0),
@@ -522,7 +549,13 @@ INSERT INTO `product_sizes` (`id`, `sizeId`, `productId`, `price`, `createAt`, `
 	(53, 1, 13, 2160000.0, '2024-01-03 15:28:34', '2024-01-03 15:28:34', 0),
 	(54, 2, 13, 2170000.0, '2024-01-03 15:28:34', '2024-01-03 15:28:34', 0),
 	(55, 3, 13, 2180000.0, '2024-01-03 15:28:34', '2024-01-03 15:28:34', 0),
-	(56, 4, 13, 2190000.0, '2024-01-03 15:28:34', '2024-01-03 15:28:34', 0);
+	(56, 4, 13, 2190000.0, '2024-01-03 15:28:34', '2024-01-03 15:28:34', 0),
+	(66, 1, 17, 650000.0, '2024-04-25 17:35:36', '2024-04-25 17:35:36', 0),
+	(67, 5, 17, 650000.0, '2024-04-25 17:36:04', '2024-04-25 17:36:04', 0),
+	(68, 27, 18, 260000.0, '2024-04-25 17:36:08', '2024-04-25 17:36:08', 0),
+	(75, 1, 19, 650000.0, '2024-04-28 10:29:54', '2024-04-28 10:29:54', 0),
+	(76, 5, 19, 650000.0, '2024-04-28 10:29:54', '2024-04-28 10:29:54', 0),
+	(77, 27, 20, 260000.0, '2024-04-28 10:29:54', '2024-04-28 10:29:54', 0);
 /*!40000 ALTER TABLE `product_sizes` ENABLE KEYS */;
 
 -- Dumping structure for table shoes_web.roles
@@ -556,7 +589,7 @@ CREATE TABLE IF NOT EXISTS `sizes` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `size_pk` (`name`),
   UNIQUE KEY `size_pk2` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4;
 
 -- Dumping data for table shoes_web.sizes: ~25 rows (approximately)
 /*!40000 ALTER TABLE `sizes` DISABLE KEYS */;
@@ -585,7 +618,8 @@ INSERT INTO `sizes` (`id`, `name`, `createAt`, `updateAt`, `isDeleted`) VALUES
 	(22, 'M 5 / W 6.5', '2024-01-02 03:34:41', '2024-01-02 03:34:41', 0),
 	(23, 'M 5.5 / W 7', '2024-01-02 03:34:41', '2024-01-02 03:34:41', 0),
 	(24, 'M 6 / W 7.5', '2024-01-02 03:34:41', '2024-01-02 03:34:41', 0),
-	(25, 'M 6.5 / W 8', '2024-01-02 03:34:41', '2024-01-02 03:34:41', 0);
+	(25, 'M 6.5 / W 8', '2024-01-02 03:34:41', '2024-01-02 03:34:41', 0),
+	(27, 'M 9 / W 10.6', '2024-04-25 17:27:31', '2024-04-25 17:27:31', 0);
 /*!40000 ALTER TABLE `sizes` ENABLE KEYS */;
 
 -- Dumping structure for table shoes_web.users
@@ -614,7 +648,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 INSERT INTO `users` (`id`, `userName`, `email`, `password`, `fullName`, `birthDay`, `association`, `lastLogged`, `roleId`, `createAt`, `updateAt`, `isDeleted`) VALUES
 	(6, 'hoanghuydev', 'tranvohoanghuy12ab@gmail.com', '$2a$12$n1ZRw5rmlRGU0uqK6USVR.p8i66degNqeanwUZK9j0hdgDF8gfvVm', 'Tran Vo Hoang Huy', NULL, 'none', '2024-04-06 18:14:15', 1, '2023-12-27 15:23:38', '2024-04-06 18:14:15', 0),
 	(8, '111635119529567317993', '21130386@st.hcmuaf.edu.vn', NULL, 'Trần Võ Hoàng Huy', NULL, 'google', '2024-04-06 18:21:10', 2, '2023-12-28 11:21:13', '2024-04-06 18:21:10', 0),
-	(14, 'a', 'vophihoang252003@gmail.com', '$2a$12$9szEjqLykjaQVvPTnccyRuPLqAfBwCUMRNut8OECjLXLS4HW0LyiG', 'Vo Hoang', NULL, 'none', '2024-04-21 16:55:40', 1, '2024-03-13 15:14:47', '2024-04-21 16:55:40', 0),
+	(14, 'a', 'vophihoang252003@gmail.com', '$2a$12$9szEjqLykjaQVvPTnccyRuPLqAfBwCUMRNut8OECjLXLS4HW0LyiG', 'Vo Hoang', NULL, 'none', '2024-04-28 11:10:01', 1, '2024-03-13 15:14:47', '2024-04-28 11:10:01', 0),
 	(16, 'b', 'vophihoang@gmail.com', '$2a$12$9szEjqLykjaQVvPTnccyRuPLqAfBwCUMRNut8OECjLXLS4HW0LyiG', 'Vo Hoang', NULL, 'none', '2024-04-07 19:15:04', 3, '2024-03-13 15:14:47', '2024-04-07 19:15:05', 0),
 	(17, 'zxc', '21130363@st.hcmuaf.edu.vn', '$2a$12$TxpeSfw/IbB2lQQBKRL1xOPAouLae87JhEYs7uodTc.CZA5G.57Ea', 'Phi Nhan', NULL, 'none', '2024-04-19 15:42:01', 3, '2024-04-19 15:42:01', '2024-04-19 16:24:13', 1);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
