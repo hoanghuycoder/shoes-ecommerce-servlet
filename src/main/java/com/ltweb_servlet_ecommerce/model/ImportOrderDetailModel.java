@@ -10,11 +10,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ImportOrderDetailModel extends AbstractModel<ImportOrderDetailModel>{
-    private long importOrderId;
+    private String importOrderId;
     private long productSizeId;
-    private long quantityImport;
-    private long productId;
+    private int quantityImport;
     private double priceImport;
+
+    private long productId;
     private String productName;
     private String size;
+    private String categoryName;
+    private String categoryCode;
 }

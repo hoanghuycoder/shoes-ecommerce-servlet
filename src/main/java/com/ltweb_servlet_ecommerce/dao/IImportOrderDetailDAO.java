@@ -7,8 +7,10 @@ import com.ltweb_servlet_ecommerce.paging.Pageble;
 import java.util.List;
 
 public interface IImportOrderDetailDAO {
-    double getTotalPriceByImportId(long importId);
-    boolean softDeleteByImportId(Long id);
+    double getTotalPriceByImportId(String importId);
+    boolean softDeleteByImportId(String id);
 
-    List<ImportOrderDetailModel> findByImportId(long importId);
+    List<ImportOrderDetailModel> findByImportId(String importId);
+
+    long save(ImportOrderDetailModel newModel);
 }

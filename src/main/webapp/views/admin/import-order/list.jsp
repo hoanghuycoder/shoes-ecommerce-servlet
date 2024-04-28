@@ -68,7 +68,7 @@
                                 </td>
                                 <td class="align-middle text-center">
                                     <p class="text-xs font-weight-bold mx-auto mb-0">
-                                        <fmt:formatDate value="${item.createAt}" pattern="yyy-MM-dd hh:mm:ssa"/>
+                                        <fmt:formatDate value="${item.createAt}" pattern="yyy-MM-dd"/>
                                     </p>
                                 </td>
                                 <td class="align-middle text-center">
@@ -99,10 +99,18 @@
                         <input type="text" class="form-control" name="supplier" placeholder="Nhà cung cấp">
                     </div>
                     <div class="input-group input-group-outline my-3">
-                        <input type="date" class="form-control" name="supplier" placeholder="Nhà cung cấp">
+                        <input type="text" class="form-control" name="importId" placeholder="Mã hóa đơn">
                     </div>
                     <div class="input-group input-group-outline my-3">
-                        <input type="file" accept=".xlsx" class="form-control" name="importOrder">
+                        <input type="date" class="form-control" name="importDate">
+                    </div>
+                    <label class="form-label">File hóa đơn (.xlsx)</label>
+                    <div class="input-group input-group-outline mb-3">
+                        <input type="file" accept=".xlsx" class="form-control" name="importFile" required>
+                    </div>
+                    <label class="form-label">Thư mục ảnh</label>
+                    <div class="input-group input-group-outline mb-3">
+                        <input type="file" class="form-control" name="imageProducts" webkitdirectory directory>
                     </div>
                 </div>
                 <div class="modal-footer">

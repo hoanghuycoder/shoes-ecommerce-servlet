@@ -30,6 +30,11 @@ public class AbstractMapper<T> implements GenericMapper<T> {
                 Object value = field.get(model);
                 if (value != null) {
                     if (typeSQL.toLowerCase().equals("update") || typeSQL.toLowerCase().equals("insert")) {
+
+                        if (field.getName().equals("totalPrice")) {
+                            continue;
+                        }
+
                         sqlBuilder.append(field.getName()).append(" = ?, ");
                         params.add(value);
                     } else if (typeSQL.toLowerCase().equals("select")) {

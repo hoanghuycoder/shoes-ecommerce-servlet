@@ -21,11 +21,12 @@ SET time_zone = "+00:00";
 -- Database: `shoes_web`
 --
 
--- --------------------------------------------------------
 
---
--- Table structure for table `addresses`
---
+-- Dumping database structure for shoes_web
+DROP DATABASE IF EXISTS `shoes_web`;
+CREATE DATABASE IF NOT EXISTS `shoes_web` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+USE `shoes_web`;
+
 
 CREATE TABLE `addresses` (
   `id` bigint(20) NOT NULL,
@@ -96,128 +97,133 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `name`, `code`, `createAt`, `updateAt`, `isDeleted`) VALUES
-(1, 'Gi&agrave;y thường ng&agrave;y', 'thuong-ngay', '2024-01-01 20:24:34', '2024-04-19 09:10:36', 0),
-(2, 'Giày bóng rổ', 'bong-ro', '2024-01-01 20:24:34', '2024-01-01 20:24:34', 0),
-(3, 'Giày Bóng đá', 'bong-da', '2024-01-01 20:24:34', '2024-01-01 20:24:34', 0),
-(4, 'Giày Bóng chày', 'bong-chay', '2024-01-01 20:24:34', '2024-01-01 20:24:34', 0),
-(5, 'Giày Bóng chuyền', 'bong-chuyen', '2024-01-01 20:24:34', '2024-01-01 20:24:34', 0),
-(6, 'Giày Golf', 'golf', '2024-01-01 20:24:34', '2024-01-01 20:24:34', 0),
-(7, 'Giày Chạy bộ', 'chay-bo', '2024-01-01 20:24:34', '2024-04-19 09:19:31', 0);
 
--- --------------------------------------------------------
+	(1, 'Gi&agrave;y thường ng&agrave;y', 'thuong-ngay', '2024-01-02 03:24:34', '2024-04-19 16:10:36', 0),
+	(2, 'Giày bóng rổ', 'bong-ro', '2024-01-02 03:24:34', '2024-01-02 03:24:34', 0),
+	(3, 'Giày Bóng đá', 'bong-da', '2024-01-02 03:24:34', '2024-01-02 03:24:34', 0),
+	(4, 'Giày Bóng chày', 'bong-chay', '2024-01-02 03:24:34', '2024-01-02 03:24:34', 0),
+	(5, 'Giày Bóng chuyền', 'bong-chuyen', '2024-01-02 03:24:34', '2024-01-02 03:24:34', 0),
+	(6, 'Giày Golf', 'golf', '2024-01-02 03:24:34', '2024-01-02 03:24:34', 0),
+	(7, 'Giày Chạy bộ', 'chay-bo', '2024-01-02 03:24:34', '2024-04-19 16:19:31', 0);
+/*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 
---
--- Table structure for table `import_orders`
---
+-- Dumping structure for table shoes_web.import_orders
+CREATE TABLE IF NOT EXISTS `import_orders` (
+  `id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `supplier` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
 
-CREATE TABLE `import_orders` (
-  `id` bigint(20) NOT NULL DEFAULT 0,
-  `supplier` varchar(50) NOT NULL,
   `createAt` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `isDeleted` tinyint(4) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `import_orders`
---
 
+-- Dumping data for table shoes_web.import_orders: ~4 rows (approximately)
+/*!40000 ALTER TABLE `import_orders` DISABLE KEYS */;
 INSERT INTO `import_orders` (`id`, `supplier`, `createAt`, `isDeleted`) VALUES
-(1, 'Supplier XYZ', '2024-04-20 10:40:06', 0),
-(2, 'ZX', '2024-04-20 10:40:06', 0);
+	('1', 'Supplier XYZ', '2024-04-20 17:40:06', 0),
+	('2', 'ZX', '2024-04-25 17:17:46', 0),
+	('5', 'a', '2024-04-25 17:32:43', 0),
+	('6', 'ad', '2024-04-28 00:00:00', 0),
+	('7', 'ad', '2024-04-28 00:00:00', 0);
+/*!40000 ALTER TABLE `import_orders` ENABLE KEYS */;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `import_order_details`
---
-
-CREATE TABLE `import_order_details` (
-  `id` bigint(20) NOT NULL,
-  `importOrderId` bigint(20) NOT NULL,
+-- Dumping structure for table shoes_web.import_order_details
+CREATE TABLE IF NOT EXISTS `import_order_details` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `importOrderId` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `productSizeId` bigint(20) NOT NULL,
   `quantityImport` int(11) NOT NULL DEFAULT 0,
   `priceImport` double(15,1) NOT NULL DEFAULT 0.0,
-  `isDeleted` tinyint(4) DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `isDeleted` tinyint(4) DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `FK__product` (`productSizeId`) USING BTREE,
+  KEY `FK_purchase_order_details_purchase_order_details` (`importOrderId`) USING BTREE,
+  CONSTRAINT `FK_import_order_details_import_orders` FOREIGN KEY (`importOrderId`) REFERENCES `import_orders` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_import_order_details_product_sizes` FOREIGN KEY (`productSizeId`) REFERENCES `product_sizes` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `import_order_details`
---
-
+-- Dumping data for table shoes_web.import_order_details: ~61 rows (approximately)
+/*!40000 ALTER TABLE `import_order_details` DISABLE KEYS */;
 INSERT INTO `import_order_details` (`id`, `importOrderId`, `productSizeId`, `quantityImport`, `priceImport`, `isDeleted`) VALUES
-(2, 1, 1, 10, 918000.0, 0),
-(3, 1, 2, 10, 927000.0, 0),
-(4, 1, 3, 10, 936000.0, 0),
-(5, 1, 4, 10, 945000.0, 0),
-(6, 1, 5, 10, 1044000.0, 0),
-(7, 1, 6, 10, 1053000.0, 0),
-(8, 1, 7, 10, 1062000.0, 0),
-(9, 1, 8, 10, 1071000.0, 0),
-(10, 1, 9, 10, 1080000.0, 0),
-(11, 1, 10, 10, 1089000.0, 0),
-(12, 1, 11, 10, 791000.0, 0),
-(13, 1, 12, 10, 800000.0, 0),
-(14, 1, 13, 10, 809000.0, 0),
-(15, 1, 14, 10, 818000.0, 0),
-(16, 1, 15, 10, 827000.0, 0),
-(17, 1, 16, 10, 1492000.0, 0),
-(18, 1, 17, 10, 1501000.0, 0),
-(19, 1, 18, 10, 1510000.0, 0),
-(20, 1, 19, 10, 1519000.0, 0),
-(21, 1, 20, 10, 1528000.0, 0),
-(22, 1, 21, 10, 1854000.0, 0),
-(23, 1, 22, 10, 1863000.0, 0),
-(24, 1, 23, 10, 1872000.0, 0),
-(25, 1, 25, 10, 576000.0, 0),
-(26, 1, 26, 10, 581000.0, 0),
-(27, 1, 27, 10, 585000.0, 0),
-(28, 1, 28, 10, 594000.0, 0),
-(29, 1, 29, 10, 819000.0, 0),
-(30, 1, 30, 10, 828000.0, 0),
-(31, 1, 31, 10, 837000.0, 0),
-(32, 1, 32, 10, 846000.0, 0),
-(33, 1, 33, 10, 855000.0, 0),
-(34, 1, 34, 10, 864000.0, 0),
-(35, 1, 35, 10, 666000.0, 0),
-(36, 1, 36, 10, 675000.0, 0),
-(37, 1, 37, 10, 684000.0, 0),
-(38, 1, 38, 10, 693000.0, 0),
-(39, 1, 39, 10, 1440000.0, 0),
-(40, 1, 40, 10, 1445000.0, 0),
-(41, 1, 41, 10, 1449000.0, 0),
-(42, 1, 42, 10, 1458000.0, 0),
-(43, 1, 43, 10, 1467000.0, 0),
-(44, 1, 44, 10, 1476000.0, 0),
-(45, 1, 45, 10, 1224000.0, 0),
-(46, 1, 46, 10, 1233000.0, 0),
-(47, 1, 47, 10, 1242000.0, 0),
-(48, 1, 48, 10, 1251000.0, 0),
-(49, 1, 49, 10, 1404000.0, 0),
-(50, 1, 50, 10, 1413000.0, 0),
-(51, 1, 51, 10, 1422000.0, 0),
-(52, 1, 52, 10, 1431000.0, 0),
-(53, 1, 53, 10, 1944000.0, 0),
-(54, 1, 54, 10, 1953000.0, 0),
-(55, 1, 55, 10, 1962000.0, 0),
-(56, 1, 56, 10, 1971000.0, 0),
-(57, 2, 1, 1, 1000000.0, 0),
-(58, 2, 2, 2, 1000000.0, 0);
+	(2, '1', 1, 10, 918000.0, 0),
+	(3, '1', 2, 10, 927000.0, 0),
+	(4, '1', 3, 10, 936000.0, 0),
+	(5, '1', 4, 10, 945000.0, 0),
+	(6, '1', 5, 10, 1044000.0, 0),
+	(7, '1', 6, 10, 1053000.0, 0),
+	(8, '1', 7, 10, 1062000.0, 0),
+	(9, '1', 8, 10, 1071000.0, 0),
+	(10, '1', 9, 10, 1080000.0, 0),
+	(11, '1', 10, 10, 1089000.0, 0),
+	(12, '1', 11, 10, 791000.0, 0),
+	(13, '1', 12, 10, 800000.0, 0),
+	(14, '1', 13, 10, 809000.0, 0),
+	(15, '1', 14, 10, 818000.0, 0),
+	(16, '1', 15, 10, 827000.0, 0),
+	(17, '1', 16, 10, 1492000.0, 0),
+	(18, '1', 17, 10, 1501000.0, 0),
+	(19, '1', 18, 10, 1510000.0, 0),
+	(20, '1', 19, 10, 1519000.0, 0),
+	(21, '1', 20, 10, 1528000.0, 0),
+	(22, '1', 21, 10, 1854000.0, 0),
+	(23, '1', 22, 10, 1863000.0, 0),
+	(24, '1', 23, 10, 1872000.0, 0),
+	(25, '1', 25, 10, 576000.0, 0),
+	(26, '1', 26, 10, 581000.0, 0),
+	(27, '1', 27, 10, 585000.0, 0),
+	(28, '1', 28, 10, 594000.0, 0),
+	(29, '1', 29, 10, 819000.0, 0),
+	(30, '1', 30, 10, 828000.0, 0),
+	(31, '1', 31, 10, 837000.0, 0),
+	(32, '1', 32, 10, 846000.0, 0),
+	(33, '1', 33, 10, 855000.0, 0),
+	(34, '1', 34, 10, 864000.0, 0),
+	(35, '1', 35, 10, 666000.0, 0),
+	(36, '1', 36, 10, 675000.0, 0),
+	(37, '1', 37, 10, 684000.0, 0),
+	(38, '1', 38, 10, 693000.0, 0),
+	(39, '1', 39, 10, 1440000.0, 0),
+	(40, '1', 40, 10, 1445000.0, 0),
+	(41, '1', 41, 10, 1449000.0, 0),
+	(42, '1', 42, 10, 1458000.0, 0),
+	(43, '1', 43, 10, 1467000.0, 0),
+	(44, '1', 44, 10, 1476000.0, 0),
+	(45, '1', 45, 10, 1224000.0, 0),
+	(46, '1', 46, 10, 1233000.0, 0),
+	(47, '1', 47, 10, 1242000.0, 0),
+	(48, '1', 48, 10, 1251000.0, 0),
+	(49, '1', 49, 10, 1404000.0, 0),
+	(50, '1', 50, 10, 1413000.0, 0),
+	(51, '1', 51, 10, 1422000.0, 0),
+	(52, '1', 52, 10, 1431000.0, 0),
+	(53, '1', 53, 10, 1944000.0, 0),
+	(54, '1', 54, 10, 1953000.0, 0),
+	(55, '1', 55, 10, 1962000.0, 0),
+	(56, '1', 56, 10, 1971000.0, 0),
+	(57, '2', 1, 1, 1000000.0, 0),
+	(58, '2', 2, 2, 1000000.0, 0),
+	(62, '5', 66, 10, 500000.0, 0),
+	(63, '5', 67, 10, 500000.0, 0),
+	(64, '5', 68, 10, 200000.0, 0),
+	(92, '6', 75, 10, 500000.0, 0),
+	(93, '6', 76, 10, 500000.0, 0),
+	(94, '6', 77, 10, 200000.0, 0),
+	(95, '7', 75, 10, 500000.0, 0),
+	(96, '7', 76, 10, 500000.0, 0),
+	(97, '7', 77, 10, 200000.0, 0);
+/*!40000 ALTER TABLE `import_order_details` ENABLE KEYS */;
 
--- --------------------------------------------------------
+-- Dumping structure for table shoes_web.logs
+CREATE TABLE IF NOT EXISTS `logs` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `ip` char(50) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `location` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `level` char(50) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `action` char(50) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `resource` char(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `preValue` mediumtext CHARACTER SET utf8mb4 DEFAULT NULL,
+  `value` mediumtext CHARACTER SET utf8mb4 DEFAULT NULL,
 
---
--- Table structure for table `logs`
---
-
-CREATE TABLE `logs` (
-  `id` bigint(20) NOT NULL,
-  `ip` char(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `location` varchar(255) DEFAULT NULL,
-  `level` char(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `action` char(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `resource` char(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `preValue` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `value` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `createAt` timestamp NULL DEFAULT current_timestamp(),
   `updateAt` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `isDeleted` tinyint(4) DEFAULT NULL
@@ -388,7 +394,7 @@ CREATE TABLE `products` (
   `id` bigint(20) NOT NULL,
   `name` varchar(350) DEFAULT NULL,
   `content` text DEFAULT NULL,
-  `thumbnail` varchar(3000) NOT NULL,
+  `thumbnail` varchar(3000) DEFAULT NULL,
   `shortDescription` varchar(500) DEFAULT NULL,
   `price` decimal(10,1) DEFAULT NULL,
   `modelUrl` varchar(255) DEFAULT NULL,
@@ -557,6 +563,7 @@ INSERT INTO `product_images` (`id`, `imageUrl`, `productId`, `createAt`, `update
 
 CREATE TABLE `product_sizes` (
   `id` bigint(20) NOT NULL,
+
   `sizeId` bigint(20) DEFAULT NULL,
   `productId` bigint(20) DEFAULT NULL,
   `price` decimal(20,1) DEFAULT NULL,
@@ -705,6 +712,7 @@ CREATE TABLE `roles` (
   `id` bigint(20) NOT NULL,
   `code` varchar(50) DEFAULT NULL,
   `value` varchar(100) DEFAULT NULL,
+
   `createAt` timestamp NULL DEFAULT current_timestamp(),
   `updateAt` timestamp NULL DEFAULT current_timestamp(),
   `isDeleted` tinyint(4) DEFAULT 0
@@ -730,6 +738,7 @@ CREATE TABLE `sizes` (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `createAt` timestamp NULL DEFAULT current_timestamp(),
   `updateAt` timestamp NULL DEFAULT current_timestamp(),
+
   `isDeleted` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -738,44 +747,43 @@ CREATE TABLE `sizes` (
 --
 
 INSERT INTO `sizes` (`id`, `name`, `createAt`, `updateAt`, `isDeleted`) VALUES
-(1, 'M 7 / W 8.5', '2024-01-01 20:31:05', '2024-01-08 07:22:33', 0),
-(2, 'M 7.5 / W 9', '2024-01-01 20:31:06', '2024-01-01 20:31:06', 0),
-(3, 'M 8 / W 9.5', '2024-01-01 20:31:06', '2024-01-01 20:31:06', 0),
-(4, 'M 8.5 / W 10', '2024-01-01 20:31:06', '2024-01-01 20:31:06', 0),
-(5, 'M 9 / W 10.5', '2024-01-01 20:31:06', '2024-01-01 20:31:06', 0),
-(6, 'M 9.5 / W 11', '2024-01-01 20:31:06', '2024-01-01 20:31:06', 0),
-(7, 'M 10 / W 11.5', '2024-01-01 20:31:06', '2024-01-01 20:31:06', 0),
-(8, 'M 10.5 / W 12', '2024-01-01 20:31:06', '2024-01-01 20:31:06', 0),
-(9, 'M 11 / W 12.5', '2024-01-01 20:31:06', '2024-01-01 20:31:06', 0),
-(10, 'M 11.5 / W 13', '2024-01-01 20:31:06', '2024-01-01 20:31:06', 0),
-(11, 'M 12 / W 13.5', '2024-01-01 20:31:06', '2024-01-01 20:31:06', 0),
-(12, 'M 12.5 / W 14', '2024-01-01 20:31:06', '2024-01-01 20:31:06', 0),
-(13, 'M 13 / W 14.5', '2024-01-01 20:31:06', '2024-01-01 20:31:06', 0),
-(14, 'M 14 / W 15.5', '2024-01-01 20:31:06', '2024-01-01 20:31:06', 0),
-(15, 'M 15 / W 16.5', '2024-01-01 20:31:06', '2024-01-01 20:31:06', 0),
-(16, 'M 16 / W 17.5', '2024-01-01 20:31:06', '2024-01-01 20:31:06', 0),
-(17, 'M 17 / W 18.5', '2024-01-01 20:31:06', '2024-01-01 20:31:06', 0),
-(18, 'M 18 / W 19.5', '2024-01-01 20:31:06', '2024-01-01 20:31:06', 0),
-(19, 'M 3.5 / W 5', '2024-01-01 20:34:41', '2024-01-01 20:34:41', 0),
-(20, 'M 4 / W 5.5', '2024-01-01 20:34:41', '2024-01-01 20:34:41', 0),
-(21, 'M 4.5 / W 6', '2024-01-01 20:34:41', '2024-01-01 20:34:41', 0),
-(22, 'M 5 / W 6.5', '2024-01-01 20:34:41', '2024-01-01 20:34:41', 0),
-(23, 'M 5.5 / W 7', '2024-01-01 20:34:41', '2024-01-01 20:34:41', 0),
-(24, 'M 6 / W 7.5', '2024-01-01 20:34:41', '2024-01-01 20:34:41', 0),
-(25, 'M 6.5 / W 8', '2024-01-01 20:34:41', '2024-01-01 20:34:41', 0);
 
--- --------------------------------------------------------
+	(1, 'M 7 / W 8.5', '2024-01-02 03:31:05', '2024-01-08 14:22:33', 0),
+	(2, 'M 7.5 / W 9', '2024-01-02 03:31:06', '2024-01-02 03:31:06', 0),
+	(3, 'M 8 / W 9.5', '2024-01-02 03:31:06', '2024-01-02 03:31:06', 0),
+	(4, 'M 8.5 / W 10', '2024-01-02 03:31:06', '2024-01-02 03:31:06', 0),
+	(5, 'M 9 / W 10.5', '2024-01-02 03:31:06', '2024-01-02 03:31:06', 0),
+	(6, 'M 9.5 / W 11', '2024-01-02 03:31:06', '2024-01-02 03:31:06', 0),
+	(7, 'M 10 / W 11.5', '2024-01-02 03:31:06', '2024-01-02 03:31:06', 0),
+	(8, 'M 10.5 / W 12', '2024-01-02 03:31:06', '2024-01-02 03:31:06', 0),
+	(9, 'M 11 / W 12.5', '2024-01-02 03:31:06', '2024-01-02 03:31:06', 0),
+	(10, 'M 11.5 / W 13', '2024-01-02 03:31:06', '2024-01-02 03:31:06', 0),
+	(11, 'M 12 / W 13.5', '2024-01-02 03:31:06', '2024-01-02 03:31:06', 0),
+	(12, 'M 12.5 / W 14', '2024-01-02 03:31:06', '2024-01-02 03:31:06', 0),
+	(13, 'M 13 / W 14.5', '2024-01-02 03:31:06', '2024-01-02 03:31:06', 0),
+	(14, 'M 14 / W 15.5', '2024-01-02 03:31:06', '2024-01-02 03:31:06', 0),
+	(15, 'M 15 / W 16.5', '2024-01-02 03:31:06', '2024-01-02 03:31:06', 0),
+	(16, 'M 16 / W 17.5', '2024-01-02 03:31:06', '2024-01-02 03:31:06', 0),
+	(17, 'M 17 / W 18.5', '2024-01-02 03:31:06', '2024-01-02 03:31:06', 0),
+	(18, 'M 18 / W 19.5', '2024-01-02 03:31:06', '2024-01-02 03:31:06', 0),
+	(19, 'M 3.5 / W 5', '2024-01-02 03:34:41', '2024-01-02 03:34:41', 0),
+	(20, 'M 4 / W 5.5', '2024-01-02 03:34:41', '2024-01-02 03:34:41', 0),
+	(21, 'M 4.5 / W 6', '2024-01-02 03:34:41', '2024-01-02 03:34:41', 0),
+	(22, 'M 5 / W 6.5', '2024-01-02 03:34:41', '2024-01-02 03:34:41', 0),
+	(23, 'M 5.5 / W 7', '2024-01-02 03:34:41', '2024-01-02 03:34:41', 0),
+	(24, 'M 6 / W 7.5', '2024-01-02 03:34:41', '2024-01-02 03:34:41', 0),
+	(25, 'M 6.5 / W 8', '2024-01-02 03:34:41', '2024-01-02 03:34:41', 0),
+	(27, 'M 9 / W 10.6', '2024-04-25 17:27:31', '2024-04-25 17:27:31', 0);
+/*!40000 ALTER TABLE `sizes` ENABLE KEYS */;
 
---
--- Table structure for table `users`
---
+-- Dumping structure for table shoes_web.users
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `userName` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `fullName` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
 
-CREATE TABLE `users` (
-  `id` bigint(20) NOT NULL,
-  `userName` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `fullName` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `birthDay` date DEFAULT NULL,
   `association` varchar(20) DEFAULT 'none',
   `lastLogged` timestamp NULL DEFAULT current_timestamp(),
@@ -804,6 +812,7 @@ INSERT INTO `users` (`id`, `userName`, `email`, `password`, `fullName`, `birthDa
 
 CREATE TABLE `user_addresses` (
   `id` bigint(20) NOT NULL,
+
   `addressId` bigint(20) DEFAULT NULL,
   `userId` bigint(20) DEFAULT NULL,
   `createAt` timestamp NULL DEFAULT current_timestamp(),
