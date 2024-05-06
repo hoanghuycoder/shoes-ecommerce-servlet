@@ -7,6 +7,7 @@ import com.ltweb_servlet_ecommerce.service.IRoleService;
 import com.ltweb_servlet_ecommerce.service.IUserService;
 import com.ltweb_servlet_ecommerce.utils.AuthRole;
 import com.ltweb_servlet_ecommerce.utils.FormUtil;
+import com.ltweb_servlet_ecommerce.utils.HttpUtil;
 import com.ltweb_servlet_ecommerce.utils.NotifyUtil;
 
 import javax.inject.Inject;
@@ -46,11 +47,7 @@ public class UserListController extends HttpServlet {
             if(!AuthRole.checkPermission(resp, req, SystemConstant.ADMIN_ROLE)) return;
             String action = req.getParameter("action");
             String detailAccount = req.getParameter("detailAccount");
-            if (action!=null && action.equals("delete")){
-                Long id = Long.parseLong(req.getParameter("id"));
-                userService.softDelete(id);
-                resp.sendRedirect("/admin/user/list?message=delete_success&toast=success");
-            } else if (action!=null && action.equalsIgnoreCase("put") && detailAccount!=null && detailAccount.equalsIgnoreCase("changeRole")) {
+            if (action!=null && action.equalsIgnoreCase("put") && detailAccount!=null && detailAccount.equalsIgnoreCase("changeRole")) {
                 Long roleId = Long.parseLong(req.getParameter("roleId"));
                 Long id = Long.parseLong(req.getParameter("id"));
                 UserModel userModel = new UserModel();
@@ -63,5 +60,16 @@ public class UserListController extends HttpServlet {
             resp.sendRedirect("/admin/user/list?message=error&toast=danger");
         }
 
+    }
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if(!AuthRole.checkPermission(response, request, SystemConstant.ADMIN_ROLE)) return;
+        Long[] ids = HttpUtil.of(request.getReader()).toModel(Long[].class);
+        if (ids.length != 0) {
+            boolean flag = userService.softDelete(ids);
+            response.setStatus(flag ? HttpServletResponse.SC_OK : HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        } else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
     }
 }
