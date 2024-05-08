@@ -194,9 +194,9 @@
                 const subTotal = data.subTotal;
                 const temporaryPrice = parseFloat($("#temporaryPrice").text()) - oldSubTotal + (data.subTotal);
                 const totalPrice = parseFloat($("#totalPrice").text()) - oldSubTotal + (data.subTotal);
-                $("#subTotal"+index).text(subTotal);
-                $("#temporaryPrice").text(temporaryPrice);
-                $("#totalPrice").text(totalPrice);
+                $("#subTotal"+index).text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(subTotal));
+                $("#temporaryPrice").text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(temporaryPrice));
+                $("#totalPrice").text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalPrice));
             }
             const updateQuantity = (productId,sizeId,quantity,index,oldSubTotal)=> {
                 $.ajax({
