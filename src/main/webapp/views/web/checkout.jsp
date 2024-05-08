@@ -1,4 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="vi_VN"/>
 <%--
   Created by IntelliJ IDEA.
   User: HUY
@@ -118,12 +120,12 @@
                         <div class="flex-grow-1 ms-md-3 d-flex justify-content-between h-100">
                             <div>
                                 <p class="h6 mb-2">${product_item.name}</p>
-                                <p class="mb-1">${product_item.price} đ</p>
+                                <p class="mb-1"><fmt:formatNumber type="currency" value="${product_item.price}"/></p>
                                 <p class="mb-0">Số lượng: <span>${product_item.quantity}</span></p>
                             </div>
                             <div class="d-flex flex-column ms-3">
                                 <p class="mb-0">Giá</p>
-                                <p class="mt-auto mb-0">${product_item.subTotal}</p>
+                                <p class="mt-auto mb-0"><fmt:formatNumber type="currency" value="${product_item.subTotal}"/></p>
                             </div>
                         </div>
                     </div>
@@ -135,15 +137,15 @@
                 </c:forEach>
                 <div class="d-flex justify-content-between">
                     <p class="mb-2">Giá trị đơn hàng</p>
-                    <p class="mb-2">${temporaryPrice} đ</p>
+                    <p class="mb-2"> <fmt:formatNumber type="currency" value="${temporaryPrice}"/></p>
                 </div>
                 <div class="d-flex justify-content-between border-bottom border-2 pb-2 mb-4" style="border-color: hsl(0,0%, 96%) !important;">
                     <p>Vận chuyển</p>
-                    <p>5 đ</p>
+                    <p> <fmt:formatNumber type="currency" value="5"/></p>
                 </div>
                 <div class="d-flex justify-content-between">
                     <p class="h5 mb-5">Tổng</p>
-                    <p class="h5 mb-5">${temporaryPrice+5} đ</p>
+                    <p class="h5 mb-5"> <fmt:formatNumber type="currency" value="${temporaryPrice+5}"/></p>
                 </div>
                 <div class="small">
 <%--                    <p class="text-muted mb-4">Our returns are free and easy. If something isn't quite right, you have 14 days to send it back to us. Read more in our <a class="#!">return and refund policy</a>.</p>--%>

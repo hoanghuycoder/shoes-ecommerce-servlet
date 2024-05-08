@@ -7,6 +7,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/common/taglib.jsp" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="vi_VN"/>
 <html>
 <head>
     <title>Nai - Giỏ hàng</title>
@@ -64,7 +66,7 @@
                                     </div>
 
                                     <h5 class="mb-2">
-                                        <p class="align-middle" ><span id="subTotal${loop.index}">${product_item.subTotal}</span> đ</p>
+                                        <p class="align-middle" ><span id="subTotal${loop.index}"><fmt:formatNumber type="currency" value="${product_item.subTotal}"/></span></p>
                                     </h5>
                                 </div>
                             </div>
@@ -112,18 +114,18 @@
                         <div class="d-flex justify-content-between mb-3">
                             <span>Giá sản phẩm</span>
                             <p>
-                                $<span id="temporaryPrice">${temporaryPrice}</span>
+                                <span id="temporaryPrice"><fmt:formatNumber type="currency" value="${temporaryPrice}"/></span>
                             </p>
                         </div>
                         <div class="d-flex justify-content-between">
                             <span>Giá giao hàng </span>
-                            <span>$5</span>
+                            <span><fmt:formatNumber type="currency" value="5"/></span>
                         </div>
                         <hr class="my-4" />
                         <div class="d-flex justify-content-between fw-bold mb-5">
                             <span>Tổng số tiền (bao gồm VAT) </span>
                             <p>
-                                $<span id="totalPrice">${temporaryPrice+5}</span>
+                                <span id="totalPrice"><fmt:formatNumber type="currency" value="${temporaryPrice+5} "/></span>
                             </p>
 
                         </div>
@@ -194,9 +196,9 @@
                 const subTotal = data.subTotal;
                 const temporaryPrice = parseFloat($("#temporaryPrice").text()) - oldSubTotal + (data.subTotal);
                 const totalPrice = parseFloat($("#totalPrice").text()) - oldSubTotal + (data.subTotal);
-                $("#subTotal"+index).text(subTotal);
-                $("#temporaryPrice").text(temporaryPrice);
-                $("#totalPrice").text(totalPrice);
+                $("#subTotal"+index).text(formatCurrency(subTotal));
+                $("#temporaryPrice").text(formatCurrency(temporaryPrice));
+                $("#totalPrice").text(formatCurrency(totalPrice));
             }
             const updateQuantity = (productId,sizeId,quantity,index,oldSubTotal)=> {
                 $.ajax({
@@ -215,6 +217,17 @@
                     }
                 })
             }
+            function formatCurrency(amount) {
+                // Định dạng số tiền thành chuỗi, thêm dấu phẩy sau mỗi 3 chữ số từ phải sang trái
+                const formattedAmount = amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+                // Thêm ký tự tiền tệ ở cuối
+                const currencySymbol = " ₫";
+
+                // Kết hợp chuỗi đã định dạng và ký tự tiền tệ
+                return formattedAmount + currencySymbol;
+            }
+
             $('.quantityProduct').change(function () {
                 clearTimeout(changeQuantityTimeout);
 
