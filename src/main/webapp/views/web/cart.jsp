@@ -119,13 +119,13 @@
                         </div>
                         <div class="d-flex justify-content-between">
                             <span>Giá giao hàng </span>
-                            <span><fmt:formatNumber type="currency" value="5"/></span>
+                            <span>20.000đ</span>
                         </div>
                         <hr class="my-4" />
                         <div class="d-flex justify-content-between fw-bold mb-5">
                             <span>Tổng số tiền (bao gồm VAT) </span>
                             <p>
-                                <span id="totalPrice"><fmt:formatNumber type="currency" value="${temporaryPrice+5} "/></span>
+                                $<span id="totalPrice"><fmt:formatNumber type="currency" value="${temporaryPrice+20000}"/></span>
                             </p>
 
                         </div>
@@ -196,9 +196,9 @@
                 const subTotal = data.subTotal;
                 const temporaryPrice = parseFloat($("#temporaryPrice").text()) - oldSubTotal + (data.subTotal);
                 const totalPrice = parseFloat($("#totalPrice").text()) - oldSubTotal + (data.subTotal);
-                $("#subTotal"+index).text(formatCurrency(subTotal));
-                $("#temporaryPrice").text(formatCurrency(temporaryPrice));
-                $("#totalPrice").text(formatCurrency(totalPrice));
+                $("#subTotal"+index).text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(subTotal));
+                $("#temporaryPrice").text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(temporaryPrice));
+                $("#totalPrice").text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalPrice));
             }
             const updateQuantity = (productId,sizeId,quantity,index,oldSubTotal)=> {
                 $.ajax({
