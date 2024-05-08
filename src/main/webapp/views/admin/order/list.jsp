@@ -1,15 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: HUY
-  Date: 12/30/2023
-  Time: 10:05 PM
-  To change this template use File | Settings | File Templates.
---%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<fmt:setLocale value="vi_VN"/>
 <html>
 <head>
     <title>Admin Nai - Danh sách đơn hàng</title>
+
 </head>
 <body>
 <div class="row">
@@ -73,7 +69,9 @@
                                 <!-- End Product list -->
                                 <!-- Total -->
                                 <td class="align-middle text-center">
-                                    <p class="text-xs text-secondary mb-0">$${order_item.totalAmount}</p>
+                                    <p class="text-xs text-secondary mb-0">
+                                        <fmt:formatNumber type="currency" value="${order_item.totalAmount}"/>
+                                    </p>
                                 </td>
                                 <!-- End total -->
                                 <!-- Note -->
@@ -92,7 +90,9 @@
                                 <!-- End Note -->
                                 <td >
                                     <div class="d-flex">
-                                        <p class="text-xs font-weight-bold mx-auto mb-0">${order_item.createAt}</p>
+                                        <p class="text-xs font-weight-bold mx-auto mb-0">
+                                            <fmt:formatDate value="${order_item.createAt}" pattern="yyy-MM-dd hh:mm:ssa"/>
+                                        </p>
                                     </div>
                                 </td>
                                 <!-- Action -->
@@ -104,7 +104,7 @@
                                     </div>
                                     <p class="m-0 p-0">CRM</p>
                                     <div class="d-flex">
-                                        <a class="btn btn-link text-dark px-1 mb-0" id="editOrder${order_item.id}" href="javascript:;"><i class="material-icons text-sm me-1">edit</i>Sửa</a>
+                                        <a class="btn btn-link text-dark px-1 mb-0" href="<c:url value="/admin/orders/detail?id=${order_item.id}"/> "><i class="material-icons text-sm me-1">edit</i>Sửa</a>
                                         <a class="btn btn-link text-danger text-gradient px-1 mb-0" id="removeOrder${order_item.id}" href="javascript:;"><i class="material-icons text-sm me-1">delete</i>Xóa</a>
                                     </div>
 

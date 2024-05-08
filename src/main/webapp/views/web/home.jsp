@@ -7,6 +7,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/common/taglib.jsp" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="vi_VN"/>
 <html>
 <head>
     <title>Nai Shoes & Sneakers</title>
@@ -52,7 +54,7 @@
                         <a class="product-item" href="/product-details/${product_item.id}">
                             <img loading="lazy" src="${product_item.thumbnail}" class="img-fluid product-thumbnail">
                             <h3 class="product-title">${product_item.name}</h3>
-                            <strong class="product-price">${product_item.price} đ</strong>
+                            <strong class="product-price"> <fmt:formatNumber type="currency" value="${product_item.price}"/></strong>
                             <span class="icon-cross"><img loading="lazy" src="/template/web/images/cross.svg" class="img-fluid"></span>
                         </a>
                     </div>

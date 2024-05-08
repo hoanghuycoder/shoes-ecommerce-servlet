@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/common/taglib.jsp" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="vi_VN"/>
 <!doctype html>
 <html lang="en">
 <head>
@@ -84,7 +86,7 @@
                         <p class="text-muted" style="font-size: 16px; font-weight: 600;">Loại: <span>${CATEGORY.name}</span></p>
                         <div class="mb-3">
 
-                            <span class="h5">${MODEL.price} đ</span>
+                            <span class="h5"><fmt:formatNumber type="currency" value="${MODEL.price}"/></span>
                             <span class="text-muted">/ đôi</span>
 
                         </div>
@@ -487,7 +489,8 @@
                                                 <div class="post-content-entry">
                                                     <h3><a href="#">${product_item.name}</a></h3>
                                                     <div class="meta">
-                                                        <span>${product_item.price} đ</span>
+                                                        <span><fmt:formatNumber type="currency" value="${product_item.price} "/></span>
+
                                                     </div>
                                                 </div>
                                             </div>
