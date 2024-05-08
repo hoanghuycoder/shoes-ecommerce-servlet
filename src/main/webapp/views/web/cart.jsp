@@ -7,6 +7,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/common/taglib.jsp" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="vi_VN"/>
 <html>
 <head>
     <title>Nai - Giỏ hàng</title>
@@ -215,6 +217,17 @@
                     }
                 })
             }
+            function formatCurrency(amount) {
+                // Định dạng số tiền thành chuỗi, thêm dấu phẩy sau mỗi 3 chữ số từ phải sang trái
+                const formattedAmount = amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+                // Thêm ký tự tiền tệ ở cuối
+                const currencySymbol = " ₫";
+
+                // Kết hợp chuỗi đã định dạng và ký tự tiền tệ
+                return formattedAmount + currencySymbol;
+            }
+
             $('.quantityProduct').change(function () {
                 clearTimeout(changeQuantityTimeout);
 

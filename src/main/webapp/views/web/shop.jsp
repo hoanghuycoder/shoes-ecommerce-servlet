@@ -1,4 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setLocale value="vi_VN"/>
 <%--
   Created by IntelliJ IDEA.
   User: HUY
@@ -66,6 +68,16 @@
             });
             return result;
         }
+        function formatCurrency(amount) {
+            // Định dạng số tiền thành chuỗi, thêm dấu phẩy sau mỗi 3 chữ số từ phải sang trái
+            const formattedAmount = amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+            // Thêm ký tự tiền tệ ở cuối
+            const currencySymbol = " ₫";
+
+            // Kết hợp chuỗi đã định dạng và ký tự tiền tệ
+            return formattedAmount + currencySymbol;
+        }
         const renderMoreProduct = (name) => {
             let listProductHtml = ``;
             const listProduct = loadMoreProduct(name);
@@ -78,6 +90,7 @@
                             <img loading="lazy" src="` + product.thumbnail + `" class="img-fluid product-thumbnail">
                             <h3 class="product-title">` + product.name + `</h3>
                             <strong class="product-price">` + new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price) + `</strong>
+
                             <span class="icon-cross"><img loading="lazy" src="/template/web/images/cross.svg" class="img-fluid"></span>
                         </a>
                     </div>

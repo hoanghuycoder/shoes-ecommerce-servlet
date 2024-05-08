@@ -1,8 +1,13 @@
 package com.ltweb_servlet_ecommerce.service.impl;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.ltweb_servlet_ecommerce.constant.SystemConstant;
 import com.ltweb_servlet_ecommerce.dao.IRoleDAO;
 import com.ltweb_servlet_ecommerce.dao.IUserDAO;
+import com.ltweb_servlet_ecommerce.dao.impl.CartDAO;
+import com.ltweb_servlet_ecommerce.dao.impl.OpinionDAO;
+import com.ltweb_servlet_ecommerce.dao.impl.UserAddressDAO;
+import com.ltweb_servlet_ecommerce.dao.impl.UserOrderDAO;
 import com.ltweb_servlet_ecommerce.log.LoggerHelper;
 import com.ltweb_servlet_ecommerce.model.RoleModel;
 import com.ltweb_servlet_ecommerce.model.UserModel;
@@ -12,7 +17,6 @@ import com.ltweb_servlet_ecommerce.subquery.SubQuery;
 import com.ltweb_servlet_ecommerce.utils.JSONObjectUtil;
 import com.ltweb_servlet_ecommerce.utils.ObjectComparator;
 import com.ltweb_servlet_ecommerce.utils.RuntimeInfo;
-import com.restfb.types.User;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
@@ -28,6 +32,75 @@ public class UserService implements IUserService {
     IUserDAO userDAO;
     @Inject
     IRoleDAO roleDAO;
+    @Inject
+    CartDAO cartDAO;
+    @Inject
+    OpinionDAO opinionDAO;
+    @Inject
+    UserAddressDAO userAddressDAO;
+    @Inject
+    UserOrderDAO userOrderDAOl;
+
+    @Override
+    public boolean changePassword(long userId, String password) {
+        try {
+            UserModel user = userDAO.findById(userId);
+            if (user == null) {
+                return false;
+            }
+            BCrypt.Hasher hasher = BCrypt.withDefaults();
+            String hashedPassword = hasher.hashToString(12, password.toCharArray());
+            user.setPassword(hashedPassword);
+            user.setUpdateAt(new Timestamp(System.currentTimeMillis()));
+            userDAO.update(user);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    @Override
+    // This method performs a soft delete operation on multiple users
+    public boolean softDelete(Long[] ids) {
+        // Initialize a flag to true. This flag will be used to indicate if the operation was successful
+        boolean flag = true;
+
+        // Iterate over the array of user IDs
+        for (Long id : ids) {
+            try {
+                // Find the user with the current ID
+                UserModel model = findById(id);
+
+                // Set the update timestamp to the current time
+                model.setUpdateAt(new Timestamp(System.currentTimeMillis()));
+
+                // Mark the user as deleted
+                model.setIsDeleted(true);
+
+                // Update the user in the database
+                update(model);
+
+                // Mark the user's carts as deleted
+                cartDAO.update("UPDATE carts SET isDeleted = 1 WHERE userId = ?", List.of(id));
+
+                // Mark the user's opinions as deleted
+                opinionDAO.update("UPDATE opinions SET isDeleted = 1 WHERE userId = ?", List.of(id));
+
+                // Mark the user's addresses as deleted
+                userAddressDAO.update("UPDATE user_addresses SET isDeleted = 1 WHERE userId = ?", List.of(id));
+
+                // Mark the user's orders as deleted
+                userOrderDAOl.update("UPDATE user_orders SET isDeleted = 1 WHERE userId = ?", List.of(id));
+            } catch (SQLException e) {
+                // If an exception occurs, set the flag to false
+                flag = false;
+            }
+        }
+
+        // Return the flag. If it's still true, the operation was successful. If it's false, an exception occurred
+        return flag;
+    }
+
     private List<UserModel> appendRoleForUsers(List<UserModel> listUser) throws SQLException {
         List<RoleModel> listRole = roleDAO.findAll(null);
         Map<Long, RoleModel> roleMap = listRole.stream()
@@ -45,13 +118,13 @@ public class UserService implements IUserService {
     @Override
     public List<UserModel> findAllWithFilter(UserModel model, Pageble pageble) throws SQLException {
         List<UserModel> listUser = userDAO.findAllWithFilter(model, pageble);
-       return appendRoleForUsers(listUser);
+        return appendRoleForUsers(listUser);
     }
 
     @Override
     public UserModel findWithFilter(UserModel model) throws SQLException {
         UserModel user = userDAO.findWithFilter(model);
-        if (user!=null) {
+        if (user != null) {
             RoleModel role = roleDAO.findById(user.getRoleId());
             user.setRole(role);
         }
@@ -70,6 +143,8 @@ public class UserService implements IUserService {
     }
 
 
+
+
     @Override
     public UserModel update(UserModel model) throws SQLException {
         model.setRole(null);
@@ -82,13 +157,13 @@ public class UserService implements IUserService {
         // Logging
         JSONObject preValue = new JSONObject();
         JSONObject preValueObject = new JSONObject(results[0]);
-        JSONObjectUtil.removeKeys(preValueObject, List.of("password","userName","role"));
+        JSONObjectUtil.removeKeys(preValueObject, List.of("password", "userName", "role"));
         preValue.put(SystemConstant.VALUE_LOG, preValueObject);
 
         JSONObject value = new JSONObject();
         value.put(SystemConstant.STATUS_LOG, "UpdatedAt and lastLogged fields successfully updated");
         JSONObject valueObject = new JSONObject(results[1]);
-        JSONObjectUtil.removeKeys(valueObject, List.of("password","userName","role"));
+        JSONObjectUtil.removeKeys(valueObject, List.of("password", "userName", "role"));
         value.put(SystemConstant.VALUE_LOG, valueObject);
 
         LoggerHelper.log(SystemConstant.WARN_LEVEL, "UPDATE", RuntimeInfo.getCallerClassNameAndLineNumber(), preValue, value);
@@ -105,23 +180,15 @@ public class UserService implements IUserService {
 
     @Override
     public List<UserModel> findAll(Pageble pageble) throws SQLException {
-        List<UserModel> listUser =  userDAO.findAll(pageble);
+        List<UserModel> listUser = userDAO.findAll(pageble);
         return appendRoleForUsers(listUser);
     }
 
-    @Override
-    public UserModel softDelete(Long id) throws SQLException {
-        UserModel model = findById(id);
-        model.setUpdateAt(new Timestamp(System.currentTimeMillis()));
-        model.setIsDeleted(true);
-        update(model);
-        return findById(model.getId());
-    }
 
     @Override
     public UserModel findById(Long id) throws SQLException {
         UserModel user = userDAO.findById(id);
-        if (user!=null) {
+        if (user != null) {
             RoleModel role = roleDAO.findById(user.getRoleId());
             user.setRole(role);
         }
