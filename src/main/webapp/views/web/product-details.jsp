@@ -84,7 +84,7 @@
                         <p class="text-muted" style="font-size: 16px; font-weight: 600;">Loại: <span>${CATEGORY.name}</span></p>
                         <div class="mb-3">
 
-                            <span class="product-price h5">${MODEL.price} đ</span>
+                            <span class="product-price h5"><fmt:formatNumber type="currency" value="${MODEL.price}"/> đ</span>
                             <span class="text-muted">/ đôi</span>
 
                         </div>

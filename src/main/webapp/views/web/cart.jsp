@@ -64,7 +64,7 @@
                                     </div>
 
                                     <h5 class="mb-2">
-                                        <p class="align-middle" ><span id="subTotal${loop.index}">${product_item.subTotal}</span> đ</p>
+                                        <p class="align-middle" ><span id="subTotal${loop.index}"><fmt:formatNumber type="currency" value="${product_item.subTotal}"/></span></p>
                                     </h5>
                                 </div>
                             </div>
@@ -112,18 +112,18 @@
                         <div class="d-flex justify-content-between mb-3">
                             <span>Giá sản phẩm</span>
                             <p>
-                                $<span id="temporaryPrice">${temporaryPrice}</span>
+                                <span id="temporaryPrice"><fmt:formatNumber type="currency" value="${temporaryPrice}"/></span>
                             </p>
                         </div>
                         <div class="d-flex justify-content-between">
                             <span>Giá giao hàng </span>
-                            <span>$5</span>
+                            <span>20.000đ</span>
                         </div>
                         <hr class="my-4" />
                         <div class="d-flex justify-content-between fw-bold mb-5">
                             <span>Tổng số tiền (bao gồm VAT) </span>
                             <p>
-                                $<span id="totalPrice">${temporaryPrice+5}</span>
+                                $<span id="totalPrice"><fmt:formatNumber type="currency" value="${temporaryPrice+20000}"/></span>
                             </p>
 
                         </div>

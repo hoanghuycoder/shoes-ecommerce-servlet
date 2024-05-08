@@ -72,18 +72,18 @@
             if (listProduct.length>0){
                 for (let i = 0; i < listProduct.length; i++) {
                     const product = listProduct[i];
-                    listProductHtml+=`
+                    listProductHtml+= `
                      <div class="col-12 col-md-4 col-lg-3 mb-5">
-                        <a class="product-item" href="/product-details/`+product.id+`">
-                            <img loading="lazy" src="`+product.thumbnail+`" class="img-fluid product-thumbnail">
-                            <h3 class="product-title">`+product.name+`</h3>
-                            <strong class="product-price">`+product.price+` đ</strong>
+                        <a class="product-item" href="/product-details/` + product.id + `">
+                            <img loading="lazy" src="` + product.thumbnail + `" class="img-fluid product-thumbnail">
+                            <h3 class="product-title">` + product.name + `</h3>
+                            <strong class="product-price">` + new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price) + `</strong>
                             <span class="icon-cross"><img loading="lazy" src="/template/web/images/cross.svg" class="img-fluid"></span>
                         </a>
                     </div>
                 `
                 }
-            } else if (listProduct.length==0 && productName!="" && page==2) {
+            } else if (listProduct.length == 0 && productName!="" && page==2) {
                 const notFoundHtml = `<div class="d-flex">
                         <p class="mx-auto">Không tìm thấy sản phẩm</p>
                     </div>`
