@@ -18,7 +18,7 @@ import java.util.Map;
 public class VoucherDAO extends AbstractDAO<VoucherModel> implements IVoucherDAO {
     @Override
     public List<VoucherModel> findAllWithFilter(VoucherModel model,Pageble pageble) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM voucher_usage WHERE 1=1 ");
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM vouchers WHERE 1=1 ");
         MapSQLAndParamsResult sqlAndParams = new VoucherMapper().mapSQLAndParams(sqlStrBuilder,model,"select",pageble);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
@@ -27,14 +27,14 @@ public class VoucherDAO extends AbstractDAO<VoucherModel> implements IVoucherDAO
     }
     @Override
     public List<VoucherModel> findAll(Pageble pageble) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM voucher_usage");
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM vouchers");
         SqlPagebleUtil.addSQlPageble(sqlStrBuilder,pageble);
         return query(sqlStrBuilder.toString(),new VoucherMapper(),null, VoucherModel.class);
     }
 
     @Override
     public VoucherModel findById(Long id) throws SQLException {
-        String sql = "select * from voucher_usage where id=?";
+        String sql = "select * from vouchers where id=?";
         List<Object> params = new ArrayList<>();
         params.add(id);
         List<VoucherModel> result =  query(sql,new VoucherMapper(),params,VoucherModel.class);
@@ -42,7 +42,7 @@ public class VoucherDAO extends AbstractDAO<VoucherModel> implements IVoucherDAO
     }
     @Override
     public VoucherModel findWithFilter(VoucherModel model) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM voucher_usage WHERE 1=1 ");
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM vouchers WHERE 1=1 ");
         MapSQLAndParamsResult sqlAndParams = new VoucherMapper().mapSQLAndParams(sqlStrBuilder,model,"select",null);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
@@ -52,14 +52,14 @@ public class VoucherDAO extends AbstractDAO<VoucherModel> implements IVoucherDAO
 
     @Override
     public List<VoucherModel> findByColumnValues(List<SubQuery> subQueryList,Pageble pageble) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM voucher_usage WHERE 1=1 ");
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM vouchers WHERE 1=1 ");
         List<VoucherModel> result = queryWithSubQuery(sqlStrBuilder,new VoucherMapper(),subQueryList,"in",VoucherModel.class,pageble);
         return result;
     }
 
     @Override
     public Long save(VoucherModel model) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("INSERT INTO voucher_usage SET ");
+        StringBuilder sqlStrBuilder = new StringBuilder("INSERT INTO vouchers SET ");
         MapSQLAndParamsResult sqlAndParams = new VoucherMapper().mapSQLAndParams(sqlStrBuilder,model,"insert",null);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
@@ -68,7 +68,7 @@ public class VoucherDAO extends AbstractDAO<VoucherModel> implements IVoucherDAO
 
     @Override
     public void update(VoucherModel model) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("UPDATE voucher_usage SET ");
+        StringBuilder sqlStrBuilder = new StringBuilder("UPDATE vouchers SET ");
         MapSQLAndParamsResult sqlAndParams = new VoucherMapper().mapSQLAndParams(sqlStrBuilder,model,"update",null);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
@@ -77,7 +77,7 @@ public class VoucherDAO extends AbstractDAO<VoucherModel> implements IVoucherDAO
 
     @Override
     public void delete(Long id) throws SQLException {
-        String sql = "delete from voucher_usage where id=?";
+        String sql = "delete from vouchers where id=?";
         List<Object> params = new ArrayList<>();
         params.add(id);
         delete(sql,params);
@@ -88,7 +88,7 @@ public class VoucherDAO extends AbstractDAO<VoucherModel> implements IVoucherDAO
         VoucherModel model = new VoucherModel();
         model.setId(id);
         model.setIsDeleted(true);
-        StringBuilder sqlStrBuilder = new StringBuilder("UPDATE voucher_usage SET ");
+        StringBuilder sqlStrBuilder = new StringBuilder("UPDATE vouchers SET ");
         MapSQLAndParamsResult sqlAndParams = new VoucherMapper().mapSQLAndParams(sqlStrBuilder,model,"update",null);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();

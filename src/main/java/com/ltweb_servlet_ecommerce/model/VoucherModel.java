@@ -11,9 +11,9 @@ import java.sql.Timestamp;
 public class VoucherModel extends AbstractModel<VoucherModel>{
     private String name;
     private String code;
+    private String content;
     private Timestamp startDate;
     private Timestamp endDate;
     private int usageLimit;
     private String shortDescription;
-    private boolean active;
 }

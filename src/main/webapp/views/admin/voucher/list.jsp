@@ -10,17 +10,18 @@
 <body>
     <div class="col-12 mt-4">
         <div class="mb-5 ps-3">
-            <a class="btn bg-gradient-dark mb-0" id="toggleAddProduct" data-bs-toggle="collapse" href="#formNewProduct"><i class="material-icons text-sm">add</i>&nbsp;&nbsp;Thêm sản phẩm mới</a>
+            <a class="btn bg-gradient-dark mb-0" id="toggleAddProduct" data-bs-toggle="collapse" href="#formNewProduct"><i class="material-icons text-sm">add</i>&nbsp;&nbsp;Thêm mã giảm giá mới</a>
           <div class="collapse multi-collapse my-3" id="formNewProduct">
             <div class="card py-2 px-4" >
-              <form method="POST" enctype="multipart/form-data">
+              <form method="POST" id ="formAddVoucher" enctype="multipart/form-data">
                 <div class="input-group input-group-outline my-3">
                   <label class="form-label">Tên mã giảm giá</label>
                   <input type="text" class="form-control" name="name" required>
                 </div>
                 <div class="input-group input-group-outline my-3">
                   <label class="form-label">Mã giảm giá</label>
-                  <input type="text" class="form-control" name="name" required>
+                  <input type="text" class="form-control" name="code" required>
+                  <p class="text-danger" id="validateCodeVoucher"></p>
                 </div>
                 <div class="my-3">
                   <label>Nội dung</label>
@@ -41,46 +42,15 @@
                 </div>
                 <div class="input-group input-group-outline my-3">
                   <label class="form-label">Giới hạn (số lần sử dụng)</label>
-                  <input type="text" class="form-control" name="shortDescription" required/>
+                  <input type="text" class="form-control" name="usageLimit" required/>
                 </div>
                 <div class="input-group input-group-static mb-4">
-                  <label for="size" class="ms-0">Điều kiện áp dụng</label>
-                  <input type="checkbox" class="form-control" name="haveCondition"/>
+                  <label for="haveCondition" class="ms-0">Điều kiện áp dụng</label>
+                  <input type="checkbox" class="form-control" id="haveCondition" name="haveCondition"/>
                 </div>
-               <div class="row">
-                 <div class="col-12 col-md-4">
-                   <div class="input-group input-group-static mb-4">
-                     <label for="size" class="ms-0">Áp dụng với</label>
-                     <select class="form-control" id="applyFor" name="tableName" required>
-                       <option value="user">Người dùng</option>
-                       <option value="product">Sản phẩm</option>
-                       <option value="category">Thể loại sản phẩm</option>
-                     </select>
-                   </div>
-                 </div>
-                 <div class="col-12 col-md-4">
-                   <div class="input-group input-group-static mb-4">
-                     <label for="size" class="ms-0">Thông tin áp dụng điều kiện</label>
-                     <select class="form-control" id="size" name="columnName" required>
-                       <option value="userName">ID người dùng</option>
-                       <option value="fullName">Tên người dùng</option>
-                       <option value="birthDay">Sinh nhật</option>
-                       <option value="association">Liên kết</option>
-                       <option value="createAt">Ngày tạo tài khoản</option>
-                     </select>
-                   </div>
-                 </div>
-                 <div class="col-12 col-md-4">
-                   <div class="input-group input-group-static mb-4">
-                     <label for="size" class="ms-0">Điều kiện cụ thể</label>
-                     <select class="form-control" id="condition" name="condition" required>
-                       <option value="userName">Google</option>
-                       <option value="fullName">Facebook</option>
-                     </select>
-                   </div>
-                 </div>
+                <div id="conditionVoucher">
 
-               </div>
+                </div>
                 <button class="btn btn-primary" type="submit">Tạo mã giảm giá</button>
 
               </form>
@@ -106,7 +76,6 @@
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ngày kết thúc áp dụng</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Giới hạn sử dụng</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Mô tả ngắn</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nội dung</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tình trạng</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Cập nhật lúc</th>
                 <th class="text-secondary opacity-7"></th>
@@ -166,13 +135,7 @@
                         </div>
                       </div>
                     </td>
-                    <td>
-                      <div class="d-flex px-2 py-1">
-                        <div class="d-flex flex-column justify-content-center">
-                          <p class="text-xs font-weight-bold mx-auto mb-0">${item.content}</p>
-                        </div>
-                      </div>
-                    </td>
+
                     <td>
                       <div class="d-flex px-2 py-1">
                         <div class="d-flex flex-column justify-content-center">
@@ -255,6 +218,7 @@
         </div>
       </div>
     </div>
+    <script src="./voucher.js"></script>
     <script>
       const setIdDelete = (id,name) => {
         $("#deleteModalLabel").text("Xóa mã giảm giá "+name+"?");
@@ -273,6 +237,88 @@
                 .catch( error => {
                   console.error( error );
                 } );
+        let deboundValidateCodeVoucher =  null;
+        $("input[name='code']").change(function () {
+          const code = $(this).val();
+          clearTimeout(deboundValidateCodeVoucher);
+          deboundValidateCodeVoucher = setTimeout(function () {
+            $.ajax({
+              url : "/ajax/voucher",
+              data : {
+                code
+              },
+              type : "GET",
+              success : function (data) {
+                if (data.code===code)  {
+                  $("#validateCodeVoucher").text("Mã giảm giá đã tồn tại")
+                  $("#formAddVoucher button[type='submit']").attr("disabled","")
+                } else {
+                  $("#validateCodeVoucher").text("")
+                  $("#formAddVoucher button[type='submit']").attr("disabled",false)
+                }
+              },
+              error : {
+
+              }
+            })
+          },200)
+        })
+      //   Set condition voucher
+        let conditions = [];
+        $("haveCondition").change( function () {
+          if($(this).prop("checked")) {
+            $("#conditionVoucher").append(`
+            <div class="conditionList">
+
+                  </div>
+                  <div class="d-flex justify-content-end me-4 gap-4">
+                    <div class="btn btn-outline-primary rounded-circle d-flex p-0" id="addCondition" style="width: 40px;height: 40px">
+                      <i class="fa-solid fa-plus m-auto"></i>
+                    </div>
+                    <div class="btn btn-outline-danger rounded-circle d-flex p-0" id="removeCondition" style="width: 40px;height: 40px">
+                      <i class="fa-solid fa-minus m-auto"></i>
+                    </div>
+                  </div>
+            `)
+           conditions.push({
+             tableName : 'user',
+             columnName : 'association',
+             conditionValue :'facebook'
+           })
+          } else {
+            conditions = [];
+          }
+        })
+        function updateDOMCondition() {
+          for (let i = 0; i < conditions.length; i++) {
+            const condition = conditions[i];
+            $("#conditionList").append(`
+             <div className="row" id="conditionItem${i}" data-index-condition="${i}">
+              <div className="col-12 col-md-4 condition-table">
+
+              </div>
+              <div className="col-12 col-md-4 condition-column">
+
+              </div>
+              <div className="col-12 col-md-4 condition-value">
+
+              </div>
+            </div>
+            `);
+            $("#conditionItem${i} > .condition-table").append(conditionTable(condition.tableName))
+            $("#conditionItem${i} > .condition-column").append(conditionColumns[condition.tableName](condition.columnName))
+            $("#conditionItem${i} > .condition-value").append(conditionColumns[condition.tableName][condition.columnName](condition.conditionValue))
+          }
+        }
+
+        function updateDOMAction() {
+          $("#addCondition").click(function () {
+
+          })
+          $("#removeCondition").click(function () {
+
+          })
+        }
       })
 
     </script>

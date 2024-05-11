@@ -10,6 +10,7 @@ import com.ltweb_servlet_ecommerce.constant.SystemConstant;
 import com.ltweb_servlet_ecommerce.model.ProductImageModel;
 import com.ltweb_servlet_ecommerce.model.ProductModel;
 import com.ltweb_servlet_ecommerce.model.ProductSizeModel;
+import com.ltweb_servlet_ecommerce.model.VoucherModel;
 import com.ltweb_servlet_ecommerce.service.*;
 import com.ltweb_servlet_ecommerce.utils.FormUtil;
 import com.ltweb_servlet_ecommerce.utils.NotifyUtil;
@@ -40,11 +41,12 @@ public class VoucherListController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         NotifyUtil.setUp(req);
         try {
-            req.setAttribute(SystemConstant.LIST_MODEL,voucherService.findAll(null));
+            List<VoucherModel> vouchers = voucherService.findAll(null);
+            req.setAttribute(SystemConstant.LIST_MODEL,vouchers);
             RequestDispatcher rd = req.getRequestDispatcher("/views/admin/voucher/list.jsp");
             rd.forward(req,resp);
         } catch (Exception e) {
-            resp.sendRedirect("/admin/product/list?message=error&toast=danger");
+            resp.sendRedirect("/admin/voucher/list?message=error&toast=danger");
         }
 
     }
