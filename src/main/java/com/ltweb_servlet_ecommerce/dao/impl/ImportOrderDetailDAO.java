@@ -3,6 +3,7 @@ package com.ltweb_servlet_ecommerce.dao.impl;
 import com.ltweb_servlet_ecommerce.dao.IImportOrderDetailDAO;
 import com.ltweb_servlet_ecommerce.mapper.impl.ImportOrderDetailMapper;
 import com.ltweb_servlet_ecommerce.model.ImportOrderDetailModel;
+import com.ltweb_servlet_ecommerce.model.ImportOrderModel;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class ImportOrderDetailDAO extends AbstractDAO<ImportOrderDetailModel> im
 
     @Override
     public double getTotalPriceByImportId(long importId) {
-        String sql = "SELECT SUM(priceImport) AS totalPrice FROM import_order_details where importOrderId = ?";
+        String sql = "SELECT SUM(priceImport * quantityImport) AS totalPrice FROM import_order_details where importOrderId = ?";
         Map<String, Object> stringObjectMap = queryCustom(sql, List.of(importId));
         Object totalPrice = stringObjectMap.get("totalPrice");
         if (totalPrice != null) {
@@ -41,5 +42,11 @@ public class ImportOrderDetailDAO extends AbstractDAO<ImportOrderDetailModel> im
     public List<ImportOrderDetailModel> findByImportId(long importId) {
         String sql = "SELECT * FROM import_order_details where importOrderId = ? and isDeleted = 0";
         return query(sql, new ImportOrderDetailMapper(), List.of(importId), ImportOrderDetailModel.class);
+    }
+
+    @Override
+    public List<ImportOrderDetailModel> findByProductSizeId() {
+        String sql = "SELECT * FROM import_order_details";
+        return query(sql, new ImportOrderDetailMapper(), null, ImportOrderDetailModel.class);
     }
 }

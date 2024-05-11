@@ -20,4 +20,5 @@ public interface IOrderDetailsDAO {
 
     int softDelete(Long id) throws SQLException;
     Map<String,Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException;
+    public List<OrderDetailsModel> findAllByOrderId(Long orderId) throws SQLException;
 }

@@ -38,6 +38,16 @@ public class OrderDetailsDAO extends AbstractDAO<OrderDetailsModel> implements I
         List<OrderDetailsModel> result =  query(sql,new OrderDetailsMapper(),params,OrderDetailsModel.class);
         return result.isEmpty() ? null : result.get(0);
     }
+
+    @Override
+    public List<OrderDetailsModel> findAllByOrderId(Long orderId) throws SQLException {
+        String sql = "select * from order_details where orderId=?";
+        List<Object> params = new ArrayList<>();
+        params.add(orderId);
+        List<OrderDetailsModel> result =  query(sql,new OrderDetailsMapper(),params,OrderDetailsModel.class);
+        return result;
+    }
+
     @Override
     public OrderDetailsModel findWithFilter(OrderDetailsModel model) throws SQLException {
         StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM order_details WHERE 1=1 ");
@@ -97,6 +107,7 @@ public class OrderDetailsDAO extends AbstractDAO<OrderDetailsModel> implements I
     public Map<String, Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException {
         return queryCustom(sql,params);
     }
+
 
 
 }

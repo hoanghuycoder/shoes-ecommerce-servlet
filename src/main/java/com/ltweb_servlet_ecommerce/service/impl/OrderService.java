@@ -2,10 +2,14 @@ package com.ltweb_servlet_ecommerce.service.impl;
 
 import com.ltweb_servlet_ecommerce.constant.SystemConstant;
 import com.ltweb_servlet_ecommerce.dao.IOrderDAO;
+import com.ltweb_servlet_ecommerce.dao.impl.OrderDAO;
 import com.ltweb_servlet_ecommerce.log.LoggerHelper;
+import com.ltweb_servlet_ecommerce.model.OrderDetailsModel;
 import com.ltweb_servlet_ecommerce.model.OrderModel;
+import com.ltweb_servlet_ecommerce.paging.PageRequest;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.service.IOrderService;
+import com.ltweb_servlet_ecommerce.sort.Sorter;
 import com.ltweb_servlet_ecommerce.subquery.SubQuery;
 import com.ltweb_servlet_ecommerce.utils.ObjectComparator;
 import com.ltweb_servlet_ecommerce.utils.RuntimeInfo;
@@ -108,5 +112,27 @@ public class OrderService implements IOrderService {
     @Override
     public Map<String, Object> findIdBySlug(List<Object> params) throws SQLException {
         return orderDAO.findIdBySlug(params);
+    }
+
+    @Override
+    public double getTotalPrice(){
+        IOrderDAO o = new OrderDAO();
+        double totalPrice = 0;
+        List<OrderModel> listOrder = null;
+        try {
+            listOrder = o.findAll(new PageRequest(1, 10, new Sorter("id", "ASC")));
+            System.out.println(listOrder.size());
+            for (OrderModel i : listOrder) {
+                OrderDetailsService orderDetailsService = new OrderDetailsService();
+                List<OrderDetailsModel> listDetail = orderDetailsService.findAllByOrderId(i.getId());
+                for (OrderDetailsModel j :listDetail) {
+                    double pricePerOrder = j.getSubTotal() * j.getQuantity();
+                    totalPrice += pricePerOrder;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return totalPrice;
     }
 }

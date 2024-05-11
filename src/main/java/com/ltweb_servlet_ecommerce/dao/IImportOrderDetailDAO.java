@@ -11,4 +11,5 @@ public interface IImportOrderDetailDAO {
     boolean softDeleteByImportId(Long id);
 
     List<ImportOrderDetailModel> findByImportId(long importId);
+    List<ImportOrderDetailModel> findByProductSizeId();
 }

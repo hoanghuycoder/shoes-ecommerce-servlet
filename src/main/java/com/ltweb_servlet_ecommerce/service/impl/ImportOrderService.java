@@ -2,9 +2,14 @@ package com.ltweb_servlet_ecommerce.service.impl;
 
 import com.ltweb_servlet_ecommerce.dao.IImportOrderDAO;
 import com.ltweb_servlet_ecommerce.dao.IImportOrderDetailDAO;
+import com.ltweb_servlet_ecommerce.dao.impl.ImportOrderDAO;
+import com.ltweb_servlet_ecommerce.dao.impl.ImportOrderDetailDAO;
+import com.ltweb_servlet_ecommerce.model.ImportOrderDetailModel;
 import com.ltweb_servlet_ecommerce.model.ImportOrderModel;
+import com.ltweb_servlet_ecommerce.paging.PageRequest;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.service.IImportOrderService;
+import com.ltweb_servlet_ecommerce.sort.Sorter;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -19,6 +24,12 @@ public class ImportOrderService implements IImportOrderService {
     @Override
     public List<ImportOrderModel> findAll(Pageble pageble) {
         // calculate total price for every import order
+
+        if (importDAO == null || importDetailDAO == null) {
+            importDAO = new ImportOrderDAO();
+            importDetailDAO = new ImportOrderDetailDAO();
+        }
+
         List<ImportOrderModel> all = importDAO.findAll(pageble);
         if (all == null) {
             all = new ArrayList<>();
@@ -39,4 +50,18 @@ public class ImportOrderService implements IImportOrderService {
 
         return result;
     }
+
+    @Override
+    public double getTotalImportPrice() {
+        double totalImportPrice = 0;
+        List<ImportOrderModel> listImportOrder = this.findAll(new PageRequest(1, 10, new Sorter("id", "ASC")));
+        for (ImportOrderModel i :  listImportOrder) {
+            ImportOrderDetailService importOrderDetailService = new ImportOrderDetailService();
+            double pricePerImport = importOrderDetailService.getTotalPriceByImportId(i.getId());
+            totalImportPrice += pricePerImport;
+        }
+        return totalImportPrice;
+    }
+
+
 }

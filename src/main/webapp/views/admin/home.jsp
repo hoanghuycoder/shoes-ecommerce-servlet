@@ -13,6 +13,15 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="com.google.gson.Gson" %>
+<%@ page import="com.ltweb_servlet_ecommerce.model.ImportOrderModel" %>
+<%@ page import="com.ltweb_servlet_ecommerce.service.impl.ImportOrderService" %>
+<%@ page import="com.ltweb_servlet_ecommerce.paging.PageRequest" %>
+<%@ page import="com.ltweb_servlet_ecommerce.service.impl.ImportOrderDetailService" %>
+<%@ page import="com.ltweb_servlet_ecommerce.model.ImportOrderDetailModel" %>
+<%@ page import="com.ltweb_servlet_ecommerce.sort.Sorter" %>
+<%@ page import="java.text.DecimalFormat" %>
+<%@ page import="java.sql.SQLException" %>
+<%@ page import="com.ltweb_servlet_ecommerce.service.impl.ProductSizeService" %>
 <fmt:setLocale value="vi_VN"/>
 <!doctype html>
 <html lang="en">
@@ -40,8 +49,13 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                            Doanh thu</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                            Tổng Doanh thu</div>
+                        <%  OrderService orderService = new OrderService();
+                            double totalOrderPrice = orderService.getTotalPrice();
+                            DecimalFormat decimalFormat1 = new DecimalFormat("#,##0.00 ₫");
+                            String formattedOrderPrice = decimalFormat1.format(totalOrderPrice);
+                           %>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><%=formattedOrderPrice%></div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -58,8 +72,12 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                            Chi phí nhập hàng</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                            Tổng Chi phí nhập hàng</div>
+                        <%  ImportOrderService importOrderService = new ImportOrderService();
+                            double totalImportPrice = importOrderService.getTotalImportPrice();
+                            DecimalFormat decimalFormat2 = new DecimalFormat("#,##0.00 ₫");
+                            String formattedImportPrice = decimalFormat2.format(totalImportPrice);%>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><%=formattedImportPrice%></div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -76,8 +94,13 @@
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                            Lợi nhuận</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                            Tổng Lợi Nhuận</div>
+                        <%
+                            ProductSizeService productSizeService = new ProductSizeService();
+                            double totalProfit = productSizeService.getTotalProfit();
+                            String formattedProfitPrice = decimalFormat2.format(totalProfit);
+                        %>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"><%=formattedProfitPrice%></div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -95,7 +118,7 @@
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                             Earnings (Annual)</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800"></div>
                     </div>
                     <div class="col-auto">
                         <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -139,6 +162,7 @@
                     <option value="2024">2024</option>
                 </select>
 
+
 <%--                <select id="monthSelect" name="selectMonth" onchange="updateMonth()">--%>
 <%--                    <option value="1" selected>Tháng 1</option>--%>
 <%--                    <option value="2">Tháng 2</option>--%>
@@ -174,6 +198,7 @@
         </div>
 
     </div>
+    <div>Coming soon</div>
 </div>
 
 

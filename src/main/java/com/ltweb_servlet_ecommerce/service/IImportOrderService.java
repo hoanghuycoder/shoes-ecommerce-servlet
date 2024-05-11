@@ -9,4 +9,6 @@ public interface IImportOrderService {
     List<ImportOrderModel> findAll(Pageble pageble);
 
     boolean delete(Long[] ids);
+
+    double getTotalImportPrice();
 }
