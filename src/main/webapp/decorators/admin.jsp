@@ -3,6 +3,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+<%--    <link rel="stylesheet" href="<c:url value="/template/admin/assets/css/admin-product.css"/>">--%>
+    <link rel="stylesheet" href="<c:url value="/template/admin/assets/css/admin-order.css"/>">
+
     <link href="<c:url value="/template/admin/assets/css/editImage.css"/>" rel="stylesheet">
     <link rel="shortcut icon" href="<c:url value="https://www.nike.com/favicon.ico"/> ">
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
@@ -14,6 +17,7 @@
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
     <link href="<c:url value="/template/web/css/custom.css"/>" rel="stylesheet">
     <link rel="stylesheet" href="<c:url value="/template/admin/assets/css/admin-log.css"/>">
+
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
 

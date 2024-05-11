@@ -4,10 +4,7 @@ public class SystemConstant {
     public static final String ADMIN_ROLE = "admin";
     public static final String MODERATOR_ROLE = "moderator";
     public static final String USER_ROLE = "user";
-
-
     public static final String USER_MODEL = "USER_MODEL";
-
     public static final String MODEL = "MODEL";
     public static final String LIST_MODEL = "LIST_MODEL";
     public static final String HOME_TAB = "Home";
@@ -21,4 +18,8 @@ public class SystemConstant {
     public static final String WARN_LEVEL = "WARN";
     public static final String VALUE_LOG = "value";
     public static final String STATUS_LOG = "status";
+    public static final String ORDER_PROCESSING = "Đang chuẩn bị";
+    public static final String ORDER_TRANSPORTING = "Đang giao";
+    public static final String ORDER_DELIVERED = "Đã giao";
+    public static final String ORDER_CANCEL = "Đã hủy";
 }

@@ -166,6 +166,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
                 return rs.getLong(1);
             }
         } catch (SQLException e) {
+            e.printStackTrace();
             LoggerHelper.logDetailedDangerMessage(e, "INSERT");
             if (connection != null) {
                 connection.rollback();

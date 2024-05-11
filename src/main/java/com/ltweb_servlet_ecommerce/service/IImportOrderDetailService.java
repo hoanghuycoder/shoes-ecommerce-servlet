@@ -4,10 +4,15 @@ import com.ltweb_servlet_ecommerce.model.ImportOrderDetailModel;
 import com.ltweb_servlet_ecommerce.model.ImportOrderModel;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 
+import javax.servlet.http.Part;
+import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 public interface IImportOrderDetailService {
-    double getTotalPriceByImportId(long importId);
+    double getTotalPriceByImportId(String importId);
 
-    List<ImportOrderDetailModel> findByImportId(long importId);
+    List<ImportOrderDetailModel> findByImportId(String importId);
+
+    boolean importFileExcel(String importOrderId, Part importFile ,Collection<Part> parts) throws IOException;
 }

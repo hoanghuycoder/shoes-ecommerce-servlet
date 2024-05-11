@@ -8,5 +8,8 @@ import java.util.List;
 public interface IImportOrderDAO {
     List<ImportOrderModel> findAll(Pageble pageble) ;
 
-    boolean softDelete(Long id);
+    boolean softDelete(String id);
+
+    String save(ImportOrderModel model) ;
+    ImportOrderModel findById(String id);
 }

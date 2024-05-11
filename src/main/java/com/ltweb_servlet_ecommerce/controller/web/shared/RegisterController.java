@@ -3,17 +3,11 @@ package com.ltweb_servlet_ecommerce.controller.web.shared;
 import com.ltweb_servlet_ecommerce.model.UserModel;
 import com.ltweb_servlet_ecommerce.service.IUserService;
 import com.ltweb_servlet_ecommerce.utils.FormUtil;
-import com.ltweb_servlet_ecommerce.utils.SendMailUtil;
 import com.ltweb_servlet_ecommerce.utils.NotifyUtil;
+import com.ltweb_servlet_ecommerce.utils.SendMailUtil;
 import com.ltweb_servlet_ecommerce.utils.SessionUtil;
 
 import javax.inject.Inject;
-import javax.mail.Authenticator;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,9 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
-import java.util.Properties;
 import java.util.Random;
-import java.util.ResourceBundle;
 
 
 @WebServlet(urlPatterns = {"/sign-up"})

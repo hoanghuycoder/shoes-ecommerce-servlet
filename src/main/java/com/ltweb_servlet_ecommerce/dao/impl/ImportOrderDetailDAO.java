@@ -1,11 +1,14 @@
 package com.ltweb_servlet_ecommerce.dao.impl;
 
 import com.ltweb_servlet_ecommerce.dao.IImportOrderDetailDAO;
+import com.ltweb_servlet_ecommerce.log.LoggerHelper;
 import com.ltweb_servlet_ecommerce.mapper.impl.ImportOrderDetailMapper;
 import com.ltweb_servlet_ecommerce.model.ImportOrderDetailModel;
 import com.ltweb_servlet_ecommerce.model.ImportOrderModel;
+import com.ltweb_servlet_ecommerce.utils.JDBCUtil;
 
-import java.sql.SQLException;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +28,7 @@ public class ImportOrderDetailDAO extends AbstractDAO<ImportOrderDetailModel> im
     }
 
     @Override
-    public boolean softDeleteByImportId(Long id) {
+    public boolean softDeleteByImportId(String id) {
         String sql = "update import_order_details set isDeleted=? where importOrderId=?";
         List<Object> params = new ArrayList<>();
         params.add(1);
@@ -39,7 +42,7 @@ public class ImportOrderDetailDAO extends AbstractDAO<ImportOrderDetailModel> im
     }
 
     @Override
-    public List<ImportOrderDetailModel> findByImportId(long importId) {
+    public List<ImportOrderDetailModel> findByImportId(String importId) {
         String sql = "SELECT * FROM import_order_details where importOrderId = ? and isDeleted = 0";
         return query(sql, new ImportOrderDetailMapper(), List.of(importId), ImportOrderDetailModel.class);
     }
@@ -48,5 +51,41 @@ public class ImportOrderDetailDAO extends AbstractDAO<ImportOrderDetailModel> im
     public List<ImportOrderDetailModel> findByProductSizeId() {
         String sql = "SELECT * FROM import_order_details";
         return query(sql, new ImportOrderDetailMapper(), null, ImportOrderDetailModel.class);
+    public long save(ImportOrderDetailModel newModel) {
+        String sql = "INSERT INTO import_order_details(importOrderId, productSizeId,quantityImport,priceImport) VALUES(?,?,?,?)";
+        Connection connection = null;
+        ResultSet rs = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = JDBCUtil.getConnection();
+            connection.setAutoCommit(false);
+            preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+            preparedStatement.setString(1, newModel.getImportOrderId());
+            preparedStatement.setLong(2, newModel.getProductSizeId());
+            preparedStatement.setInt(3, newModel.getQuantityImport());
+            preparedStatement.setDouble(4, newModel.getPriceImport());
+
+            preparedStatement.executeUpdate();
+            rs = preparedStatement.getGeneratedKeys();
+            if (rs.next()) {
+                connection.commit();
+                return rs.getLong(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            LoggerHelper.logDetailedDangerMessage(e, "INSERT");
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+
+        } finally {
+            JDBCUtil.closeConnection(connection, preparedStatement, rs);
+        }
+        return 0;
     }
 }

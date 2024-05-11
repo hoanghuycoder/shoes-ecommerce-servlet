@@ -11,7 +11,12 @@ import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.service.IImportOrderService;
 import com.ltweb_servlet_ecommerce.sort.Sorter;
 
+import com.ltweb_servlet_ecommerce.utils.ReadImportOrderFile;
+
+
 import javax.inject.Inject;
+import javax.servlet.http.Part;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,15 +47,14 @@ public class ImportOrderService implements IImportOrderService {
     }
 
     @Override
-    public boolean delete(Long[] ids) {
+    public boolean delete(String[] ids) {
         boolean result = true;
-        for (Long id : ids) {
+        for (String id : ids) {
             result = result && importDAO.softDelete(id) && importDetailDAO.softDeleteByImportId(id);
         }
 
         return result;
     }
-
     @Override
     public double getTotalImportPrice() {
         double totalImportPrice = 0;
@@ -63,5 +67,13 @@ public class ImportOrderService implements IImportOrderService {
         return totalImportPrice;
     }
 
+
+
+
+    @Override
+    public ImportOrderModel save(ImportOrderModel model) {
+        importDAO.save(model);
+        return model;
+    }
 
 }
