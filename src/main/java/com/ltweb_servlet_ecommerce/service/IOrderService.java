@@ -21,5 +21,5 @@ public interface IOrderService {
     OrderModel softDelete(Long id) throws SQLException;
     Map<String,Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException;
     Map<String,Object> findIdBySlug(List<Object> params) throws SQLException;
-
+    double getTotalPrice();
 }

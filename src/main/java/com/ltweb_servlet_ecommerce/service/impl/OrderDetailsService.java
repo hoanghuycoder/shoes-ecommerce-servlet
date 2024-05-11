@@ -2,6 +2,7 @@ package com.ltweb_servlet_ecommerce.service.impl;
 
 import com.ltweb_servlet_ecommerce.constant.SystemConstant;
 import com.ltweb_servlet_ecommerce.dao.IOrderDetailsDAO;
+import com.ltweb_servlet_ecommerce.dao.impl.OrderDetailsDAO;
 import com.ltweb_servlet_ecommerce.log.LoggerHelper;
 import com.ltweb_servlet_ecommerce.model.OrderDetailsModel;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
@@ -43,6 +44,15 @@ public class OrderDetailsService implements IOrderDetailsService {
     }
 
     @Override
+    public List<OrderDetailsModel> findAllByOrderId(Long orderId) throws SQLException {
+        if (orderDetailsDAO == null) {
+            orderDetailsDAO = new OrderDetailsDAO();
+        }
+        return orderDetailsDAO.findAllByOrderId(orderId);
+    }
+
+
+    @Override
     public OrderDetailsModel update(OrderDetailsModel model) throws SQLException {
         OrderDetailsModel oldModel = orderDetailsDAO.findById(model.getId());
         model.setUpdateAt(new Timestamp(System.currentTimeMillis()));
@@ -73,6 +83,9 @@ public class OrderDetailsService implements IOrderDetailsService {
 
     @Override
     public List<OrderDetailsModel> findAll(Pageble pageble) throws SQLException {
+        if (orderDetailsDAO == null) {
+            orderDetailsDAO = new OrderDetailsDAO();
+        }
         return orderDetailsDAO.findAll(pageble);
     }
 

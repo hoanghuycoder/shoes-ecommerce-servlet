@@ -11,8 +11,10 @@ import java.util.List;
 public interface IImportOrderService {
     List<ImportOrderModel> findAll(Pageble pageble);
 
-    boolean delete(String[] ids);
+    boolean delete(Long[] ids);
 
+    double getTotalImportPrice();
 
     ImportOrderModel save(ImportOrderModel model);
+
 }

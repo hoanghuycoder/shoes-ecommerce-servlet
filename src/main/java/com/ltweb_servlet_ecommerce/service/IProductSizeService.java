@@ -21,4 +21,5 @@ public interface IProductSizeService {
     ProductSizeModel softDelete(Long id) throws SQLException;
     int getAvailableProducts(Long productSizeId);
     Map<String,Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException;
+    double getTotalProfit();
 }

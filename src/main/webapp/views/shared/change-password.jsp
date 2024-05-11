@@ -30,21 +30,21 @@
             <p style="margin: 5px 0px; color: #fc1616"> <%= error%> </p>
         </div>
         <div class="card-body">
-            <form class="form" role="form" autocomplete="off">
+            <form class="form" role="form" autocomplete="off" method="post" action="/change-password">
                 <div class="form-group">
                     <label for="inputPasswordOld">Mật khẩu hiện tại</label>
-                    <input type="password" class="form-control" id="inputPasswordOld" required="">
+                    <input type="password" class="form-control" id="inputPasswordOld" name="currentpassword" required="">
                 </div>
                 <div class="form-group">
                     <label for="inputPasswordNew">Mật khẩu mới</label>
-                    <input type="password" class="form-control" id="inputPasswordNew" required="">
+                    <input type="password" class="form-control" id="inputPasswordNew" name="newpassword" required="">
 <%--                    <span class="form-text small text-muted">--%>
 <%--                                            The password must be 8-20 characters, and must <em>not</em> contain spaces.--%>
 <%--                                        </span>--%>
                 </div>
                 <div class="form-group">
-                    <label for="inputPasswordNewVerify">Xác thực</label>
-                    <input type="password" class="form-control" id="inputPasswordNewVerify" required="">
+                    <label for="inputPasswordNewVerify">Xác thực mật khẩu</label>
+                    <input type="password" class="form-control" id="inputPasswordNewVerify" name="repassword" required="">
 <%--                    <span class="form-text small text-muted">--%>
 <%--                                            To confirm, type the new password again.--%>
 <%--                                        </span>--%>

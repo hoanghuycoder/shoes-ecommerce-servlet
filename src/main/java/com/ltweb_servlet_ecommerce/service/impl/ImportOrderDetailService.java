@@ -3,6 +3,9 @@ package com.ltweb_servlet_ecommerce.service.impl;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.ltweb_servlet_ecommerce.dao.*;
+import com.ltweb_servlet_ecommerce.dao.impl.ImportOrderDetailDAO;
+import com.ltweb_servlet_ecommerce.dao.impl.ProductDAO;
+import com.ltweb_servlet_ecommerce.dao.impl.SizeDAO;
 import com.ltweb_servlet_ecommerce.model.*;
 import com.ltweb_servlet_ecommerce.service.IImportOrderDetailService;
 import com.ltweb_servlet_ecommerce.utils.CloudinarySingleton;
@@ -34,13 +37,24 @@ public class ImportOrderDetailService implements IImportOrderDetailService {
     ProductImageService imageService;
 
     @Override
-    public double getTotalPriceByImportId(String importId) {
+
+    public double getTotalPriceByImportId(long importId) {
+        //do máy ko tự inject nên tạo tay
+        if (orderDetailDAO == null) {
+            orderDetailDAO = new ImportOrderDetailDAO();
+        }
         return orderDetailDAO.getTotalPriceByImportId(importId);
     }
 
     @Override
-    // This method retrieves a list of ImportOrderDetailModel by the given importId
-    public List<ImportOrderDetailModel> findByImportId(String importId) {
+    public List<ImportOrderDetailModel> findByImportId(long importId) {
+        //do máy ko tự inject nên tạo tay
+        if (orderDetailDAO == null || productDAO == null || sizeDAO == null) {
+            orderDetailDAO = new ImportOrderDetailDAO();
+            productDAO = new ProductDAO();
+            sizeDAO = new SizeDAO();
+        }
+
         // Call the DAO to get the list of ImportOrderDetailModel by importId
         List<ImportOrderDetailModel> importList = orderDetailDAO.findByImportId(importId);
 
@@ -69,6 +83,12 @@ public class ImportOrderDetailService implements IImportOrderDetailService {
         return importList;
     }
 
+    public List<ImportOrderDetailModel> findByProductSizeId() {
+        if (orderDetailDAO == null) {
+            orderDetailDAO = new ImportOrderDetailDAO();
+        }
+        return orderDetailDAO.findByProductSizeId();
+    }
 
     // This method processes the category of the imported product
     private long processCategory(ImportOrderDetailModel model) throws SQLException {
