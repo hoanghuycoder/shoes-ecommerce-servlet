@@ -8,6 +8,7 @@ import com.ltweb_servlet_ecommerce.model.OrderDetailsModel;
 import com.ltweb_servlet_ecommerce.model.OrderModel;
 import com.ltweb_servlet_ecommerce.paging.PageRequest;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
+import com.ltweb_servlet_ecommerce.service.IOrderDetailsService;
 import com.ltweb_servlet_ecommerce.service.IOrderService;
 import com.ltweb_servlet_ecommerce.sort.Sorter;
 import com.ltweb_servlet_ecommerce.subquery.SubQuery;
@@ -25,6 +26,8 @@ import java.util.Map;
 public class OrderService implements IOrderService {
     @Inject
     IOrderDAO orderDAO;
+    @Inject
+    IOrderDetailsService orderDetailsService;
 
     @Override
     public List<OrderModel> findAllWithFilter(OrderModel model, Pageble pageble) throws SQLException {
@@ -81,12 +84,29 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public OrderModel softDelete(Long id) throws SQLException {
-        OrderModel model = orderDAO.findById(id);
-        model.setUpdateAt(new Timestamp(System.currentTimeMillis()));
-        model.setIsDeleted(true);
-        orderDAO.update(model);
-        return orderDAO.findById(model.getId());
+    public boolean softDelete(Long id) {
+        OrderModel model = null;
+        try {
+            model = orderDAO.findById(id);
+            if (model == null) {
+                return false;
+            }
+
+            model.setUpdateAt(new Timestamp(System.currentTimeMillis()));
+            model.setIsDeleted(true);
+            boolean isDeleted = orderDAO.update(model) > 0;
+
+            boolean flag = true;
+            List<OrderDetailsModel> all = orderDetailsService.findAllByOrderId(id);
+            for (OrderDetailsModel orderDetailsModel : all) {
+                flag = flag && orderDetailsService.softDelete(orderDetailsModel.getId());
+            }
+
+            return isDeleted && flag;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override

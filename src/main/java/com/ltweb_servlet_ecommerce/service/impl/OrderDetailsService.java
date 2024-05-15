@@ -90,12 +90,12 @@ public class OrderDetailsService implements IOrderDetailsService {
     }
 
     @Override
-    public OrderDetailsModel softDelete(Long id) throws SQLException {
+    public boolean softDelete(Long id) throws SQLException {
         OrderDetailsModel model = orderDetailsDAO.findById(id);
         model.setUpdateAt(new Timestamp(System.currentTimeMillis()));
         model.setIsDeleted(true);
-        orderDetailsDAO.update(model);
-        return orderDetailsDAO.findById(model.getId());
+
+        return orderDetailsDAO.update(model) > 0;
     }
 
     @Override

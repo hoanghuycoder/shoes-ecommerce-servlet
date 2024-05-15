@@ -1,13 +1,12 @@
 package com.ltweb_servlet_ecommerce.controller.admin.order;
 
+import com.google.gson.JsonParser;
 import com.ltweb_servlet_ecommerce.model.AddressModel;
 import com.ltweb_servlet_ecommerce.model.OrderDetailsModel;
 import com.ltweb_servlet_ecommerce.model.OrderModel;
 import com.ltweb_servlet_ecommerce.model.ProductModel;
-import com.ltweb_servlet_ecommerce.paging.PageRequest;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.service.*;
-import com.ltweb_servlet_ecommerce.sort.Sorter;
 import com.ltweb_servlet_ecommerce.utils.CartUtil;
 import com.ltweb_servlet_ecommerce.utils.NotifyUtil;
 import com.ltweb_servlet_ecommerce.utils.PagingUtil;
@@ -63,5 +62,18 @@ public class OrderListController extends HttpServlet {
             resp.sendRedirect("/admin?message=error&toast=danger");
         }
 
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) {
+        JsonParser parser = new JsonParser();
+        try {
+            long id = parser.parse(request.getReader()).getAsLong();
+            boolean isDeleted = orderService.softDelete(id);
+            response.setStatus(isDeleted ? HttpServletResponse.SC_NO_CONTENT : HttpServletResponse.SC_BAD_REQUEST);
+        }catch (Exception e) {
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
     }
 }

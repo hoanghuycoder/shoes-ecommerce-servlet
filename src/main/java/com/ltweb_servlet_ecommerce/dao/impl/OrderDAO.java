@@ -30,7 +30,7 @@ public class OrderDAO extends AbstractDAO<OrderModel> implements IOrderDAO {
 
     @Override
     public List<OrderModel> findAll(Pageble pageble) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM `orders`");
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM `orders` where isDeleted=0 ");
         SqlPagebleUtil.addSQlPageble(sqlStrBuilder,pageble);
         return query(sqlStrBuilder.toString(),new OrderMapper(),null, OrderModel.class);
     }
