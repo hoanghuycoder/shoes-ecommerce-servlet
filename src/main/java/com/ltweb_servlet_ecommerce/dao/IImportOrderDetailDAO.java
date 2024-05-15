@@ -10,7 +10,7 @@ public interface IImportOrderDetailDAO {
     double getTotalPriceByImportId(String importId);
     boolean softDeleteByImportId(String id);
 
-    List<ImportOrderDetailModel> findByImportId(long importId);
+    List<ImportOrderDetailModel> findByImportId(String importId);
     List<ImportOrderDetailModel> findByProductSizeId();
 
     long save(ImportOrderDetailModel newModel);

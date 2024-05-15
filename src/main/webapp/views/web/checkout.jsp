@@ -87,7 +87,7 @@
                         </div>
                         <div class="form-group">
                             <label for="note" class="form-label">Ghi chú</label>
-                            <input class="form-control" type="text" id="note" name="note" placeholder="Ghi chú của bạn..." required>
+                            <input class="form-control" type="text" id="note" name="note" placeholder="Ghi chú của bạn...">
                         </div>
 
                         <c:forEach var="product_item" items="${LIST_PRODUCT_OF_CART}">
@@ -141,11 +141,11 @@
                 </div>
                 <div class="d-flex justify-content-between border-bottom border-2 pb-2 mb-4" style="border-color: hsl(0,0%, 96%) !important;">
                     <p>Vận chuyển</p>
-                    <p> <fmt:formatNumber type="currency" value="5"/></p>
+                    <p> <fmt:formatNumber type="currency" value="20000"/></p>
                 </div>
                 <div class="d-flex justify-content-between">
                     <p class="h5 mb-5">Tổng</p>
-                    <p class="h5 mb-5"> <fmt:formatNumber type="currency" value="${temporaryPrice+5}"/></p>
+                    <p class="h5 mb-5"> <fmt:formatNumber type="currency" value="${temporaryPrice+20000}"/></p>
                 </div>
                 <div class="small">
 <%--                    <p class="text-muted mb-4">Our returns are free and easy. If something isn't quite right, you have 14 days to send it back to us. Read more in our <a class="#!">return and refund policy</a>.</p>--%>
@@ -237,9 +237,9 @@
 
         $("#formCheckout").submit(function (e) {
             e.preventDefault();
-            let phoneExp = /^(^\+251|^251|^0)?(9|7)\d{8}$/;
+            let phoneExp = /^(0[3-9])+([0-9]{8})$/;
             if (!phoneExp.test($("#phoneNumber").val())) {
-                $("#phoneNumberValidate").text("Please enter valid phone number");
+                $("#phoneNumberValidate").text("SĐT không hợp lệ");
                 $('html, body').animate({
                     scrollTop: $('#'+id).offset().top
                 }, 150);

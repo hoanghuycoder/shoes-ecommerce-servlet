@@ -56,7 +56,6 @@ public class ProductSizeService implements IProductSizeService {
                 for (ImportOrderDetailModel i : listImport) {
                     if (o.getProductSizeId().equals(i.getProductSizeId())) {
                         double profit = o.getQuantity() * o.getSubTotal() - o.getQuantity() * i.getPriceImport();
-                        System.out.println(o.getQuantity());
                         totalProfit += profit;
                     }
                 }

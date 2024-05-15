@@ -37,8 +37,7 @@ public class ImportOrderDetailService implements IImportOrderDetailService {
     ProductImageService imageService;
 
     @Override
-
-    public double getTotalPriceByImportId(long importId) {
+    public double getTotalPriceByImportId(String importId) {
         //do máy ko tự inject nên tạo tay
         if (orderDetailDAO == null) {
             orderDetailDAO = new ImportOrderDetailDAO();
@@ -47,7 +46,7 @@ public class ImportOrderDetailService implements IImportOrderDetailService {
     }
 
     @Override
-    public List<ImportOrderDetailModel> findByImportId(long importId) {
+    public List<ImportOrderDetailModel> findByImportId(String importId) {
         //do máy ko tự inject nên tạo tay
         if (orderDetailDAO == null || productDAO == null || sizeDAO == null) {
             orderDetailDAO = new ImportOrderDetailDAO();
@@ -193,7 +192,6 @@ public class ImportOrderDetailService implements IImportOrderDetailService {
     private boolean saveOrderDetail(ImportOrderDetailModel newModel) throws SQLException {
         return orderDetailDAO.save(newModel) > 0;
     }
-
     @Override
     // This method imports an Excel file and processes its contents
     public boolean importFileExcel(String importOrderId, Part importFile, Collection<Part> parts) throws IOException {

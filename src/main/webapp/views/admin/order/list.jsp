@@ -1,6 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="com.ltweb_servlet_ecommerce.constant.SystemConstant" %>
+<%@ page import="com.ltweb_servlet_ecommerce.utils.StatusMapUtil" %>
 <fmt:setLocale value="vi_VN"/>
 <html>
 <head>
@@ -22,13 +24,27 @@
                         <thead>
                         <tr>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Thông tin khách hàng</th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Địa chỉ</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Trạng thái</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sản phẩm</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tổng tiền</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ghi chú</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Được tạo lúc</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Thông tin
+                                khách hàng
+                            </th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Địa
+                                chỉ
+                            </th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                Trạng thái
+                            </th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                Sản phẩm
+                            </th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                Tổng tiền
+                            </th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                Ghi chú
+                            </th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                Được tạo lúc
+                            </th>
                             <th class="text-secondary opacity-7"></th>
                         </tr>
                         </thead>
@@ -47,23 +63,38 @@
                                     <div class="d-flex px-2 py-1">
                                         <div class="d-flex flex-column justify-content-center">
                                             <h6 class="mb-0 text-sm">${order_item.addressModel.fullName}</h6>
-                                            <p class="text-xs text-secondary mb-0">0${order_item.addressModel.phoneNumber}</p>
+                                            <p class="text-xs text-secondary mb-0">
+                                                0${order_item.addressModel.phoneNumber}</p>
                                         </div>
                                     </div>
                                 </td>
                                 <!-- End Customer -->
 
-                                <td style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="${order_item.addressModel.hamlet},${order_item.addressModel.commune},${order_item.addressModel.district},${order_item.addressModel.province}" >
+                                <td style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
+                                    title="${order_item.addressModel.hamlet},${order_item.addressModel.commune},${order_item.addressModel.district},${order_item.addressModel.province}">
                                     <p class="text-xs font-weight-bold mb-0">${order_item.addressModel.province}</p>
                                     <p class="text-xs text-secondary mb-0">${order_item.addressModel.district}</p>
                                 </td>
                                 <td class="align-middle text-center text-sm">
-                                    <span class="badge badge-sm bg-gradient-success">${order_item.status}</span>
+                                    <c:if test="${order_item.status eq StatusMapUtil.getStatusKey(SystemConstant.ORDER_DELIVERED)}">
+                                        <c:set var="contextual" value="success"/>
+                                    </c:if>
+                                    <c:if test="${order_item.status eq StatusMapUtil.getStatusKey(SystemConstant.ORDER_TRANSPORTING)}">
+                                        <c:set var="contextual" value="info"/>
+                                    </c:if>
+                                    <c:if test="${order_item.status eq StatusMapUtil.getStatusKey(SystemConstant.ORDER_CANCEL)}">
+                                        <c:set var="contextual" value="danger"/>
+                                    </c:if>
+                                    <c:if test="${order_item.status eq StatusMapUtil.getStatusKey(SystemConstant.ORDER_PROCESSING)}">
+                                        <c:set var="contextual" value="primary"/>
+                                    </c:if>
+                                    <span class="badge badge-sm bg-gradient-${contextual}">${StatusMapUtil.getStatusValue(order_item.status)}</span>
                                 </td>
                                 <!-- Product list -->
                                 <td class="align-middle text-center">
                                     <c:forEach var="product_item" items="${order_item.listProduct}">
-                                        <p class="text-xs font-weight-bold mb-0">${product_item.quantity} - ${product_item.name} - ${product_item.sizeName}</p>
+                                        <p class="text-xs font-weight-bold mb-0">${product_item.quantity}
+                                            - ${product_item.name} - ${product_item.sizeName}</p>
                                     </c:forEach>
                                 </td>
                                 <!-- End Product list -->
@@ -75,7 +106,8 @@
                                 </td>
                                 <!-- End total -->
                                 <!-- Note -->
-                                <td style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top" title="${order_item.note}" >
+                                <td style="cursor: pointer;" data-bs-toggle="tooltip" data-bs-placement="top"
+                                    title="${order_item.note}">
                                     <div class="d-flex">
                                         <p class="text-xs font-weight-bold mx-auto mb-0">
                                             <c:if test="${not empty order_item.note || order_item.note != ''}">
@@ -88,24 +120,37 @@
                                     </div>
                                 </td>
                                 <!-- End Note -->
-                                <td >
+                                <td>
                                     <div class="d-flex">
                                         <p class="text-xs font-weight-bold mx-auto mb-0">
-                                            <fmt:formatDate value="${order_item.createAt}" pattern="yyy-MM-dd hh:mm:ssa"/>
+                                            <fmt:formatDate value="${order_item.createAt}"
+                                                            pattern="yyy-MM-dd hh:mm:ssa"/>
                                         </p>
                                     </div>
                                 </td>
                                 <!-- Action -->
                                 <td class="align-middle">
-                                    <p class="m-0 p-0">GHTK</p>
-                                    <div class="d-flex">
-                                        <a class="btn btn-link text-success px-1 mb-0" id="pushOrder${order_item.id}" href="javascript:;"><i class="fa-solid fa-truck me-1"></i>Đẩy đơn</a>
-                                        <a class="btn btn-link text-primary px-1 mb-0" id="pushOrder${order_item.id}" href="javascript:;"><i class="fa-solid fa-rectangle-xmark me-1"></i>Hủy đơn</a>
-                                    </div>
+                                    <c:if test="${order_item.status eq StatusMapUtil.getStatusKey(SystemConstant.ORDER_PROCESSING)}">
+                                        <p class="m-0 p-0">GHTK</p>
+                                        <div class="d-flex">
+                                            <a class="btn btn-link text-success px-1 mb-0"
+                                               id="pushOrder${order_item.id}"
+                                               href="javascript:;"><i class="fa-solid fa-truck me-1"></i>Đẩy đơn</a>
+                                            <a class="btn btn-link text-primary px-1 mb-0"
+                                               id="pushOrder${order_item.id}"
+                                               href="javascript:;"><i class="fa-solid fa-rectangle-xmark me-1"></i>Hủy
+                                                đơn</a>
+                                        </div>
+                                    </c:if>
+
                                     <p class="m-0 p-0">CRM</p>
                                     <div class="d-flex">
-                                        <a class="btn btn-link text-dark px-1 mb-0" href="<c:url value="/admin/orders/detail?id=${order_item.id}"/> "><i class="material-icons text-sm me-1">edit</i>Sửa</a>
-                                        <a class="btn btn-link text-danger text-gradient px-1 mb-0" id="removeOrder${order_item.id}" href="javascript:;"><i class="material-icons text-sm me-1">delete</i>Xóa</a>
+                                        <a class="btn btn-link text-dark px-1 mb-0"
+                                           href="<c:url value="/admin/orders/detail?id=${order_item.id}"/> "><i
+                                                class="material-icons text-sm me-1">edit</i>Sửa</a>
+                                        <a class="btn btn-link text-danger text-gradient px-1 mb-0"
+                                           id="removeOrder${order_item.id}" href="javascript:;"><i
+                                                class="material-icons text-sm me-1">delete</i>Xóa</a>
                                     </div>
 
                                 </td>
@@ -120,9 +165,9 @@
     </div>
 </div>
 
-<script >
-    window.addEventListener("DOMContentLoaded",function (){
-        $("table").each(function (){
+<script>
+    window.addEventListener("DOMContentLoaded", function () {
+        $("table").each(function () {
             new DataTable(this);
         })
     })

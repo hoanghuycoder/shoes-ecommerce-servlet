@@ -28,7 +28,7 @@ public class OrderService implements IOrderService {
 
     @Override
     public List<OrderModel> findAllWithFilter(OrderModel model, Pageble pageble) throws SQLException {
-        return orderDAO.findAllWithFilter(model,pageble);
+        return orderDAO.findAllWithFilter(model, pageble);
     }
 
     @Override
@@ -38,11 +38,12 @@ public class OrderService implements IOrderService {
 
     @Override
     public List<OrderModel> findByColumnValues(List<SubQuery> subQueryList, Pageble pageble) throws SQLException {
-        return orderDAO.findByColumnValues(subQueryList,pageble);
+        return orderDAO.findByColumnValues(subQueryList, pageble);
     }
+
     @Override
-    public Map<String,Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException {
-        return orderDAO.findWithCustomSQL(sql,params);
+    public Map<String, Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException {
+        return orderDAO.findWithCustomSQL(sql, params);
     }
 
     @Override
@@ -58,13 +59,13 @@ public class OrderService implements IOrderService {
                 .put(SystemConstant.VALUE_LOG, new JSONObject(results[0]));
 
         JSONObject value = new JSONObject()
-                .put(SystemConstant.STATUS_LOG, String.format("Update orderDetails %s",  isUpdated ? "successfully" : "failed"))
+                .put(SystemConstant.STATUS_LOG, String.format("Update orderDetails %s", isUpdated ? "successfully" : "failed"))
                 .put(SystemConstant.VALUE_LOG, new JSONObject(results[1]));
 
         LoggerHelper.log(SystemConstant.WARN_LEVEL, "UPDATE",
                 RuntimeInfo.getCallerClassNameAndLineNumber(), preValue, value);
 
-        return newModel;
+        return isUpdated ? newModel : null;
     }
 
     @Override
@@ -95,6 +96,7 @@ public class OrderService implements IOrderService {
 
     @Override
     public OrderModel save(OrderModel model) throws SQLException {
+        model.setStatus(SystemConstant.ORDER_PROCESSING);
         Long productId = orderDAO.save(model);
         OrderModel result = orderDAO.findById(productId);
 
@@ -115,17 +117,16 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public double getTotalPrice(){
+    public double getTotalPrice() {
         IOrderDAO o = new OrderDAO();
         double totalPrice = 0;
         List<OrderModel> listOrder = null;
         try {
             listOrder = o.findAll(new PageRequest(1, 10, new Sorter("id", "ASC")));
-            System.out.println(listOrder.size());
             for (OrderModel i : listOrder) {
                 OrderDetailsService orderDetailsService = new OrderDetailsService();
                 List<OrderDetailsModel> listDetail = orderDetailsService.findAllByOrderId(i.getId());
-                for (OrderDetailsModel j :listDetail) {
+                for (OrderDetailsModel j : listDetail) {
                     double pricePerOrder = j.getSubTotal() * j.getQuantity();
                     totalPrice += pricePerOrder;
                 }

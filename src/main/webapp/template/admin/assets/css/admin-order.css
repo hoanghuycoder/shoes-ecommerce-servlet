@@ -76,6 +76,7 @@
 .content .information td{
     padding: 10px;
     line-height: 1.8;
+    min-width: 150px;
 }
 .content .information tr.item{
     height: 60px;

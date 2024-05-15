@@ -1,26 +1,11 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: HUY
-  Date: 12/30/2023
-  Time: 9:08 PM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="com.ltweb_servlet_ecommerce.service.impl.OrderService" %>
 <%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.Map" %>
 <%@ page import="com.google.gson.Gson" %>
-<%@ page import="com.ltweb_servlet_ecommerce.model.ImportOrderModel" %>
 <%@ page import="com.ltweb_servlet_ecommerce.service.impl.ImportOrderService" %>
-<%@ page import="com.ltweb_servlet_ecommerce.paging.PageRequest" %>
-<%@ page import="com.ltweb_servlet_ecommerce.service.impl.ImportOrderDetailService" %>
-<%@ page import="com.ltweb_servlet_ecommerce.model.ImportOrderDetailModel" %>
-<%@ page import="com.ltweb_servlet_ecommerce.sort.Sorter" %>
 <%@ page import="java.text.DecimalFormat" %>
-<%@ page import="java.sql.SQLException" %>
 <%@ page import="com.ltweb_servlet_ecommerce.service.impl.ProductSizeService" %>
 <fmt:setLocale value="vi_VN"/>
 <!doctype html>
