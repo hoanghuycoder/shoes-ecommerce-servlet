@@ -99,7 +99,7 @@
             } else if (listProduct.length == 0 && productName!="" && page==2) {
                 const notFoundHtml = `<div class="d-flex">
                         <p class="mx-auto">Không tìm thấy sản phẩm</p>
-                    </div>`
+                    </div>`                                  
                 $("#listProduct").append(notFoundHtml);
             } else if (listProduct.length==0) {
                 isDone = true;
