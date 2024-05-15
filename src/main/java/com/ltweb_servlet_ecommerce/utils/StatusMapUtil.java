@@ -23,4 +23,14 @@ public class StatusMapUtil {
         }
         return "";
     }
+
+    public static String getStatusKey(String value) {
+        for (Map.Entry<String, String> entry : getStatusMap().entrySet()) {
+            if (entry.getValue().equals(value)) {
+                return entry.getKey();
+            }
+        }
+        return "";
+    }
+
 }

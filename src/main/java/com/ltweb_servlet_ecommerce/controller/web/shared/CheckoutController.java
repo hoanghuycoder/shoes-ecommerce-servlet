@@ -97,6 +97,7 @@ public class CheckoutController extends HttpServlet {
         productSizeModel.setSizeId(sizeId);
         productSizeModel.setProductId(productId);
         productSizeModel = productSizeService.findWithFilter(productSizeModel);
+        productModel.setPrice(productSizeModel.getPrice());
         productModel.setQuantity(quantity);
         productModel.setSizeName(sizeModel.getName());
         productModel.setSizeId(sizeModel.getId());
@@ -111,6 +112,9 @@ public class CheckoutController extends HttpServlet {
             String[] productListStr = req.getParameterValues("product[]");
             UserModel user = (UserModel) SessionUtil.getInstance().getValue(req, "USER_MODEL");
             AddressModel addressModel = FormUtil.toModel(AddressModel.class, req);
+            addressModel.setProvince("");
+            addressModel.setDistrict("");
+            addressModel.setCommune("");
             String hamlet2 = req.getParameter("hamlet2") != "" ? req.getParameter("hamlet2") + " " : "";
             addressModel.setHamlet(hamlet2 + req.getParameter("hamlet1"));
             AddressModel tmpAddress = addressService.findWithFilter(addressModel);
@@ -148,7 +152,7 @@ public class CheckoutController extends HttpServlet {
                 orderDetailsService.save(orderDetailsModel);
                 deleteCartItem(productId, sizeId, quantity);
             }
-            order.setTotalAmount(order.getTotalAmount() + 5);
+            order.setTotalAmount(order.getTotalAmount() + 20000);
             String slugEncodedFromId = UrlUtil.encodeNumber(order.getId());
             order.setSlug(slugEncodedFromId);
 

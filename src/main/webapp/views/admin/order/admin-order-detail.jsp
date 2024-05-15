@@ -71,13 +71,13 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <fmt:formatNumber type="currency" value="${product_item.subTotal}"/>
+                                            <fmt:formatNumber type="currency" value="${product_item.price}"/>
                                         </td>
                                         <td>
                                                 ${product_item.quantity}
                                         </td>
                                         <td class="f-right">
-                                            <fmt:formatNumber type="currency" value="${order.totalAmount}"/>
+                                            <fmt:formatNumber type="currency" value="${product_item.subTotal}"/>
                                         </td>
                                     </tr>
                                 </c:forEach>
@@ -90,7 +90,7 @@
                                     </td>
                                     <td class="f-right">
 
-                                        <fmt:formatNumber type="currency" value="0"/><br>
+                                        <fmt:formatNumber type="currency" value="20000"/><br>
                                         <span style="font-size: 15px;font-weight: 700;">
                                         <fmt:formatNumber type="currency" value="${order.totalAmount}"/>
                                     </span> <br>
@@ -110,9 +110,9 @@
                                     >${entry.value}</option>
                                 </c:forEach>
                             </select>
-                            <button class="change-state"
-                                    <c:if test="${order.status eq 'ORDER_CANCEL'}">
-                                        style="background-color: #cccccc;color: #666666;cursor: not-allowed;"
+                            <button class="change-state" id="changeBtn"
+                                    <c:if test="${order.status eq 'ORDER_CANCEL' || order.status eq 'ORDER_DELIVERED'}">
+                                        style="background-color: #cccccc;color: #666666;cursor: not-allowed;pointer-events: none;"
                                     </c:if>
                             >Lưu thay đổi
                             </button>
@@ -128,7 +128,58 @@
 
 <script>
     window.addEventListener("DOMContentLoaded", function () {
-
+        $("#changeBtn").click(function () {
+            let status = $("#select").val();
+            let orderId = ${order.id};
+            console.log(JSON.stringify({
+                status: status,
+                orderId: orderId
+            }))
+            $.ajax({
+                url: "<c:url value="/admin/orders/detail"/>",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    status: status,
+                    orderId: orderId
+                }),
+                success: function (data) {
+                    // use swetalert2
+                    Swal.fire({
+                        icon: "success",
+                        title: "Thay đổi thành công",
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 1000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 1000)
+                },
+                error: function (data) {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Thay đổi thất bại!",
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 1000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
+                    console.log(data)
+                }
+            })
+        })
     })
 </script>
 </body>

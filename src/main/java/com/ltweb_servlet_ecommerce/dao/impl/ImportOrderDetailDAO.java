@@ -4,9 +4,7 @@ import com.ltweb_servlet_ecommerce.dao.IImportOrderDetailDAO;
 import com.ltweb_servlet_ecommerce.log.LoggerHelper;
 import com.ltweb_servlet_ecommerce.mapper.impl.ImportOrderDetailMapper;
 import com.ltweb_servlet_ecommerce.model.ImportOrderDetailModel;
-import com.ltweb_servlet_ecommerce.model.ImportOrderModel;
 import com.ltweb_servlet_ecommerce.utils.JDBCUtil;
-
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -16,7 +14,7 @@ import java.util.Map;
 public class ImportOrderDetailDAO extends AbstractDAO<ImportOrderDetailModel> implements IImportOrderDetailDAO {
 
     @Override
-    public double getTotalPriceByImportId(long importId) {
+    public double getTotalPriceByImportId(String importId) {
         String sql = "SELECT SUM(priceImport * quantityImport) AS totalPrice FROM import_order_details where importOrderId = ?";
         Map<String, Object> stringObjectMap = queryCustom(sql, List.of(importId));
         Object totalPrice = stringObjectMap.get("totalPrice");
@@ -51,6 +49,9 @@ public class ImportOrderDetailDAO extends AbstractDAO<ImportOrderDetailModel> im
     public List<ImportOrderDetailModel> findByProductSizeId() {
         String sql = "SELECT * FROM import_order_details";
         return query(sql, new ImportOrderDetailMapper(), null, ImportOrderDetailModel.class);
+
+    }
+
     public long save(ImportOrderDetailModel newModel) {
         String sql = "INSERT INTO import_order_details(importOrderId, productSizeId,quantityImport,priceImport) VALUES(?,?,?,?)";
         Connection connection = null;

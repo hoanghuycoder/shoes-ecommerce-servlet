@@ -33,6 +33,7 @@ public class CartUtil {
         productModel.setSizeName(sizeModel.getName());
         productModel.setSizeId(sizeModel.getId());
         productModel.setSubTotal(orderDetailsModel.getSubTotal());
+        productModel.setPrice(productSizeModel.getPrice());
         productModelList.add(productModel);
     }
 }
