@@ -21,6 +21,8 @@ public interface IOrderDetailsService {
     Map<String,Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException;
     public List<OrderDetailsModel> findAllByOrderId(Long orderId) throws SQLException;
 
+    boolean softDelete(long orderId, long productSizeId);
+
 
 //    List<OrderDetailsModel> findByOrderId(Long id);
 

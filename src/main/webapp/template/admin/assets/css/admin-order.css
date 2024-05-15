@@ -108,3 +108,12 @@
     float: right;
     text-align: right;
 }
+.delete-detail-btn {
+    font-size: 14px;
+    font-style: italic;
+    text-decoration: underline;
+    font-weight: 600;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+}

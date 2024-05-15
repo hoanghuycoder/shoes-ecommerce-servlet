@@ -34,7 +34,9 @@ public class OrderListController extends HttpServlet {
     IProductService productService;
     @Inject
     IProductSizeService productSizeService;
-    @Inject ISizeService sizeService;
+    @Inject
+    ISizeService sizeService;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
@@ -46,18 +48,18 @@ public class OrderListController extends HttpServlet {
                 AddressModel addressModel = addressService.findById(orderModel.getAddressId());
                 OrderDetailsModel orderDetailsModel = new OrderDetailsModel();
                 orderDetailsModel.setOrderId(orderModel.getId());
-                List<OrderDetailsModel> listOrderDetails = orderDetailsService.findAllWithFilter(orderDetailsModel,null);
+                List<OrderDetailsModel> listOrderDetails = orderDetailsService.findAllWithFilter(orderDetailsModel, null);
                 List<ProductModel> listProduct = new ArrayList<>();
                 for (OrderDetailsModel orderDetails : listOrderDetails) {
-                    new CartUtil().setListProductFromOrderDetails(listProduct,orderDetails,productSizeService,productService,sizeService);
+                    new CartUtil().setListProductFromOrderDetails(listProduct, orderDetails, productSizeService, productService, sizeService);
                 }
                 orderModel.setAddressModel(addressModel);
                 orderModel.setListProduct(listProduct);
-                listOrder.set(i,orderModel);
+                listOrder.set(i, orderModel);
             }
-            req.setAttribute("LIST_ORDER",listOrder);
+            req.setAttribute("LIST_ORDER", listOrder);
             RequestDispatcher rd = req.getRequestDispatcher("/views/admin/order/list.jsp");
-            rd.forward(req,resp);
+            rd.forward(req, resp);
         } catch (Exception e) {
             resp.sendRedirect("/admin?message=error&toast=danger");
         }
@@ -71,7 +73,7 @@ public class OrderListController extends HttpServlet {
             long id = parser.parse(request.getReader()).getAsLong();
             boolean isDeleted = orderService.softDelete(id);
             response.setStatus(isDeleted ? HttpServletResponse.SC_NO_CONTENT : HttpServletResponse.SC_BAD_REQUEST);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
