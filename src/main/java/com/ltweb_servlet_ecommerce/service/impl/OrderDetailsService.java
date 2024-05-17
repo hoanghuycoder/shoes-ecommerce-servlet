@@ -1,10 +1,12 @@
 package com.ltweb_servlet_ecommerce.service.impl;
 
 import com.ltweb_servlet_ecommerce.constant.SystemConstant;
+import com.ltweb_servlet_ecommerce.dao.IOrderDAO;
 import com.ltweb_servlet_ecommerce.dao.IOrderDetailsDAO;
 import com.ltweb_servlet_ecommerce.dao.impl.OrderDetailsDAO;
 import com.ltweb_servlet_ecommerce.log.LoggerHelper;
 import com.ltweb_servlet_ecommerce.model.OrderDetailsModel;
+import com.ltweb_servlet_ecommerce.model.OrderModel;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.service.IOrderDetailsService;
 import com.ltweb_servlet_ecommerce.subquery.SubQuery;
@@ -22,6 +24,8 @@ import java.util.Map;
 public class OrderDetailsService implements IOrderDetailsService {
     @Inject
     IOrderDetailsDAO orderDetailsDAO;
+    @Inject
+    IOrderDAO orderDAO;
 
     @Override
     public List<OrderDetailsModel> findAllWithFilter(OrderDetailsModel model, Pageble pageble) throws SQLException {
@@ -49,6 +53,38 @@ public class OrderDetailsService implements IOrderDetailsService {
             orderDetailsDAO = new OrderDetailsDAO();
         }
         return orderDetailsDAO.findAllByOrderId(orderId);
+    }
+
+    @Override
+    public boolean softDelete(long orderId, long productSizeId) {
+        try {
+            OrderModel orderModel = orderDAO.findById(orderId);
+            if (orderModel == null) {
+                return false;
+            }
+
+            List<OrderDetailsModel> all = orderDetailsDAO.findAllByOrderId(orderId);
+            for (OrderDetailsModel model : all) {
+                if (model.getProductSizeId() == productSizeId) {
+                    double subTotal = model.getSubTotal();
+                    model.setUpdateAt(new Timestamp(System.currentTimeMillis()));
+                    model.setIsDeleted(true);
+                    orderDetailsDAO.update(model);
+
+                    orderModel.setTotalAmount(orderModel.getTotalAmount() - subTotal);
+                    break;
+                }
+            }
+            if (all.size() == 1) {
+                orderModel.setIsDeleted(true);
+            }
+            orderDAO.update(orderModel);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
 
 
@@ -90,12 +126,12 @@ public class OrderDetailsService implements IOrderDetailsService {
     }
 
     @Override
-    public OrderDetailsModel softDelete(Long id) throws SQLException {
+    public boolean softDelete(Long id) throws SQLException {
         OrderDetailsModel model = orderDetailsDAO.findById(id);
         model.setUpdateAt(new Timestamp(System.currentTimeMillis()));
         model.setIsDeleted(true);
-        orderDetailsDAO.update(model);
-        return orderDetailsDAO.findById(model.getId());
+
+        return orderDetailsDAO.update(model) > 0;
     }
 
     @Override
@@ -109,7 +145,7 @@ public class OrderDetailsService implements IOrderDetailsService {
         OrderDetailsModel result = orderDetailsDAO.findById(productId);
 
         //logging
-        String status = String.format("Saved orderDetails %s",  result !=null ? "successfully" : "failed");
+        String status = String.format("Saved orderDetails %s", result != null ? "successfully" : "failed");
         JSONObject value = new JSONObject().put(SystemConstant.STATUS_LOG, status)
                 .put(SystemConstant.VALUE_LOG, new JSONObject(result));
 

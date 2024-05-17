@@ -62,19 +62,39 @@
                                     <td style="width: 20%;">Số lượng</td>
                                     <td class="f-right">Tổng</td>
                                 </tr>
-                                <c:forEach var="product_item" items="${order.listProduct}">
+                                <c:forEach var="product_item" items="${order.listProduct}" varStatus="loop">
                                     <tr class="item">
-                                        <td style="display: flex;">
-                                            <img class="img-product" src="" alt="">
+                                        <td>
+<%--                                        <td style="display: flex;">--%>
                                             <div class="product-name">
-                                                    ${product_item.name} - ${product_item.sizeName}
+                                                <span>${product_item.name} - ${product_item.sizeName}</span>
+                                                <c:if test="${order.status ne 'ORDER_CANCEL' && order.status ne 'ORDER_DELIVERED'}">
+                                                    <div>
+                                                        <button class="delete-detail-btn"
+                                                                data-id="${product_item.productSizeId}">Xóa
+                                                        </button>
+                                                    </div>
+                                                </c:if>
                                             </div>
+
+
                                         </td>
                                         <td>
                                             <fmt:formatNumber type="currency" value="${product_item.price}"/>
                                         </td>
                                         <td>
-                                                ${product_item.quantity}
+                                            <c:if test="${order.status ne 'ORDER_CANCEL' && order.status ne 'ORDER_DELIVERED'}">
+                                                <div class="form-outline" data-mdb-input-init>
+                                                    <input type="number" id="${product_item.productSizeId}"  class="form-control quantityProduct"
+                                                           value="${product_item.quantity}" min="1" max="${product_item.available}" />
+                                                </div>
+                                            </c:if>
+
+                                            <c:if test="${order.status eq 'ORDER_CANCEL' || order.status eq 'ORDER_DELIVERED'}">
+                                                <span>${product_item.quantity}</span>
+                                            </c:if>
+
+
                                         </td>
                                         <td class="f-right">
                                             <fmt:formatNumber type="currency" value="${product_item.subTotal}"/>
@@ -128,12 +148,33 @@
 
 <script>
     window.addEventListener("DOMContentLoaded", function () {
+        $('.quantityProduct').change(function () {
+            let quantity = parseInt($(this).val());
+            const min = parseInt($(this).attr('min'));
+            const max = parseInt($(this).attr('max'));
+            if (isNaN(quantity) || quantity < min) {
+                $(this).val(min)
+            } else if (quantity > max) {
+                $(this).val(max)
+            }
+
+        })
+
         $("#changeBtn").click(function () {
             let status = $("#select").val();
             let orderId = ${order.id};
+            let listProduct = [];
+
+            $(".quantityProduct").each(function () {
+                let productSizeId = $(this).attr("id");
+                let quantity = parseInt($(this).val());
+                listProduct.push({
+                    productSizeId: productSizeId,
+                    quantity: quantity
+                })
+            })
             console.log(JSON.stringify({
-                status: status,
-                orderId: orderId
+                listProduct: listProduct
             }))
             $.ajax({
                 url: "<c:url value="/admin/orders/detail"/>",
@@ -141,45 +182,73 @@
                 contentType: "application/json",
                 data: JSON.stringify({
                     status: status,
-                    orderId: orderId
+                    orderId: orderId,
+                    listProduct: listProduct
                 }),
                 success: function (data) {
-                    // use swetalert2
-                    Swal.fire({
-                        icon: "success",
-                        title: "Thay đổi thành công",
-                        toast: true,
-                        position: "top-end",
-                        showConfirmButton: false,
-                        timer: 1000,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.onmouseenter = Swal.stopTimer;
-                            toast.onmouseleave = Swal.resumeTimer;
-                        }
-                    });
-                    setTimeout(function () {
-                        window.location.reload();
-                    }, 1000)
+                    showMess("success", "Thay đổi thành công", 1000)
                 },
                 error: function (data) {
-                    Swal.fire({
-                        icon: "warning",
-                        title: "Thay đổi thất bại!",
-                        toast: true,
-                        position: "top-end",
-                        showConfirmButton: false,
-                        timer: 1000,
-                        timerProgressBar: true,
-                        didOpen: (toast) => {
-                            toast.onmouseenter = Swal.stopTimer;
-                            toast.onmouseleave = Swal.resumeTimer;
-                        }
-                    });
+                    showMess("warning", "Thay đổi thất bại!")
                     console.log(data)
                 }
             })
-        })
+        });
+        $(".delete-detail-btn").click(function () {
+            // delete product in order
+            Swal.fire({
+                title: "Xóa ?",
+                text: "Bạn có muốn xóa sản phẩm này khỏi đơn hàng không?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                cancelButtonText: "Hủy",
+                confirmButtonText: "Xóa"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let productId = $(this).data("id");
+                    let orderId = ${order.id};
+                    $.ajax({
+                        url: "<c:url value="/admin/orders/detail"/>",
+                        type: "DELETE",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            productSizeId: productId,
+                            orderId: orderId
+                        }),
+                        success: function (data) {
+                            showMess("success", "Xóa thành công", 1000)
+                        },
+                        error: function (data) {
+                            showMess("warning", "Xóa thất bại!")
+                            console.log(data)
+                        }
+                    })
+                }
+            });
+        });
+
+        function showMess(icon, mess, time) {
+            Swal.fire({
+                icon: icon,
+                title: mess,
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: time,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+            if (time !== undefined) {
+                setTimeout(function () {
+                    window.location.reload();
+                }, time)
+            }
+        }
     })
 </script>
 </body>
