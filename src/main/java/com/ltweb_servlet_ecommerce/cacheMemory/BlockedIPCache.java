@@ -1,5 +1,6 @@
 package com.ltweb_servlet_ecommerce.cacheMemory;
 
+import java.sql.Timestamp;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -45,5 +46,10 @@ public class BlockedIPCache {
             }
         }
         return null;
+    }
+
+
+    public void printBlockedIPs() {
+        blockedIPs.forEach((k, v) -> System.out.printf("ip: %s, blocked time: %s\n", k, new Timestamp(v).toString()));
     }
 }

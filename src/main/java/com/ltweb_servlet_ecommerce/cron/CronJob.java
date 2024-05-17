@@ -11,6 +11,8 @@ import com.ltweb_servlet_ecommerce.model.OrderModel;
 import com.ltweb_servlet_ecommerce.model.RoleModel;
 import com.ltweb_servlet_ecommerce.model.UserModel;
 import com.ltweb_servlet_ecommerce.subquery.SubQuery;
+import com.ltweb_servlet_ecommerce.utils.SendMailUtil;
+import com.ltweb_servlet_ecommerce.utils.StatusMapUtil;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -30,7 +32,7 @@ public class CronJob implements ServletContextListener {
         timer = new Timer(true);
         // Schedule a task to run periodically
         timer.scheduleAtFixedRate(new SaleForUserOfflineOver30DaysTask(), 0, 30L * 24L * 60L * 60L * 1000L); //30day
-        timer.scheduleAtFixedRate(new OrderNoneProcessOver5DaysTask(), 0, 1L * 24L * 60L * 60L * 1000L); //30day
+//        timer.scheduleAtFixedRate(new OrderNoneProcessOver5DaysTask(), 0, 24L * 60L * 60L * 1000L); //1day
 
     }
 
@@ -76,18 +78,6 @@ public class CronJob implements ServletContextListener {
         @Override
         public void run() {
             System.out.println("Run task send order not process over 5days for admin...");
-            List<SubQuery> subQueryList = new ArrayList<>();
-            List<Object> dataSubQueryTime = new ArrayList<>();
-            List<Object> dataSubQueryStatus = new ArrayList<>();
-            Calendar calendar = Calendar.getInstance();
-            long currentTimeInMillis = calendar.getTimeInMillis();
-            long fiveDaysInMillis = 5L * 24L * 60L * 60L * 1000L;
-            long targetTimeInMillis = currentTimeInMillis - fiveDaysInMillis;
-            Timestamp time5DaysAgo = new Timestamp(targetTimeInMillis);
-            dataSubQueryTime.add(time5DaysAgo);
-            dataSubQueryTime.add(0);
-            subQueryList.add(new SubQuery("status", "=", dataSubQueryStatus));
-            subQueryList.add(new SubQuery("updateAt", "<", dataSubQueryTime));
             try {
                 IOrderDAO orderDAO = new OrderDAO();
                 IUserDAO userDAO = new UserDAO();
@@ -97,13 +87,16 @@ public class CronJob implements ServletContextListener {
                 roleAdmin = roleDAO.findWithFilter(roleAdmin);
                 UserModel adminModel = new UserModel();
                 adminModel.setRoleId(roleAdmin.getId());
-//                List<OrderModel> listOrderNotProcess = orderDAO.findByColumnValues(subQueryList, null);
-//                List<UserModel> listAdmin = userDAO.findAllWithFilter(adminModel, null);
-//            for (UserModel user : listAdmin) {
-//                for (OrderModel orderNotProcess : listOrderNotProcess) {
-//                    SendMailUtil.sendMail(user.getEmail(),"Urgent Report: Orders Pending Processing for Over 5 Days",SendMailUtil.templateMailOrderNotProcess(orderNotProcess.getSlug()));
-//                }
-//            }
+                List<OrderModel> listOrderNotProcess = orderDAO.findByNoProcessingOverDays(5,
+                        StatusMapUtil.getStatusKey(SystemConstant.ORDER_PROCESSING));
+                List<UserModel> listAdmin = userDAO.findAllWithFilter(adminModel, null);
+
+                for (UserModel user : listAdmin) {
+                    SendMailUtil.sendMail(user.getEmail(),
+                            "Báo cáo khẩn cấp: Đơn hàng đang chờ xử lý trên 5 ngày",
+                            SendMailUtil.templateMailOrderNotProcess(listOrderNotProcess));
+
+                }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

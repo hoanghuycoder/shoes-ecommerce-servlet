@@ -21,4 +21,6 @@ public interface IUserService {
     Map<String,Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException;
 
     boolean changePassword(long userId, String password);
+
+    List<UserModel> getListAdmin();
 }
