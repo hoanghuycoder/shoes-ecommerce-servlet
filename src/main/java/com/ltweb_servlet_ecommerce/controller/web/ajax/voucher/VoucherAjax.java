@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -29,7 +30,12 @@ public class VoucherAjax extends HttpServlet {
             String code = req.getParameter("code");
             VoucherModel voucher = new VoucherModel();
             voucher.setCode(code);
-            objectMapper.writeValue(resp.getOutputStream(), voucherService.findWithFilter(voucher));
+            voucher = voucherService.findWithFilter(voucher);
+            if (voucher == null) {
+                HttpUtil.returnError404Json(objectMapper,resp,"Không tìm thấy voucher");
+            } else {
+                objectMapper.writeValue(resp.getOutputStream(),voucher );
+            }
         } catch (Exception e) {
             HttpUtil.returnError404Json(objectMapper,resp,e.toString());
         }
