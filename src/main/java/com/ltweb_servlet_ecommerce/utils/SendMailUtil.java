@@ -2,6 +2,7 @@ package com.ltweb_servlet_ecommerce.utils;
 
 import com.ltweb_servlet_ecommerce.constant.SystemConstant;
 import com.ltweb_servlet_ecommerce.model.LogModel;
+import com.ltweb_servlet_ecommerce.model.OrderModel;
 
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -9,8 +10,10 @@ import javax.mail.MessagingException;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -28,7 +31,7 @@ public class SendMailUtil {
 
     public static void sendMail(String toEmailAddress, String titleMail, String templateMail) {
         executorService.submit(() -> {
-            
+
             ResourceBundle resourceBundle = ResourceBundle.getBundle("env");
 //            String fromEmail = resourceBundle.getString("EMAIL_ADDRESS");
             String username = resourceBundle.getString("EMAIL_ADDRESS");
@@ -76,13 +79,31 @@ public class SendMailUtil {
         return content.toString();
     }
 
-    public static String templateMailOrderNotProcess(String orderSlug) {
+    public static String templateMailOrderNotProcess(List<OrderModel> list) {
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         StringBuilder contentHtml = new StringBuilder();
-        contentHtml.append("<p><strong>Dear Admin,</strong></p>");
-        contentHtml.append("<p>I hope this email finds you well. I am writing to bring to your attention an issue regarding pending orders that have not been processed for over five days.<a href='localhost:8080/order-details/'" + orderSlug + ">Check here</a></p>");
-        contentHtml.append("<p>Please find attached a detailed report listing the orders that are currently pending processing for over five days. The report includes relevant information such as order numbers, dates of placement, and any pertinent notes.</p>");
-        contentHtml.append("<p>Thank you for your attention and cooperation.</p>");
-        contentHtml.append("<p>Sincerely,</p>");
+        contentHtml.append("<p><strong>Gửi quản trị viên,</strong></p>");
+        contentHtml.append("<p>Tôi hy vọng email này đến được với bạn. Tôi viết thư này để lưu ý bạn về một vấn đề liên quan đến các đơn đặt hàng đang chờ xử lý chưa được xử lý trong hơn năm ngày.");
+        contentHtml.append("<p>Báo cáo bao gồm các thông tin liên quan như số đơn đặt hàng, ngày đặt hàng và mọi ghi chú thích hợp.</p>");
+
+        contentHtml.append("<table style=\"width: 505.562px;\">");
+        contentHtml.append("<tbody><tr style=\"height: 13px;\"><td style=\"width: 71px; height: 13px;text-align: center;\"><strong>#</strong></td>");
+        contentHtml.append("<td style=\"width: 92px; height: 13px; text-align: center;\"><strong>Trạng thái</strong></td>");
+        contentHtml.append("<td style=\"width: 172px; height: 13px; text-align: center;\"><strong>Ngày tạo đơn</strong></td>");
+        contentHtml.append("<td style=\"width: 180.562px; height: 13px; text-align: center;\"><strong>Trị giá</strong></td>");
+        contentHtml.append("</tr>");
+        for (OrderModel model : list) {
+            contentHtml.append("<tr style=\"height: 13px;\">");
+            contentHtml.append("<td style=\"width: 71px; height: 13px;; text-align: center;\">").append(model.getId()).append("</td>");
+            contentHtml.append("<td style=\"width: 100px; height: 13px;text-align: center;\">").append(StatusMapUtil.getStatusValue(model.getStatus())).append("</td>");
+            contentHtml.append("<td style=\"width: 200px; height: 13px;text-align: center;\">").append(model.getCreateAt().toString()).append("</td>");
+            contentHtml.append("<td style=\"width: 180.562px; height: 13px; text-align: center;\">").append(currencyFormat.format(model.getTotalAmount())).append("</td>");
+            contentHtml.append("</tr>");
+        }
+        contentHtml.append("</tbody></table>");
+        contentHtml.append("<a href=\"http://localhost:8080/admin/order/list\" target=\"_blank\">Kiểm tra tại đây</a>");
+        contentHtml.append("<p>Cảm ơn sự quan tâm và hợp tác của bạn.</p>");
+        contentHtml.append("<p>Trân trọng,</p>");
         contentHtml.append("<p><strong>Nai Shoes &amp; Sneakers</strong><br /><br /></p>");
         return contentHtml.toString();
     }
@@ -950,33 +971,35 @@ public class SendMailUtil {
                 "</html>";
     }
 
-    public static void templateMailAccessCount(List<LogModel> list) {
+    public static void templateMailAccessCount(List<LogModel> list, String toMail) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         StringBuilder content = new StringBuilder();
         content.append("<p><strong>Xin ch&agrave;o Admin,</strong></p>");
         content.append("<p>Ch&uacute;ng t&ocirc;i nhận thấy một lượng truy cập lớn đối với t&agrave;i nguy&ecirc;n của bạn v&agrave;o l&uacute;c n&agrave;y.</p>");
         content.append("<p>Đ&acirc;y l&agrave; th&ocirc;ng tin chi tiết:</p>");
-        content.append("<table style=\"width: 505.562px;\">");
-        content.append("<tbody><tr style=\"height: 13px;\"><td style=\"width: 71px; height: 13px;\"><strong>STT</strong></td>");
-        content.append("<td style=\"width: 92px; height: 13px; text-align: center;\"><strong>Địa chỉ IP</strong></td>");
-        content.append("<td style=\"width: 172px; height: 13px; text-align: center;\"><strong>T&agrave;i nguy&ecirc;n bị truy cập</strong></td>");
-        content.append("<td style=\"width: 180.562px; height: 13px; text-align: center;\"><strong>Số lần truy cập / gi&acirc;y</strong></td>");
-        content.append("<td style=\"width: 180.562px; height: 13px; text-align: center;\"><strong>Thời gian</strong></td>");
+        content.append("<table style=\"width: 100%;\">");
+        content.append("<tbody><tr style=\"\"><td style=\"width: 71px; text-align: center;\"><strong>STT</strong></td>");
+        content.append("<td style=\"width: 100px;text-align: center;\"><strong>Địa chỉ IP</strong></td>");
+        content.append("<td style=\"width: 170px;text-align: center;\"><strong>Quốc gia</strong></td>");
+        content.append("<td style=\"text-align: center;\"><strong>T&agrave;i nguy&ecirc;n bị truy cập</strong></td>");
+        content.append("<td style=\"width: 180.562px;text-align: center;\"><strong>Số lần truy cập / gi&acirc;y</strong></td>");
+        content.append("<td style=\"width: 180.562px;text-align: center;\"><strong>Thời gian</strong></td>");
         content.append("</tr>");
         for (int i = 0; i < list.size(); i++) {
             LogModel logModel = list.get(i);
-            content.append("<tr style=\"height: 13px;\">");
-            content.append("<td style=\"width: 71px; height: 13px;; text-align: center;\">").append(i+1).append("</td>");
-            content.append("<td style=\"width: 100px; height: 13px;\">").append(logModel.getIp()).append("</td>");
-            content.append("<td style=\"width: 200px; height: 13px;\">").append(logModel.getResource()).append("</td>");
-            content.append("<td style=\"width: 180.562px; height: 13px; text-align: center;\">").append(logModel.getAccessCount()).append("</td>");
-            content.append("<td style=\"width: 180.562px; height: 13px; text-align: center;\">").append(formatter.format(logModel.getCreateAt().getTime())).append("</td>");
+            content.append("<tr style=\"\">");
+            content.append("<td style=\"text-align: center;\">").append(i + 1).append("</td>");
+            content.append("<td style=\"text-align: center;\">").append(logModel.getIp()).append("</td>");
+            content.append("<td style=\"\">").append(logModel.getLocation()).append("</td>");
+            content.append("<td style=\"\">").append(logModel.getResource()).append("</td>");
+            content.append("<td style=\"text-align: center;\">").append(logModel.getAccessCount()).append("</td>");
+            content.append("<td style=\"text-align: center;\">").append(formatter.format(logModel.getCreateAt().getTime())).append("</td>");
             content.append("</tr>");
         }
         content.append("</tbody></table>");
         content.append("<p>Ch&uacute;ng t&ocirc;i đề xuất kiểm tra v&agrave; đ&aacute;nh gi&aacute; lại lượng truy cập n&agrave;y để đảm bảo rằng kh&ocirc;ng c&oacute; h&agrave;nh vi kh&ocirc;ng hợp lệ n&agrave;o đang xảy ra. Nếu cần, vui l&ograve;ng thực hiện c&aacute;c biện ph&aacute;p bảo mật ph&ugrave; hợp để đảm bảo an to&agrave;n cho hệ thống.</p>");
         content.append("<p>Trân trọng.</p>");
         String subject = "Thông báo: Lượng Truy Cập Lớn Bất Thường";
-        sendMail("21130363@st.hcmuaf.edu.vn", subject, content.toString());
+        sendMail(toMail, subject, content.toString());
     }
 }

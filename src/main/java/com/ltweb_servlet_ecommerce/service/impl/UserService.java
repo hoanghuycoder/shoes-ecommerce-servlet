@@ -4,10 +4,7 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.ltweb_servlet_ecommerce.constant.SystemConstant;
 import com.ltweb_servlet_ecommerce.dao.IRoleDAO;
 import com.ltweb_servlet_ecommerce.dao.IUserDAO;
-import com.ltweb_servlet_ecommerce.dao.impl.CartDAO;
-import com.ltweb_servlet_ecommerce.dao.impl.OpinionDAO;
-import com.ltweb_servlet_ecommerce.dao.impl.UserAddressDAO;
-import com.ltweb_servlet_ecommerce.dao.impl.UserOrderDAO;
+import com.ltweb_servlet_ecommerce.dao.impl.*;
 import com.ltweb_servlet_ecommerce.log.LoggerHelper;
 import com.ltweb_servlet_ecommerce.model.RoleModel;
 import com.ltweb_servlet_ecommerce.model.UserModel;
@@ -59,6 +56,23 @@ public class UserService implements IUserService {
         }
         return true;
     }
+
+    @Override
+    public List<UserModel> getListAdmin() {
+        RoleModel roleAdmin = new RoleModel(SystemConstant.ADMIN_ROLE);
+        try {
+            roleDAO = new RoleDAO();
+            userDAO = new UserDAO();
+            roleAdmin = roleDAO.findWithFilter(roleAdmin);
+            UserModel adminModel = new UserModel();
+            adminModel.setRoleId(roleAdmin.getId());
+            List<UserModel> listAdmin = userDAO.findAllWithFilter(adminModel, null);
+            return listAdmin;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     // This method performs a soft delete operation on multiple users
     public boolean softDelete(Long[] ids) {
@@ -141,8 +155,6 @@ public class UserService implements IUserService {
     public Map<String, Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException {
         return userDAO.findWithCustomSQL(sql, params);
     }
-
-
 
 
     @Override
