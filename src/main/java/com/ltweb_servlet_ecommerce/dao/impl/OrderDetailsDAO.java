@@ -40,8 +40,8 @@ public class OrderDetailsDAO extends AbstractDAO<OrderDetailsModel> implements I
     }
 
     @Override
-    public List<OrderDetailsModel> findAllByOrderId(Long orderId) throws SQLException {
-        String sql = "select * from order_details where orderId=?";
+    public List<OrderDetailsModel> findAllByOrderId(Long orderId) {
+        String sql = "select * from order_details where orderId=? and isDeleted=0";
         List<Object> params = new ArrayList<>();
         params.add(orderId);
         List<OrderDetailsModel> result =  query(sql,new OrderDetailsMapper(),params,OrderDetailsModel.class);

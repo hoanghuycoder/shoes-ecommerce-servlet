@@ -99,9 +99,9 @@ public class LogDAO extends AbstractDAO<LogModel> implements ILogDAO {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet rs = null;
-        String sql = "SELECT ip, resource, COUNT(ip) AS accessCount, createAt " +
+        String sql = "SELECT ip, resource, location, COUNT(ip) AS accessCount, createAt " +
                 "FROM logs " +
-                "WHERE createAt > DATE_SUB(NOW() , INTERVAL 1 MINUTE) " +
+                "WHERE createAt > DATE_SUB(NOW() , INTERVAL 1 MINUTE) AND isDeleted = 0 " +
                 "GROUP BY ip, resource, createAt " +
                 "HAVING COUNT(ip) > 10";
         try {
@@ -111,9 +111,10 @@ public class LogDAO extends AbstractDAO<LogModel> implements ILogDAO {
             while (rs.next()) {
                 String ip = rs.getString("ip");
                 String resource = rs.getString("resource");
+                String location = rs.getString("location");
                 int accessCount = rs.getInt("accessCount");
                 Timestamp createAt = rs.getTimestamp("createAt");
-                LogModel logModel = LogModel.builder().ip(ip).resource(resource).accessCount(accessCount).build();
+                LogModel logModel = LogModel.builder().ip(ip).location(location).resource(resource).accessCount(accessCount).build();
                 logModel.setCreateAt(createAt);
                 results.add(logModel);
             }

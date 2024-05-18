@@ -34,6 +34,8 @@ public class CartUtil {
         productModel.setSizeId(sizeModel.getId());
         productModel.setSubTotal(orderDetailsModel.getSubTotal());
         productModel.setPrice(productSizeModel.getPrice());
+        productModel.setProductSizeId(productSizeModel.getId());
+        productModel.setAvailable(productSizeService.getAvailableProducts(productSizeModel.getId()));
         productModelList.add(productModel);
     }
 }

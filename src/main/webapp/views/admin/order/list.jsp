@@ -148,9 +148,9 @@
                                         <a class="btn btn-link text-dark px-1 mb-0"
                                            href="<c:url value="/admin/orders/detail?id=${order_item.id}"/> "><i
                                                 class="material-icons text-sm me-1">edit</i>Sửa</a>
-                                        <a class="btn btn-link text-danger text-gradient px-1 mb-0"
-                                           id="removeOrder${order_item.id}" href="javascript:;"><i
-                                                class="material-icons text-sm me-1">delete</i>Xóa</a>
+                                        <button class="btn btn-link text-danger text-gradient px-1 mb-0"
+                                           id="removeOrder" data-id="${order_item.id}"><i
+                                                class="material-icons text-sm me-1">delete</i>Xóa</button>
                                     </div>
 
                                 </td>
@@ -169,6 +169,65 @@
     window.addEventListener("DOMContentLoaded", function () {
         $("table").each(function () {
             new DataTable(this);
+        })
+
+        // Remove order
+        $(document).on('click', '#removeOrder', function () {
+            Swal.fire({
+                title: "Xóa ?",
+                text: "Bạn có muốn xóa hóa đơn này?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                cancelButtonText: "Hủy",
+                confirmButtonText: "Xóa"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let id = $(this).data('id');
+                    $.ajax({
+                        url: '<c:url value="/admin/order/list"/>',
+                        method: 'DELETE',
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(id),
+                        success: function (response) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Thành công",
+                                toast: true,
+                                position: "top-end",
+                                showConfirmButton: false,
+                                timer: 700,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.onmouseenter = Swal.stopTimer;
+                                    toast.onmouseleave = Swal.resumeTimer;
+                                }
+                            });
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 700);
+                        },
+                        error: function (error) {
+                            console.log('that bai')
+                            Swal.fire({
+                                icon: "warning",
+                                title: "Có lỗi xảy ra!",
+                                toast: true,
+                                position: "top-end",
+                                showConfirmButton: false,
+                                timer: 700,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.onmouseenter = Swal.stopTimer;
+                                    toast.onmouseleave = Swal.resumeTimer;
+                                }
+                            });
+                        }
+                    })
+
+                }
+            });
         })
     })
 </script>

@@ -19,7 +19,8 @@
             <div class="card-body px-0 pb-2">
                 <div class="table-responsive p-0">
                     <div class="d-flex justify-content-end me-4">
-                        <button id="btnDelete" type="button" class="btnDelete" data-toggle="tooltip" title='Delete Logs'>
+                        <button id="btnDelete" type="button" class="btnDelete" data-toggle="tooltip"
+                                title='Delete Logs'>
                             <span><i class="fa-solid fa-trash"></i></span>
                         </button>
                     </div>
@@ -32,13 +33,27 @@
                                     <span class="lbl"></span>
                                 </label>
                             </th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">IP</th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Quốc gia</th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Cấp độ</th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Hành động</th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 text-center">Giá trị cũ</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Giá trị mới</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Thời gian tạo</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
+                                IP
+                            </th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
+                                Quốc gia
+                            </th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
+                                Cấp độ
+                            </th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
+                                Hành động
+                            </th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 text-center">
+                                Giá trị cũ
+                            </th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
+                                Giá trị mới
+                            </th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
+                                Thời gian tạo
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
@@ -63,24 +78,24 @@
                                 <td>
                                     <div class="d-flex px-2 py-1 text-center">
                                         <c:if test="${item.level.equals(SystemConstant.DANGER_LEVEL) || item.level.equals(SystemConstant.ERROR_LEVEL)}">
-                                            <c:set var="alert" value="danger" scope="page" />
+                                            <c:set var="alert" value="danger" scope="page"/>
                                         </c:if>
                                         <c:if test="${item.level.equals(SystemConstant.INFO_LEVEL)}">
-                                            <c:set var="alert" value="success" scope="page" />
+                                            <c:set var="alert" value="success" scope="page"/>
                                         </c:if>
                                         <c:if test="${item.level.equals(SystemConstant.WARN_LEVEL)}">
-                                            <c:set var="alert" value="warning" scope="page" />
+                                            <c:set var="alert" value="warning" scope="page"/>
                                         </c:if>
                                         <span class="badge badge-sm bg-gradient-${alert}">${item.level}</span>
                                     </div>
                                 </td>
-                                <td data-bs-toggle="tooltip" class="text-center" data-bs-placement="top" title="" >
+                                <td data-bs-toggle="tooltip" class="text-center" data-bs-placement="top" title="">
                                     <p class="text-xs font-weight-bold mx-auto mb-0">${item.action}</p>
                                 </td>
                                 <td class="align-middle text-sm">
                                     <c:if test="${item.preValue!=null}">
                                         <p class="text-xs font-weight-bold mx-auto mb-0">
-                                            ${StringUtilsHelper.insertHtmlBreaks(item.preValue.get(SystemConstant.VALUE_LOG).toString(), 50)}
+                                                ${StringUtilsHelper.insertHtmlBreaks(item.preValue.get(SystemConstant.VALUE_LOG).toString(), 50)}
                                         </p>
                                     </c:if>
                                 </td>
@@ -107,9 +122,9 @@
         </div>
     </div>
 </div>
-<script >
-    window.addEventListener("DOMContentLoaded",function (){
-        $(document).ready(function(){
+<script>
+    window.addEventListener("DOMContentLoaded", function () {
+        $(document).ready(function () {
             new DataTable('#dataTable', {
                 order: [[7, 'desc']],
                 pagingType: 'simple_numbers',
@@ -123,7 +138,7 @@
             });
 
             //check all
-            $("#checkAll").change(function() {
+            $("#checkAll").change(function () {
                 $(".checkbox").prop('checked', $(this).prop("checked"));
             });
 
@@ -140,7 +155,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         var ids = [];
-                        $('input[type="checkbox"].checkbox:checked').each(function() {
+                        $('input[type="checkbox"].checkbox:checked').each(function () {
                             if ($(this).attr('id') !== 'checkAll') {
                                 ids.push($(this).val()); // Thêm giá trị của checkbox được chọn vào mảng
                             }
@@ -191,7 +206,6 @@
                     }
                 });
             });
-
 
         });
 

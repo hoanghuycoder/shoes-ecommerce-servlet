@@ -59,10 +59,8 @@
 
                                 <div class="col-md-2 mb-4 mb-md-0">
                                     <div class="form-outline mb-4" data-mdb-input-init>
-
-                                        <input type="number" id="quantityProduct${product_item.id}"  class="form-control quantityProduct" value="${product_item.quantity}" data-index="${loop.index}" data-product-id="${product_item.id}" data-size-id="${product_item.sizeId}" min="1" max="20" />
+                                        <input type="number" id="quantityProduct${product_item.id}"  class="form-control quantityProduct" value="${product_item.quantity}" data-index="${loop.index}" data-product-id="${product_item.id}" data-size-id="${product_item.sizeId}" min="1" max="${product_item.available}" />
                                         <label class="form-label" for="quantityProduct${product_item.id}">Số lượng</label>
-
                                     </div>
 
                                     <h5 class="mb-2">
