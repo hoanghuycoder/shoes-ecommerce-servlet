@@ -57,6 +57,7 @@ const conditionValue = {
         <div class="input-group input-group-static mb-4">
                           <label for="association" class="ms-0">Điều kiện cụ thể</label>
                           <select class="form-control" id="association" name="association" required>
+                            <option value="" ${value==="" ? "selected" : ""}>--Chọn tài khoản liên kết--</option>
                             <option value="google" ${value==="google" ? "selected" : ""}>Google</option>
                             <option value="facebook" ${value==="facebook" ? "selected" : ""}>Facebook</option>
                           </select>
@@ -75,7 +76,7 @@ const conditionValue = {
             <div class="input-group input-group-outline my-3">
                   <label class="form-label">Điều kiện cụ thể</label>
                   <input type="number" class="form-control" name="id" value="${value}" required/>
-                </div>
+            </div>
         `,
         name : (value) =>`
         <div class="input-group input-group-outline my-3">
