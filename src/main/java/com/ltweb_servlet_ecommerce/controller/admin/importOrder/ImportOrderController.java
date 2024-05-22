@@ -55,6 +55,13 @@ public class ImportOrderController extends HttpServlet {
             String supplier = request.getParameter("supplier");
             String importId = request.getParameter("importId");
 
+            // Check if the importId already exists
+            if (importOrderService.isExists(importId)) {
+                // If it does, redirect to the error page and return
+                redirectToErrorPage(response);
+                return;
+            }
+
             // Initialize importDate and parse it from the request parameter
             Date importDate = null;
             try {
@@ -65,9 +72,14 @@ public class ImportOrderController extends HttpServlet {
             }
 
             // Create a new ImportOrderModel with the supplier, set its id and createAt, and save it
-            ImportOrderModel importOrderModel = ImportOrderModel.builder().supplier(supplier).build();
-            importOrderModel.setId(importId);
-            importOrderModel.setCreateAt(new Timestamp(importDate.getTime()));
+            ImportOrderModel importOrderModel = ImportOrderModel.builder()
+                    .id(importId)
+                    .createAt(new Timestamp(importDate.getTime()))
+                    .supplier(supplier)
+                    .build();
+
+//            importOrderModel.setId(importId);
+//            importOrderModel.setCreateAt(new Timestamp(importDate.getTime()));
             importOrderModel = importOrderService.save(importOrderModel);
 
             // If the ImportOrderModel was saved successfully

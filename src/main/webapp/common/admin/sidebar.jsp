@@ -1,8 +1,10 @@
-<%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
-<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark" id="sidenav-main">
+<%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark"
+       id="sidenav-main">
 
     <div class="sidenav-header">
-        <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+        <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
+           aria-hidden="true" id="iconSidenav"></i>
         <a class="navbar-brand m-0" href="<c:url value="/admin/home"/> " target="_blank">
             <img src="https://www.nike.com/favicon.ico" class="navbar-brand-img h-100" alt="main_logo">
             <span class="ms-1 font-weight-bold text-white">Admin Nai</span>
@@ -89,22 +91,22 @@
                 </a>
             </li>
 
+<%--            <li class="nav-item">--%>
+<%--                <a class="nav-link text-white " href="/admin/stat">--%>
+<%--                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">--%>
+<%--                        <i class="fa-solid fa-chart-line"></i>--%>
+<%--                    </div>--%>
+<%--                    <span class="nav-link-text ms-1">Thống kê</span>--%>
+<%--                </a>--%>
+<%--            </li>--%>
             <li class="nav-item">
-                <a class="nav-link text-white " href="/admin/stat">
+                <a class="nav-link text-white " href="/admin/voucher/list">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="fa-solid fa-chart-line"></i>
+                        <i class="fa-solid fa-ticket"></i>
                     </div>
-                    <span class="nav-link-text ms-1">Thống kê</span>
+                    <span class="nav-link-text ms-1">Mã giảm giá</span>
                 </a>
             </li>
-    <li class="nav-item">
-        <a class="nav-link text-white " href="/admin/voucher/list">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-                <i class="fa-solid fa-ticket"></i>
-            </div>
-            <span class="nav-link-text ms-1">Mã giảm giá</span>
-        </a>
-    </li>
 
             <li class="nav-item">
                 <a class="nav-link text-white " href="<c:url value="/admin/import-order"/>">
@@ -116,19 +118,19 @@
                     <span class="nav-link-text ms-1">Hóa đơn nhập</span>
                 </a>
             </li>
-<%--            <li class="nav-item mt-3">--%>
-<%--                <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Other</h6>--%>
-<%--            </li>--%>
-<%--            <li class="nav-item">--%>
-<%--                <a class="nav-link text-white " href="#">--%>
+            <%--            <li class="nav-item mt-3">--%>
+            <%--                <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Other</h6>--%>
+            <%--            </li>--%>
+            <%--            <li class="nav-item">--%>
+            <%--                <a class="nav-link text-white " href="#">--%>
 
-<%--                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">--%>
-<%--                        <i class="material-icons opacity-10">notifications</i>--%>
-<%--                    </div>--%>
+            <%--                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">--%>
+            <%--                        <i class="material-icons opacity-10">notifications</i>--%>
+            <%--                    </div>--%>
 
-<%--                    <span class="nav-link-text ms-1">Notifications</span>--%>
-<%--                </a>--%>
-<%--            </li>--%>
+            <%--                    <span class="nav-link-text ms-1">Notifications</span>--%>
+            <%--                </a>--%>
+            <%--            </li>--%>
             <li class="nav-item">
                 <a class="nav-link text-white " href="/admin/edit-image">
 
