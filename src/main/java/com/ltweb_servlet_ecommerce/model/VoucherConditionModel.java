@@ -13,5 +13,5 @@ public class VoucherConditionModel extends AbstractModel<VoucherConditionModel> 
     private Long voucherId;
     private String tableName;
     private String columnName;
-    private String condition;
+    private String conditionValue;
 }

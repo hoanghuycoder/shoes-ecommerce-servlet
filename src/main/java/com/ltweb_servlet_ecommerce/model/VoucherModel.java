@@ -3,6 +3,8 @@ package com.ltweb_servlet_ecommerce.model;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.util.*;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,4 +18,6 @@ public class VoucherModel extends AbstractModel<VoucherModel>{
     private Timestamp endDate;
     private int usageLimit;
     private String shortDescription;
+//    properties of handle logic
+    private List<VoucherConditionModel> conditions;
 }

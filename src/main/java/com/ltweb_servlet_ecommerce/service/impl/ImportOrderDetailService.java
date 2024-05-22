@@ -90,7 +90,11 @@ public class ImportOrderDetailService implements IImportOrderDetailService {
     }
 
     // This method processes the category of the imported product
-    private long processCategory(ImportOrderDetailModel model) throws SQLException {
+    private long processCategory(ImportOrderDetailModel model, HashMap<String, CategoryModel> cacheCategory) throws SQLException {
+        if (cacheCategory.containsKey(model.getCategoryCode())) {
+            return cacheCategory.get(model.getCategoryCode()).getId();
+        }
+
         // Initialize the category ID
         long cateId = 0;
         // Try to find the category in the database using the category code from the model
@@ -105,12 +109,18 @@ public class ImportOrderDetailService implements IImportOrderDetailService {
             // Save the new category in the database and get its ID
             cateId = categoryDAO.save(category);
         }
+
+        cacheCategory.put(model.getCategoryCode(), category);
         // Return the category ID
         return cateId;
     }
 
     // This method processes the size of the imported product
-    private long processSize(ImportOrderDetailModel model) throws SQLException {
+    private long processSize(ImportOrderDetailModel model, HashMap<String, SizeModel> cacheSize) throws SQLException {
+        if (cacheSize.containsKey(model.getSize())) {
+            return cacheSize.get(model.getSize()).getId();
+        }
+
         // Try to find the size in the database using the size name from the model
         SizeModel size = sizeDAO.findWithFilter(SizeModel.builder().name(model.getSize()).build());
         long sizeId;
@@ -123,12 +133,18 @@ public class ImportOrderDetailService implements IImportOrderDetailService {
             // If the size exists, get its ID
             sizeId = size.getId();
         }
+        cacheSize.put(model.getSize(), size);
         // Return the size ID
         return sizeId;
     }
 
     // This method processes the product size of the imported product
-    private long processProductSize(long productId, long sizeId, ImportOrderDetailModel model) throws SQLException {
+    private long processProductSize(long productId, long sizeId, ImportOrderDetailModel model, HashMap<String, ProductSizeModel> cacheProductSize) throws SQLException {
+        String key = productId + "_" + sizeId;
+        if (cacheProductSize.containsKey(key)) {
+            return cacheProductSize.get(key).getId();
+        }
+
         // Try to find the product size in the database using the product ID and size ID
         ProductSizeModel withFilter = productSizeDAO.findWithFilter(
                 ProductSizeModel.builder().productId(productId).sizeId(sizeId).build());
@@ -141,13 +157,18 @@ public class ImportOrderDetailService implements IImportOrderDetailService {
             // If the product size exists, get its ID
             productSizeId = withFilter.getId();
         }
+        cacheProductSize.put(key, withFilter);
         // Return the product size ID
         return productSizeId;
     }
 
 
     // This method processes the product of the imported order
-    private long processProduct(ImportOrderDetailModel model) throws SQLException {
+    private long processProduct(ImportOrderDetailModel model, HashMap<Long, ProductModel> cacheProduct, HashMap<String, CategoryModel> cacheCategory) throws SQLException {
+        if (cacheProduct.containsKey(model.getProductId())) {
+            return cacheProduct.get(model.getProductId()).getId();
+        }
+
         // Initialize the product ID
         long productId;
 
@@ -160,7 +181,7 @@ public class ImportOrderDetailService implements IImportOrderDetailService {
             productId = model.getProductId();
 
             // Process the category of the product and get the category ID
-            long cateId = processCategory(model);
+            long cateId = processCategory(model, cacheCategory);
 
             // Create a new product with the product ID, product name, and category ID
             product = new ProductModel();
@@ -174,6 +195,7 @@ public class ImportOrderDetailService implements IImportOrderDetailService {
             // If the product exists in the database, get its ID
             productId = product.getId();
         }
+        cacheProduct.put(productId, product);
 
         // Return the product ID
         return productId;
@@ -192,6 +214,7 @@ public class ImportOrderDetailService implements IImportOrderDetailService {
     private boolean saveOrderDetail(ImportOrderDetailModel newModel) throws SQLException {
         return orderDetailDAO.save(newModel) > 0;
     }
+
     @Override
     // This method imports an Excel file and processes its contents
     public boolean importFileExcel(String importOrderId, Part importFile, Collection<Part> parts) throws IOException {
@@ -208,15 +231,21 @@ public class ImportOrderDetailService implements IImportOrderDetailService {
         });
 
         // Create a cache to store the product IDs that have been processed
-        HashMap<Long, String> cacheProductId = new HashMap<>();
+        HashMap<Long, Boolean> cacheIsUploadImg = new HashMap<>();
+        HashMap<Long, ProductModel> cacheProduct = new HashMap<>();
+        HashMap<String, CategoryModel> cacheCategory = new HashMap<>();
+        HashMap<String, SizeModel> cacheSize = new HashMap<>();
+        HashMap<String, ProductSizeModel> cacheProductSize = new HashMap<>();
+
 
         try {
             // Process each ImportOrderDetailModel in the list
             for (ImportOrderDetailModel model : list) {
+                long start = System.currentTimeMillis();
                 // Process the product, size, and product size of the model
-                long productId = processProduct(model);
-                long sizeId = processSize(model);
-                long productSizeId = processProductSize(productId, sizeId, model);
+                long productId = processProduct(model, cacheProduct, cacheCategory);
+                long sizeId = processSize(model, cacheSize);
+                long productSizeId = processProductSize(productId, sizeId, model, cacheProductSize);
 
                 // Create a new ImportOrderDetailModel with the processed information
                 ImportOrderDetailModel newModel = createImportOrderDetail(importOrderId, model, productSizeId);
@@ -228,10 +257,11 @@ public class ImportOrderDetailService implements IImportOrderDetailService {
                 }
 
                 // If the product ID is not in the cache, add it to the cache and process the product images
-                if (!cacheProductId.containsKey(productId)) {
-                    cacheProductId.put(productId, "");
+                if (!cacheIsUploadImg.containsKey(productId)) {
+                    cacheIsUploadImg.put(productId, true);
                     processProductImages(productId, partList);
                 }
+                System.out.println("Time import: " + (System.currentTimeMillis() - start) + "ms");
             }
 
             // If all models were processed and saved successfully, return true
@@ -287,6 +317,14 @@ public class ImportOrderDetailService implements IImportOrderDetailService {
                         productDAO.updateThumbnail(productId, url);
                     }
 
+                    // Close the input stream
+                    if (inputStream != null) {
+                        try {
+                            inputStream.close();
+                        } catch (IOException e) {
+                            // Handle the exception...
+                        }
+                    }
                     // Build a new ProductImageModel with the product ID and image URL, and return it
                     return ProductImageModel.builder().productId(productId).imageUrl(url).build();
                 }));
@@ -323,9 +361,4 @@ public class ImportOrderDetailService implements IImportOrderDetailService {
         // Shut down the executor service
         executor.shutdown();
     }
-//    Time img: 3835ms -> 2671ms
-//    Time img: 2804ms -> 2112ms
-//    Time import: 8099ms -> 4929ms
-//    Time main: 8164ms -> 4961ms
-
 }

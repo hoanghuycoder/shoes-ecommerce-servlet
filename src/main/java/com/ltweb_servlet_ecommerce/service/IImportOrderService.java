@@ -14,4 +14,5 @@ public interface IImportOrderService {
 
     ImportOrderModel save(ImportOrderModel model);
 
+    boolean isExists(String importId);
 }
