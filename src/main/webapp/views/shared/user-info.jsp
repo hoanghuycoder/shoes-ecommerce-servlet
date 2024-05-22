@@ -18,16 +18,15 @@
 </head>
 <body>
 
-
+<%UserModel userModel = (UserModel) request.getAttribute("userModel");%>
 <div class="container col-md-4" id="account-user">
     <div class="main-account">
         <div class="main-account-header" style="margin-top: 100px;">
             <h3>Thông tin tài khoản</h3>
-            <p>Quản lý thông tin để bảo mật tài khoản</p>
+            <p style="font-size: 20px;">Xin chào <%= userModel.getFullName()%></p>
         </div>
 
-        <%UserModel userModel = (UserModel) request.getAttribute("userModel");%>
-        <form action="/change-password" method="post">
+        <form action="/user-info" method="post">
             <div class="main-account-body">
                 <div class="main-account-body-col">
                     <div class="form-group">

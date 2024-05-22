@@ -95,11 +95,17 @@
 <%--                    </ul>--%>
 <%--                </li>--%>
                 <li class="nav-item d-flex align-items-center">
-                    <a href="./pages/sign-in.html" class="nav-link text-body font-weight-bold px-0">
+                    <a href="/user-info" class="nav-link text-body font-weight-bold px-0">
                         <i class="fa fa-user me-sm-1"></i>
 
                         <p class="d-sm-inline d-none">${USER_MODEL.fullName}</p>
 
+                    </a>
+                </li>
+                <li class="nav-item d-flex align-items-center">
+                    <a href="/sign-out" class="nav-link text-body font-weight-bold ">
+                        <i class="fas fa-sign-out-alt me-sm-1 ml-1"></i>
+                        <p class="d-sm-inline d-none">Đăng xuất</p>
                     </a>
                 </li>
             </ul>
