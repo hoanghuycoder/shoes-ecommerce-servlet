@@ -4,19 +4,13 @@ import com.ltweb_servlet_ecommerce.dao.IImportOrderDAO;
 import com.ltweb_servlet_ecommerce.dao.IImportOrderDetailDAO;
 import com.ltweb_servlet_ecommerce.dao.impl.ImportOrderDAO;
 import com.ltweb_servlet_ecommerce.dao.impl.ImportOrderDetailDAO;
-import com.ltweb_servlet_ecommerce.model.ImportOrderDetailModel;
 import com.ltweb_servlet_ecommerce.model.ImportOrderModel;
 import com.ltweb_servlet_ecommerce.paging.PageRequest;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.service.IImportOrderService;
 import com.ltweb_servlet_ecommerce.sort.Sorter;
 
-import com.ltweb_servlet_ecommerce.utils.ReadImportOrderFile;
-
-
 import javax.inject.Inject;
-import javax.servlet.http.Part;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,11 +49,12 @@ public class ImportOrderService implements IImportOrderService {
 
         return result;
     }
+
     @Override
     public double getTotalImportPrice() {
         double totalImportPrice = 0;
         List<ImportOrderModel> listImportOrder = this.findAll(new PageRequest(1, 10, new Sorter("id", "ASC")));
-        for (ImportOrderModel i :  listImportOrder) {
+        for (ImportOrderModel i : listImportOrder) {
             ImportOrderDetailService importOrderDetailService = new ImportOrderDetailService();
             double pricePerImport = importOrderDetailService.getTotalPriceByImportId(i.getId());
             totalImportPrice += pricePerImport;
@@ -68,12 +63,16 @@ public class ImportOrderService implements IImportOrderService {
     }
 
 
-
-
     @Override
     public ImportOrderModel save(ImportOrderModel model) {
         importDAO.save(model);
         return model;
+    }
+
+    @Override
+    public boolean isExists(String importId) {
+        ImportOrderModel model = importDAO.findById(importId);
+        return model != null;
     }
 
 }

@@ -34,6 +34,7 @@
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                         <c:if test="${not empty USER_MODEL}">
                             <li class="m-0"><a class="dropdown-item" href="#">${USER_MODEL.fullName}</a></li>
+                            <li><a class="dropdown-item" href="<c:url value="/orders"/> "><i class="far fa-check-circle me-2"></i>Đơn hàng</a></li>
                             <li><a class="dropdown-item" href="/sign-out"><i class="fa-solid fa-person-walking-dashed-line-arrow-right me-2"></i>Đăng xuất</a></li>
                         </c:if>
                         <c:if test="${empty USER_MODEL}">
