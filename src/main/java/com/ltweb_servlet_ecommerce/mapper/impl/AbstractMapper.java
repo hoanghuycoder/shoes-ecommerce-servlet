@@ -28,7 +28,7 @@ public class AbstractMapper<T> implements GenericMapper<T> {
             field.setAccessible(true);
             try {
                 Object value = field.get(model);
-                if (value != null) {
+                if ((value != null && !value.equals(0)) ) {
                     if (typeSQL.toLowerCase().equals("update") || typeSQL.toLowerCase().equals("insert")) {
 
                         if (field.getName().equals("totalPrice")) {

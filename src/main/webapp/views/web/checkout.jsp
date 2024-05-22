@@ -169,7 +169,7 @@
         const listInfoAddress = [
             {
                 typeAddress : "province",
-                url : () => "https://vnprovinces.pythonanywhere.com/api/provinces/?basic=true&limit=100"
+                url : () => "https://vn-public-apis.fpo.vn/provinces/getAll?limit=-1"
             },
             {
                 typeAddress : "district",

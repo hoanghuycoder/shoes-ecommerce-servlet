@@ -46,6 +46,9 @@ public class HttpUtil {
         }
         return new HttpUtil(sb.toString());
     }
+    public  String getJson() {
+        return value;
+    }
 
     public static org.json.JSONObject doGet(String url, Map<String, Object> headers) throws IOException {
         HttpClient client = HttpClients.createDefault();
@@ -93,6 +96,7 @@ public class HttpUtil {
         JSONObject result = new JSONObject(new String(value.getBytes("ISO-8859-1"), StandardCharsets.UTF_8));
         return result;
     }
+
 
 
     public <T> T toModel(Class<T> tClass) {

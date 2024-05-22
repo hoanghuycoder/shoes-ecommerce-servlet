@@ -13,24 +13,24 @@
             <a class="btn bg-gradient-dark mb-0" id="toggleAddProduct" data-bs-toggle="collapse" href="#formNewProduct"><i class="material-icons text-sm">add</i>&nbsp;&nbsp;Thêm mã giảm giá mới</a>
           <div class="collapse multi-collapse my-3" id="formNewProduct">
             <div class="card py-2 px-4" >
-              <form method="POST" id ="formAddVoucher" enctype="multipart/form-data">
+              <form method="POST" id ="formAddVoucher">
                 <div class="input-group input-group-outline my-3">
                   <label class="form-label">Tên mã giảm giá</label>
-                  <input type="text" class="form-control" name="name" required>
+                  <input type="text" class="form-control" id="nameVoucher" name="name" required>
                 </div>
                 <div class="input-group input-group-outline my-3">
                   <label class="form-label">Mã giảm giá</label>
-                  <input type="text" class="form-control" name="code" required>
-                  <p class="text-danger" id="validateCodeVoucher"></p>
+                  <input type="text" id="codeVoucher" class="form-control" name="code" required>
                 </div>
+                <p class="text-danger" id="validateCodeVoucher"></p>
                 <div class="my-3">
                   <label>Nội dung</label>
-                  <textarea type="text" class="" rows="10" style="height: 200px" name="content" id="content"></textarea>
+                  <textarea id="contentVoucher" type="text" class="" rows="10" style="height: 200px" name="content"></textarea>
                   <p class="text-sm">Nội dung không được chứa kí tự <code>'</code></p>
                 </div>
                 <div class="input-group input-group-outline my-3">
                   <label class="form-label">Mô tả ngắn</label>
-                  <input type="text" class="form-control" name="shortDescription" required/>
+                  <input id="shortDescriptionVoucher" type="text" class="form-control" name="shortDescription" required/>
                 </div>
                 <div class="input-group input-group-outline my-3">
                   <label class="form-label">Ngày bắt đầu áp dụng</label>
@@ -51,7 +51,7 @@
                 <div id="conditionVoucher">
 
                 </div>
-                <button class="btn btn-primary" type="submit">Tạo mã giảm giá</button>
+                <button class="btn btn-primary" id="submitFormAddVoucher" type="submit">Tạo mã giảm giá</button>
 
               </form>
             </div>
@@ -76,7 +76,6 @@
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ngày kết thúc áp dụng</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Giới hạn sử dụng</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Mô tả ngắn</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tình trạng</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Cập nhật lúc</th>
                 <th class="text-secondary opacity-7"></th>
               </tr>
@@ -139,14 +138,7 @@
                     <td>
                       <div class="d-flex px-2 py-1">
                         <div class="d-flex flex-column justify-content-center">
-                          <p class="text-xs font-weight-bold mx-auto mb-0">${item.active}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <div class="d-flex px-2 py-1">
-                        <div class="d-flex flex-column justify-content-center">
-                          <p class="text-xs font-weight-bold mx-auto mb-0">${item.updatedAt}</p>
+                          <p class="text-xs font-weight-bold mx-auto mb-0">${item.updateAt}</p>
                         </div>
                       </div>
                     </td>
@@ -218,7 +210,7 @@
         </div>
       </div>
     </div>
-    <script src="./voucher.js"></script>
+    <script src="http://localhost:8080/views/admin/voucher/voucher.js"></script>
     <script>
       const setIdDelete = (id,name) => {
         $("#deleteModalLabel").text("Xóa mã giảm giá "+name+"?");
@@ -232,13 +224,49 @@
     </script>
     <script>
       window.addEventListener("DOMContentLoaded", function () {
+        $("#formAddVoucher").submit((e)=> {
+          e.preventDefault()
+          const name = $("#nameVoucher").val();
+          const code = $("#codeVoucher").val();
+          const content = $("#contentVoucher").val()
+          const shortDescription = $("#shortDescriptionVoucher").val()
+          const startDate = $("#startDate").val();
+          const endDate = $("#endDate").val();
+          const usageLimit = $("#usageLimit").val();
+          $.ajax({
+            url : "/ajax/voucher/add",
+            method : "POST",
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            data : JSON.stringify({
+              name,
+              code,
+              content,
+              shortDescription,
+              startDate,
+              endDate,
+              usageLimit,
+              conditions
+            }),
+            success : function (data) {
+              
+            },
+            error : function (error) {
+              
+            }
+          })
+
+
+
+        })
         ClassicEditor
-                .create( document.querySelector( '#content' ))
+                .create( document.querySelector( '#contentVoucher' ))
                 .catch( error => {
                   console.error( error );
                 } );
         let deboundValidateCodeVoucher =  null;
-        $("input[name='code']").change(function () {
+        $("input[name='code']").keyup(function () {
           const code = $(this).val();
           clearTimeout(deboundValidateCodeVoucher);
           deboundValidateCodeVoucher = setTimeout(function () {
@@ -249,7 +277,7 @@
               },
               type : "GET",
               success : function (data) {
-                if (data.code===code)  {
+                if (data && data.code===code)  {
                   $("#validateCodeVoucher").text("Mã giảm giá đã tồn tại")
                   $("#formAddVoucher button[type='submit']").attr("disabled","")
                 } else {
@@ -257,20 +285,19 @@
                   $("#formAddVoucher button[type='submit']").attr("disabled",false)
                 }
               },
-              error : {
-
+              error : function (error) {
+                $("#validateCodeVoucher").text("")
+                $("#formAddVoucher button[type='submit']").attr("disabled",false)
               }
             })
-          },200)
+          },500)
         })
       //   Set condition voucher
         let conditions = [];
-        $("haveCondition").change( function () {
+        $("#haveCondition").change( function () {
           if($(this).prop("checked")) {
             $("#conditionVoucher").append(`
-            <div class="conditionList">
-
-                  </div>
+                  <div class="conditionList"></div>
                   <div class="d-flex justify-content-end me-4 gap-4">
                     <div class="btn btn-outline-primary rounded-circle d-flex p-0" id="addCondition" style="width: 40px;height: 40px">
                       <i class="fa-solid fa-plus m-auto"></i>
@@ -282,41 +309,87 @@
             `)
            conditions.push({
              tableName : 'user',
-             columnName : 'association',
-             conditionValue :'facebook'
+             columnName : 'id',
+             conditionValue :''
            })
+            updateDOMActionConditionVoucher();
+            updateDOMCondition();
           } else {
             conditions = [];
+            $("#conditionVoucher").empty();
           }
         })
         function updateDOMCondition() {
+          $('.conditionList').empty();
           for (let i = 0; i < conditions.length; i++) {
             const condition = conditions[i];
-            $("#conditionList").append(`
-             <div className="row" id="conditionItem${i}" data-index-condition="${i}">
-              <div className="col-12 col-md-4 condition-table">
-
-              </div>
-              <div className="col-12 col-md-4 condition-column">
-
-              </div>
-              <div className="col-12 col-md-4 condition-value">
-
-              </div>
+            const conditionItem = $(`
+            <div class="row conditionItem" id="conditionItem`+i+`" >
+              <div class="col-12 col-md-4 condition-table" data-index-condition="`+i+`"></div>
+              <div class="col-12 col-md-4 condition-column" data-index-condition="`+i+`"></div>
+              <div class="col-12 col-md-4 condition-value" data-index-condition="`+i+`"></div>
             </div>
             `);
-            $("#conditionItem${i} > .condition-table").append(conditionTable(condition.tableName))
-            $("#conditionItem${i} > .condition-column").append(conditionColumns[condition.tableName](condition.columnName))
-            $("#conditionItem${i} > .condition-value").append(conditionColumns[condition.tableName][condition.columnName](condition.conditionValue))
+            $('.conditionList').append(conditionItem);
+            const strDOMTable = conditionTables(condition.tableName);
+            const strDOMCol = conditionColumns[condition.tableName](condition.columnName);
+            const strDOMVal = conditionValue[condition.tableName][condition.columnName](condition.conditionValue);
+            conditionItem.find('.condition-table').append(strDOMTable);
+            conditionItem.find('.condition-column').append(strDOMCol);
+            conditionItem.find('.condition-value').append(strDOMVal);
+            updateDOMActionConditionVoucher();
           }
         }
 
-        function updateDOMAction() {
-          $("#addCondition").click(function () {
+        function updateDOMActionConditionVoucher() {
+          $('.conditionList').off('change', '.condition-table');
+          $('.conditionList').off('change', '.condition-column');
+          $("#addCondition").off('click');
+          $("#removeCondition").off('click');
+          $(".conditionItem > .condition-table").change(function () {
+            const index = $(this).attr("data-index-condition");
+            const tableName = $("#conditionItem"+index+" > .condition-table select").val();
+            conditions[index].tableName = tableName
+            const strDOMCol = conditionColumns[tableName](defaultColumnCondition);
+            const strDOMVal = conditionValue[tableName][defaultColumnCondition]("");
+            $(`#conditionItem`+index+` > .condition-column`).empty();
+            $(`#conditionItem`+index+` > .condition-column`).append(strDOMCol)
+            $(`#conditionItem`+index+` > .condition-value`).empty();
+            $(`#conditionItem`+index+` > .condition-value`).append(strDOMVal);
+            console.table(conditions)
+          })
+          $(".conditionItem > .condition-column").change(function () {
+            const index = $(this).attr("data-index-condition");
+            const tableName = $("#conditionItem"+index+" > .condition-table select").val();
+            const columnName = $("#conditionItem"+index+" > .condition-column select").val();
+            const strDOMVal = conditionValue[tableName][columnName]("");
+            conditions[index].columnName = columnName
+            $(`#conditionItem`+index+` > .condition-value`).empty();
+            $(`#conditionItem`+index+` > .condition-value`).append(strDOMVal);
+            console.table(conditions)
 
           })
+          $(".conditionItem > .condition-value").change(function () {
+            let valueCondition = "";
+            const index = $(this).attr("data-index-condition");
+            if ($("#conditionItem"+index+" > .condition-value select"))
+              valueCondition = $("#conditionItem"+index+" > .condition-value select").val()
+            else $("#conditionItem"+index+" > .condition-value input")
+              valueCondition = $("#conditionItem"+index+" > .condition-value input").val();
+            conditions[index].conditionValue = valueCondition
+            console.table(conditions)
+          })
+          $("#addCondition").click(function () {
+            conditions.push({
+              tableName : 'user',
+              columnName : 'id',
+              conditionValue :''
+            })
+            updateDOMCondition();
+          })
           $("#removeCondition").click(function () {
-
+            conditions.pop();
+            updateDOMCondition();
           })
         }
       })
