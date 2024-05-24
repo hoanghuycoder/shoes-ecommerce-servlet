@@ -11,17 +11,19 @@
     <div class="col-12">
         <div class="card my-4">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3" style="z-index: 1;">
                     <h6 class="text-white text-capitalize ps-3">Bảng nhập hàng</h6>
                 </div>
             </div>
             <div class="card-body px-0 pb-2">
                 <div class="table-responsive p-0">
                     <div class="d-flex justify-content-end me-4">
-                        <a class="btnDelete" data-bs-toggle="modal" href="#addModal" data-toggle="tooltip" title='Thêm đơn hàng'>
+                        <a class="btnDelete" data-bs-toggle="modal" href="#addModal" data-toggle="tooltip"
+                           title='Thêm đơn hàng'>
                             <span><i class="fa-solid fa-file-import"></i></span>
                         </a>
-                        <button id="btnDelete" type="button" class="btnDelete" data-toggle="tooltip" title='Xóa đơn hàng'>
+                        <button id="btnDelete" type="button" class="btnDelete" data-toggle="tooltip"
+                                title='Xóa đơn hàng'>
                             <span><i class="fa-solid fa-trash"></i></span>
                         </button>
 
@@ -35,10 +37,18 @@
                                     <span class="lbl"></span>
                                 </label>
                             </th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">ID</th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Nhà cung cấp</th>
-                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Trị giá</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Thời gian nhập</th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
+                                ID
+                            </th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
+                                Nhà cung cấp
+                            </th>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
+                                Trị giá
+                            </th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
+                                Thời gian nhập
+                            </th>
                             <th></th>
                         </tr>
                         </thead>
@@ -47,10 +57,10 @@
                             <tr>
                                 <td class="text-center">
 
-                                        <label class="pos-rel">
-                                            <input type="checkbox" class="form-check-input checkbox" value="${item.id}"/>
-                                            <span class="lbl"></span>
-                                        </label>
+                                    <label class="pos-rel">
+                                        <input type="checkbox" class="form-check-input checkbox" value="${item.id}"/>
+                                        <span class="lbl"></span>
+                                    </label>
 
                                 </td>
                                 <td>
@@ -63,8 +73,9 @@
                                         <p class="text-xs font-weight-bold mx-auto mb-0">${item.supplier}</p>
                                     </div>
                                 </td>
-                                <td data-bs-toggle="tooltip" class="text-center" data-bs-placement="top" title="" >
-                                    <p class="text-xs font-weight-bold mx-auto mb-0"><fmt:formatNumber type="currency" value="${item.totalPrice}"/></p>
+                                <td data-bs-toggle="tooltip" class="text-center" data-bs-placement="top" title="">
+                                    <p class="text-xs font-weight-bold mx-auto mb-0"><fmt:formatNumber type="currency"
+                                                                                                       value="${item.totalPrice}"/></p>
                                 </td>
                                 <td class="align-middle text-center">
                                     <p class="text-xs font-weight-bold mx-auto mb-0">
@@ -72,7 +83,8 @@
                                     </p>
                                 </td>
                                 <td class="align-middle text-center">
-                                    <a href="<c:url value="/admin/import-order-details?id=${item.id}"/>" ><i class="fa-solid fa-circle-info"></i></a>
+                                    <a href="<c:url value="/admin/import-order-details?id=${item.id}"/>"><i
+                                            class="fa-solid fa-circle-info"></i></a>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -83,8 +95,15 @@
         </div>
     </div>
 </div>
+
+<!-- Progress Bar -->
+<div id="overlay" style="">
+    <div class="progress-circle" style=""></div>
+</div>
+
 <%--    Modal--%>
-<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -93,13 +112,14 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form method="POST" enctype="multipart/form-data" action="<c:url value="/admin/import-order"/>" >
+            <form id="importForm" method="POST" enctype="multipart/form-data"
+                  action="<c:url value="/admin/import-order"/>">
                 <div class="modal-body">
                     <div class="input-group input-group-outline my-3">
-                        <input type="text" class="form-control" name="supplier" placeholder="Nhà cung cấp">
+                        <input type="text" class="form-control" name="supplier" placeholder="Nhà cung cấp" required>
                     </div>
                     <div class="input-group input-group-outline my-3">
-                        <input type="text" class="form-control" name="importId" placeholder="Mã hóa đơn">
+                        <input type="text" class="form-control" name="importId" placeholder="Mã hóa đơn" required>
                     </div>
                     <div class="input-group input-group-outline my-3">
                         <input type="date" class="form-control" name="importDate">
@@ -110,7 +130,7 @@
                     </div>
                     <label class="form-label">Thư mục ảnh</label>
                     <div class="input-group input-group-outline mb-3">
-                        <input type="file" class="form-control" name="imageProducts" webkitdirectory directory>
+                        <input type="file" class="form-control" name="imageProducts" webkitdirectory required>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -124,9 +144,9 @@
         </div>
     </div>
 </div>
-<script >
-    window.addEventListener("DOMContentLoaded",function (){
-        $(document).ready(function(){
+<script>
+    window.addEventListener("DOMContentLoaded", function () {
+        $(document).ready(function () {
             new DataTable('#dataTable', {
                 order: [[4, 'desc']],
                 pagingType: 'simple_numbers',
@@ -139,8 +159,20 @@
 
             });
 
+
+            $('#importForm').on('submit', function (e) {
+                e.preventDefault();
+                $('#addModal').modal('hide');
+                $('#overlay').css({'visibility': 'visible', 'opacity': '1'});
+
+                // Simulate form submission
+                setTimeout(() => {
+                    this.submit();
+                }, 500); // Delay to ensure modal hides properly before form submits
+            });
+
             //check all
-            $("#checkAll").change(function() {
+            $("#checkAll").change(function () {
                 $(".checkbox").prop('checked', $(this).prop("checked"));
             });
 
@@ -157,7 +189,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         var ids = [];
-                        $('input[type="checkbox"].checkbox:checked').each(function() {
+                        $('input[type="checkbox"].checkbox:checked').each(function () {
                             if ($(this).attr('id') !== 'checkAll') {
                                 ids.push($(this).val()); // Thêm giá trị của checkbox được chọn vào mảng
                             }
