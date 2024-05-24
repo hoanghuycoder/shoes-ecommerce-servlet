@@ -123,7 +123,7 @@
                         <div class="d-flex justify-content-between fw-bold mb-5">
                             <span>Tổng số tiền (bao gồm VAT) </span>
                             <p>
-                                $<span id="totalPrice"><fmt:formatNumber type="currency" value="${temporaryPrice+20000}"/></span>
+                                <span id="totalPrice"><fmt:formatNumber type="currency" value="${temporaryPrice+20000}"/></span>
                             </p>
 
                         </div>
@@ -192,8 +192,8 @@
             const updateDOMQuantity = (data,index,oldSubTotal) => {
                 data = JSON.parse(data);
                 const subTotal = data.subTotal;
-                const temporaryPrice = parseFloat($("#temporaryPrice").text()) - oldSubTotal + (data.subTotal);
-                const totalPrice = parseFloat($("#totalPrice").text()) - oldSubTotal + (data.subTotal);
+                const temporaryPrice = parseFloat($("#temporaryPrice").text())*1000000 - oldSubTotal + (data.subTotal);
+                const totalPrice = parseFloat($("#totalPrice").text())*1000000 - oldSubTotal + (data.subTotal);
                 $("#subTotal"+index).text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(subTotal));
                 $("#temporaryPrice").text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(temporaryPrice));
                 $("#totalPrice").text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalPrice));
@@ -215,20 +215,8 @@
                     }
                 })
             }
-            function formatCurrency(amount) {
-                // Định dạng số tiền thành chuỗi, thêm dấu phẩy sau mỗi 3 chữ số từ phải sang trái
-                const formattedAmount = amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
-                // Thêm ký tự tiền tệ ở cuối
-                const currencySymbol = " ₫";
-
-                // Kết hợp chuỗi đã định dạng và ký tự tiền tệ
-                return formattedAmount + currencySymbol;
-            }
-
             $('.quantityProduct').change(function () {
                 clearTimeout(changeQuantityTimeout);
-
                 const productId = parseInt($(this).attr("data-product-id"));
                 const sizeId = parseInt($(this).attr("data-size-id"));
                 let quantity = parseInt($(this).val());
@@ -243,7 +231,7 @@
                 changeQuantityTimeout = setTimeout(()=> {
                     $(this).val(quantity);
                     const index = $(this).attr("data-index");
-                    const oldSubTotal = parseFloat($("#subTotal"+index).text());
+                    const oldSubTotal = parseFloat($("#subTotal"+index).text())*1000000;
                     updateQuantity(productId,sizeId,quantity,index,oldSubTotal);
                 },700);
             })
