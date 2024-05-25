@@ -1,5 +1,7 @@
 package com.ltweb_servlet_ecommerce.controller.web.shared;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.ltweb_servlet_ecommerce.constant.SystemConstant;
 import com.ltweb_servlet_ecommerce.log.LoggerHelper;
 import com.ltweb_servlet_ecommerce.model.*;
@@ -39,6 +41,7 @@ public class CheckoutController extends HttpServlet {
     IOrderDetailsService orderDetailsService;
     @Inject
     ISizeService sizeService;
+    @Inject IVoucherService voucherService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -73,10 +76,16 @@ public class CheckoutController extends HttpServlet {
                 }
             }
             req.setAttribute("LIST_PRODUCT_OF_CART", productModelList);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonProduct = objectMapper.writeValueAsString(productModelList);
+            req.setAttribute("JSON_LIST_PRODUCT_OF_CART",jsonProduct);
             if (productModelList.isEmpty()) {
                 resp.sendRedirect("/home?message=cart_empty&toast=danger");
                 return;
             }
+//            Get voucher
+            List<VoucherModel> vouchers = voucherService.findAll(null);
+            req.setAttribute("LIST_VOUCHER", vouchers);
             //Render View
             RequestDispatcher rd = req.getRequestDispatcher("/views/web/checkout.jsp");
 

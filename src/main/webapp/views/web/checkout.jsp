@@ -136,16 +136,59 @@
                     <c:set var="temporaryPrice" value="${temporaryPrice + item.subTotal}" />
                 </c:forEach>
                 <div class="d-flex justify-content-between">
+                    <div class="d-flex gap-3">
+                        <i class="fa-solid fa-ticket my-auto" style="color : red"></i>
+                        <p class="fw-bold fs-6 my-auto">Nai Voucher</p>
+                    </div>
+                    <p class="text-blue " style="color: #0c63e4; cursor: pointer" data-bs-toggle="modal" data-bs-target="#voucherModal">Chọn voucher</p>
+<%--                    Modal voucher--%>
+                    <div class="modal fade" id="voucherModal" tabindex="-1" aria-labelledby="voucherModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Chọn Nai Voucher</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body overflow-auto" style="max-height: 300px">
+                                    <c:forEach var="voucher_item" items="${LIST_VOUCHER}">
+                                        <%--Voucher item--%>
+                                        <div class="d-flex border-1 px-4 py-2 shadow-lg my-3 voucher-item" data-id-voucher="${voucher_item.id}" data-bs-dismiss="modal" style="border: 0.7px solid #8f8f8f; cursor: pointer">
+                                            <div>
+                                                <strong class="fs-4">${voucher_item.name}</strong>
+                                                <p >Mã giảm giá : <strong>${voucher_item.code}</strong></p>
+                                                <fmt:parseDate var="endDate" value="${voucher_item.endDate}" pattern="yyyy-MM-dd HH:mm:ss.S" />
+                                                <fmt:formatDate value="${endDate}" pattern="H:m d/M/yyyy" var="formattedEndDate" />
+                                                <p class="p-0">HSD : ${formattedEndDate} <span><a href="/voucher/detail/${voucher_item.id}" style="color: #0c63e4">Điều kiện</a></span></p>
+                                            </div>
+                                        </div>
+                                        <%--End Voucher item--%>
+                                    </c:forEach>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Trở lại</button>
+                                    <button type="button" class="btn btn-primary">Ok</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+<%--                    End modal voucher--%>
+                </div>
+                <div class="d-flex justify-content-between">
                     <p class="mb-2">Giá trị đơn hàng</p>
                     <p class="mb-2"> <fmt:formatNumber type="currency" value="${temporaryPrice}"/></p>
+                </div>
+                <div class="d-flex justify-content-between" id="orderVoucherDesc">
+
                 </div>
                 <div class="d-flex justify-content-between border-bottom border-2 pb-2 mb-4" style="border-color: hsl(0,0%, 96%) !important;">
                     <p>Vận chuyển</p>
                     <p> <fmt:formatNumber type="currency" value="20000"/></p>
                 </div>
+
                 <div class="d-flex justify-content-between">
                     <p class="h5 mb-5">Tổng</p>
-                    <p class="h5 mb-5"> <fmt:formatNumber type="currency" value="${temporaryPrice+20000}"/></p>
+                    <p class="h5 mb-5" id="totalPrice"> <fmt:formatNumber type="currency" value="${temporaryPrice+20000}"/></p>
                 </div>
                 <div class="small">
 <%--                    <p class="text-muted mb-4">Our returns are free and easy. If something isn't quite right, you have 14 days to send it back to us. Read more in our <a class="#!">return and refund policy</a>.</p>--%>
@@ -164,8 +207,68 @@
 </div>
 <!-- Container for demo purpose -->
 <script !src="">
-
+    const totalPrice = ${temporaryPrice+20000};
+    const reviver = (key, value) => {
+        return value;
+    };
+    const listProduct = JSON.parse(`${JSON_LIST_PRODUCT_OF_CART}`,reviver)
+    console.table(listProduct)
     window.addEventListener("DOMContentLoaded",function () {
+        $('.voucher-item').click(function () {
+            const idVoucher = $(this).attr("data-id-voucher")
+            $.ajax({
+                url : '/ajax/voucher/validate',
+                method : "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data : JSON.stringify({
+                    idVoucher,
+                    products : listProduct
+                }),
+                beforeSend: function() {
+                    swal({
+                        title: "Đang xử lý",
+                        text: "Đang kiểm tra điều kiện sử dụng voucher...",
+                        icon: "info",
+                    });
+                },
+                success : function (data) {
+                    swal.close();
+                    if (data.canUseVoucher) {
+                        swal({
+                            title: "Bạn có thể sử dụng voucher này",
+                            text: "Nhấn ok để sử dụng voucher",
+                            icon: "success",
+                            button: "Ok!",
+                        });
+                        $("#totalPrice").text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalPrice*(1-data.voucher.discount/100)));
+                        $("#orderVoucherDesc").html(`
+                            <p>Giảm giá</p>
+                            <p>-`+data.voucher.discount+`%</p>
+                        `)
+                    } else {
+                        swal({
+                            title: "Lỗi",
+                            text: "Bạn chưa thỏa mãn các điều kiện để sử dụng voucher này. Vui lòng đọc lại điều kiện sử dụng voucher",
+                            icon: "error",
+                            button: "Thoát",
+                        });
+                    }
+                },
+                error : function (err) {
+                    swal.close();
+                    swal({
+                        title: "Lỗi",
+                        text: "Đã có lỗi xảy ra vui lòng thử lại",
+                        icon: "error",
+                        button: "Thoát",
+                    });
+                },
+
+
+            })
+        })
         const listInfoAddress = [
             {
                 typeAddress : "province",

@@ -22,6 +22,10 @@
                   <label class="form-label">Mã giảm giá</label>
                   <input type="text" id="codeVoucher" class="form-control" name="code" required>
                 </div>
+                <div class="input-group input-group-outline my-3">
+                  <label class="form-label">Phần trăm giảm giá</label>
+                  <input type="number" id="discountVoucher" class="form-control" name="code" required>
+                </div>
                 <p class="text-danger" id="validateCodeVoucher"></p>
                 <div class="my-3">
                   <label>Nội dung</label>
@@ -42,7 +46,7 @@
                 </div>
                 <div class="input-group input-group-outline my-3">
                   <label class="form-label">Giới hạn (số lần sử dụng)</label>
-                  <input type="text" class="form-control" name="usageLimit" required/>
+                  <input type="number" class="form-control" name="usageLimit" required/>
                 </div>
                 <div class="input-group input-group-static mb-4">
                   <label for="haveCondition" class="ms-0">Điều kiện áp dụng</label>
@@ -75,7 +79,7 @@
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ngày bắt đầu áp dụng</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ngày kết thúc áp dụng</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Giới hạn sử dụng</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Mô tả ngắn</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" style="width: 10%">Mô tả ngắn</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Cập nhật lúc</th>
                 <th class="text-secondary opacity-7"></th>
               </tr>
@@ -127,10 +131,10 @@
                         </div>
                       </div>
                     </td>
-                    <td>
+                    <td style="width: 100px" class="overflow-hidden" data-bs-toggle="tooltip" data-bs-placement="top" title="${item.shortDescription}">
                       <div class="d-flex px-2 py-1">
                         <div class="d-flex flex-column justify-content-center">
-                          <p class="text-xs font-weight-bold mx-auto mb-0">${item.shortDescription}</p>
+                          <p class="text-xs font-weight-bold mx-auto mb-0" style="line-clamp: 1; width: 100px; overflow: hidden; text-overflow: ellipsis;">${item.shortDescription}</p>
                         </div>
                       </div>
                     </td>
@@ -224,15 +228,25 @@
     </script>
     <script>
       window.addEventListener("DOMContentLoaded", function () {
+        let editorInstance;
+        ClassicEditor
+                .create( document.querySelector( '#contentVoucher' ))
+                .then(editor => {
+                  editorInstance = editor;
+                })
+                .catch( error => {
+                  console.error( error );
+                } );
         $("#formAddVoucher").submit((e)=> {
           e.preventDefault()
           const name = $("#nameVoucher").val();
           const code = $("#codeVoucher").val();
-          const content = $("#contentVoucher").val()
+          const content = editorInstance.getData();
           const shortDescription = $("#shortDescriptionVoucher").val()
           const startDate = $("#startDate").val();
           const endDate = $("#endDate").val();
           const usageLimit = $("#usageLimit").val();
+          const discount = $("#discountVoucher").val();
           $.ajax({
             url : "/ajax/voucher/add",
             method : "POST",
@@ -247,24 +261,18 @@
               startDate,
               endDate,
               usageLimit,
-              conditions
+              conditions,
+              discount
             }),
             success : function (data) {
-              
+              window.location.href += '/admin/voucher/list?toast=success&message=add_success'
             },
             error : function (error) {
-              
+              window.location.href += '/admin/voucher/list?toast=danger&message=error'
             }
           })
-
-
-
         })
-        ClassicEditor
-                .create( document.querySelector( '#contentVoucher' ))
-                .catch( error => {
-                  console.error( error );
-                } );
+
         let deboundValidateCodeVoucher =  null;
         $("input[name='code']").keyup(function () {
           const code = $(this).val();
@@ -372,10 +380,12 @@
           $(".conditionItem > .condition-value").change(function () {
             let valueCondition = "";
             const index = $(this).attr("data-index-condition");
-            if ($("#conditionItem"+index+" > .condition-value select"))
+            if ($("#conditionItem"+index+" > .condition-value select")) {
               valueCondition = $("#conditionItem"+index+" > .condition-value select").val()
-            else $("#conditionItem"+index+" > .condition-value input")
+            }
+            else if ($("#conditionItem"+index+" > .condition-value input")) {
               valueCondition = $("#conditionItem"+index+" > .condition-value input").val();
+            }
             conditions[index].conditionValue = valueCondition
             console.table(conditions)
           })

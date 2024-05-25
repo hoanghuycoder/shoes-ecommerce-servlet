@@ -14,6 +14,7 @@ public class VoucherModel extends AbstractModel<VoucherModel>{
     private String name;
     private String code;
     private String content;
+    private Double discount;
     private Timestamp startDate;
     private Timestamp endDate;
     private int usageLimit;

@@ -34,7 +34,7 @@ public class VoucherAjax extends HttpServlet {
             if (voucher == null) {
                 HttpUtil.returnError404Json(objectMapper,resp,"Không tìm thấy voucher");
             } else {
-                objectMapper.writeValue(resp.getOutputStream(),voucher );
+                objectMapper.writeValue(resp.getOutputStream(),voucher);
             }
         } catch (Exception e) {
             HttpUtil.returnError404Json(objectMapper,resp,e.toString());
