@@ -24,11 +24,11 @@ public class CheckVoucher {
                         switch (columnName) {
                             case "name":
                                 if (product.getName().contains(conditionValue))
-                                    return true;
+                                    return false;
                                 break;
                             case "id" :
-                                if (product.getId() == Integer.parseInt(conditionValue))
-                                    return true;
+                                if (product.getId() != Integer.parseInt(conditionValue))
+                                    return false;
                                 break;
                             default:
                                 return false;
@@ -37,8 +37,8 @@ public class CheckVoucher {
                     switch (columnName) {
 
                         case "price" :
-                            if (totalPrice > Double.parseDouble(conditionValue))
-                                return true;
+                            if (totalPrice < Double.parseDouble(conditionValue))
+                                return false;
                             break;
                         default:
                             return false;
@@ -48,20 +48,20 @@ public class CheckVoucher {
                     if (currentUser != null) {
                         switch (columnName) {
                             case "fullName":
-                                if (currentUser.getFullName().contains(conditionValue))
+                                if (!currentUser.getFullName().contains(conditionValue))
                                     return true;
                                 break;
                             case "id" :
-                                if (currentUser.getId() == Integer.parseInt(conditionValue))
-                                    return true;
+                                if (currentUser.getId() != Integer.parseInt(conditionValue))
+                                    return false;
                                 break;
                             case "association":
-                                if (currentUser.getAssociation().contains(conditionValue))
-                                    return true;
+                                if (!currentUser.getAssociation().contains(conditionValue))
+                                    return false;
                                 break;
                             case "createAt" :
-                                if (currentUser.getCreateAt().equals(new Timestamp(Long.parseLong(conditionValue))))
-                                    return true;
+                                if (!currentUser.getCreateAt().equals(new Timestamp(Long.parseLong(conditionValue))))
+                                    return false;
                                 break;
                             default:
                                 return false;
@@ -70,15 +70,15 @@ public class CheckVoucher {
                     break;
                 case "category" :
                    for (ProductModel product : products) {
-                       if (product.getCategoryId() == Integer.parseInt(conditionValue))
-                           return true;
+                       if (product.getCategoryId() != Integer.parseInt(conditionValue))
+                           return false;
                    }
                     break;
                 default:
                     return false;
             }
         }
-        return false;
+        return true;
     }
     public static Object createInstance(String className) {
         try {

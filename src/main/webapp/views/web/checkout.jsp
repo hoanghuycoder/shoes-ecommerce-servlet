@@ -65,8 +65,8 @@
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <label for="commune" class="form-label">Phường/ Xã<sup style="color :red;">*</sup></label>
-                                <select class="form-select" name="commune" id="commune" required disabled>
+                                <label for="ward" class="form-label">Phường/ Xã<sup style="color :red;">*</sup></label>
+                                <select class="form-select" name="commune" id="ward" required disabled>
 
                                 </select>
                             </div>
@@ -93,7 +93,8 @@
                         <c:forEach var="product_item" items="${LIST_PRODUCT_OF_CART}">
                             <input type="hidden" name="product[]" value="${product_item.id}-${product_item.sizeId}-${product_item.quantity}">
                         </c:forEach>
-                        <div class="pt-1 mb-3">
+                        <div id="voucherApply"></div>
+                        <div class="pt-1 my-3">
                             <button type="submit" class="btn btn-dark btn-lg px-5">Thanh toán đơn hàng</button>
 <%--                            <p class="small text-muted mt-4 mb-0">Bằng cách nhấp vào "Tiếp tục với PayPal", tôi xác nhận rằng tôi đã đọc <a href="#!">Privacy Notice</a> và <a href="#!">Cookie Notice</a>. I agree to the <a href="#!">terms & conditions</a> of the store. "I also accept that the store will process my personal data to manage my order, in accordance with the store's <a href="#!">privacy notice</a>"</p>--%>
                                 <p class="small text-muted mt-4 mb-0">Bằng cách nhấp vào "Tiếp tục với PayPal", tôi xác nhận rằng tôi đã đọc <a href="#!">Thông báo về Quyền riêng tư</a> và <a href="#!">Thông báo về Cookie</a>. Tôi đồng ý với <a href="#!">điều khoản & điều kiện</a> của cửa hàng. "Tôi cũng chấp nhận rằng cửa hàng sẽ xử lý dữ liệu cá nhân của tôi để quản lý đơn hàng, theo đúng <a href="#!">thông báo quyền riêng tư</a> của cửa hàng."</p>
@@ -227,6 +228,8 @@
                     products : listProduct
                 }),
                 beforeSend: function() {
+                    if ($("#voucherApply")) $("#voucherApply").empty();
+                    $("#orderVoucherDesc").empty();
                     swal({
                         title: "Đang xử lý",
                         text: "Đang kiểm tra điều kiện sử dụng voucher...",
@@ -247,7 +250,19 @@
                             <p>Giảm giá</p>
                             <p>-`+data.voucher.discount+`%</p>
                         `)
+                       if ($("#voucherApply")) $("#voucherApply").empty();
+                        $("#voucherApply").append(`
+                        <div class="px-4 py-2 shadow-sm my-3 bg-white rounded-3"  style="border: 0.4px solid #8f8f8f;">
+                           <div class="d-flex justify-content-between">
+                               <strong class="fs-5">`+data.voucher.name+`</strong>
+                               <strong style="color : #50d106">-`+data.voucher.discount+`%</strong>
+                           </div>
+                           <p class="m-0 p-0">Mã giảm giá : <strong>`+data.voucher.code+`</strong></p>
+                           <input type="hidden" name="voucherApply" value="`+data.voucher.id+`"/>
+                        </div>
+                        `)
                     } else {
+                        if ($("#voucherApply")) $("#voucherApply").empty();
                         swal({
                             title: "Lỗi",
                             text: "Bạn chưa thỏa mãn các điều kiện để sử dụng voucher này. Vui lòng đọc lại điều kiện sử dụng voucher",
@@ -257,6 +272,7 @@
                     }
                 },
                 error : function (err) {
+                    $("#orderVoucherDesc").empty();
                     swal.close();
                     swal({
                         title: "Lỗi",
@@ -272,15 +288,15 @@
         const listInfoAddress = [
             {
                 typeAddress : "province",
-                url : () => "https://vn-public-apis.fpo.vn/provinces/getAll?limit=-1"
+                url : () => "https://vapi.vnappmob.com/api/province/"
             },
             {
                 typeAddress : "district",
-                url : (idProvince) => "https://vnprovinces.pythonanywhere.com/api/districts/?province_id="+idProvince+"&basic=true&limit=100"
+                url : (idProvince) => "https://vapi.vnappmob.com/api/province/district/"+idProvince
             },
             {
-                typeAddress : "commune",
-                url : (idDistrict) => "https://vnprovinces.pythonanywhere.com/api/wards/?district_id="+idDistrict+"&basic=true&limit=100"
+                typeAddress : "ward",
+                url : (idDistrict) => "https://vapi.vnappmob.com/api/province/ward/"+idDistrict
             },
             {
                 typeAddress: "hamlet1",
@@ -290,7 +306,7 @@
         const loadDataAddress = (typeAddress,id) => {
             let dataListAddress = [];
             const infoAddress = listInfoAddress.filter((address) => address.typeAddress === typeAddress)[0];
-            const url = infoAddress.typeAddress === "province" ? infoAddress.url() : infoAddress.typeAddress === "hamlet1" ? infoAddress.url($("#province").val(),$("#district").val(),$("#commune").val()) : infoAddress.url(id);
+            const url = infoAddress.typeAddress === "province" ? infoAddress.url() : infoAddress.typeAddress === "hamlet1" ? infoAddress.url($("#province").val(),$("#district").val(),$("#ward").val()) : infoAddress.url(id);
             $.ajax({
                 url,
                 method : "GET",
@@ -309,10 +325,9 @@
                 }
             } else {
                 for (const address of data) {
-                    dataAdressHtml += `<option data-id="`+address.id+`" value="`+address.name+`">`+address.name+`</option>`
+                    dataAdressHtml += `<option data-id="`+address[typeAddress+"_id"]+`" value="`+address[typeAddress+"_name"]+`">`+address[typeAddress+"_name"]+`</option>`
                 }
             }
-
             $("#"+typeAddress).append(dataAdressHtml);
             $("#"+typeAddress).prop('disabled', false);
         }
