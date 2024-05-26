@@ -1,4 +1,5 @@
 package com.ltweb_servlet_ecommerce.controller.admin.ajax.voucher;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ltweb_servlet_ecommerce.model.VoucherConditionModel;
@@ -40,7 +41,6 @@ public class VoucherAjaxAdmin extends HttpServlet {
                 voucherConditionService.save(voucherCondition);
             }
             resp.getWriter().write("{\"status\":\"success\"}");
-
         } catch ( Exception e) {
             HttpUtil.returnError500Json(objectMapper,resp,e.getMessage());
         }

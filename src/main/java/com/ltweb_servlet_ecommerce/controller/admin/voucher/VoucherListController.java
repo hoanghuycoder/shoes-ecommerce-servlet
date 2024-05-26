@@ -36,7 +36,6 @@ import java.util.*;
 public class VoucherListController extends HttpServlet {
     @Inject
     IVoucherService voucherService;
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         NotifyUtil.setUp(req);
@@ -46,12 +45,25 @@ public class VoucherListController extends HttpServlet {
             RequestDispatcher rd = req.getRequestDispatcher("/views/admin/voucher/list.jsp");
             rd.forward(req,resp);
         } catch (Exception e) {
-            resp.sendRedirect("/admin/voucher/list?message=error&toast=danger");
+            resp.sendRedirect("/admin/voucher/list?message=delete_success&toast=danger");
         }
-
     }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+       try {
+           String action = req.getParameter("action");
+           switch (action) {
+               case "delete" :
+                   Long id = Long.parseLong(req.getParameter("idDelete"));
+                   voucherService.softDelete(id);
+                   resp.sendRedirect("/admin/voucher/list?toast=success&message=add_success");
+                   break;
+               default :
+                   resp.sendRedirect("/admin/voucher/list?toast=danger&message=error");
+                   break;
+           }
+       } catch (Exception e) {
+           resp.sendRedirect("/admin/voucher/list?toast=danger&message=error");
+       }
     }
 }

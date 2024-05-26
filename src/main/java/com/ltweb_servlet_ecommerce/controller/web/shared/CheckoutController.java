@@ -1,9 +1,12 @@
 package com.ltweb_servlet_ecommerce.controller.web.shared;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.ltweb_servlet_ecommerce.constant.SystemConstant;
 import com.ltweb_servlet_ecommerce.log.LoggerHelper;
 import com.ltweb_servlet_ecommerce.model.*;
 import com.ltweb_servlet_ecommerce.service.*;
+import com.ltweb_servlet_ecommerce.subquery.SubQuery;
 import com.ltweb_servlet_ecommerce.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
@@ -39,6 +42,9 @@ public class CheckoutController extends HttpServlet {
     IOrderDetailsService orderDetailsService;
     @Inject
     ISizeService sizeService;
+    @Inject IVoucherService voucherService;
+    @Inject IVoucherConditionService voucherConditionService;
+    @Inject IVoucherUsageService voucherUsageService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -73,10 +79,16 @@ public class CheckoutController extends HttpServlet {
                 }
             }
             req.setAttribute("LIST_PRODUCT_OF_CART", productModelList);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonProduct = objectMapper.writeValueAsString(productModelList);
+            req.setAttribute("JSON_LIST_PRODUCT_OF_CART",jsonProduct);
             if (productModelList.isEmpty()) {
                 resp.sendRedirect("/home?message=cart_empty&toast=danger");
                 return;
             }
+//            Get voucher
+            List<VoucherModel> vouchers = voucherService.findAll(null);
+            req.setAttribute("LIST_VOUCHER", vouchers);
             //Render View
             RequestDispatcher rd = req.getRequestDispatcher("/views/web/checkout.jsp");
 
@@ -112,9 +124,6 @@ public class CheckoutController extends HttpServlet {
             String[] productListStr = req.getParameterValues("product[]");
             UserModel user = (UserModel) SessionUtil.getInstance().getValue(req, "USER_MODEL");
             AddressModel addressModel = FormUtil.toModel(AddressModel.class, req);
-            addressModel.setProvince("");
-            addressModel.setDistrict("");
-            addressModel.setCommune("");
             String hamlet2 = req.getParameter("hamlet2") != "" ? req.getParameter("hamlet2") + " " : "";
             addressModel.setHamlet(hamlet2 + req.getParameter("hamlet1"));
             AddressModel tmpAddress = addressService.findWithFilter(addressModel);
@@ -129,9 +138,11 @@ public class CheckoutController extends HttpServlet {
             order.setNote(note);
             order.setAddressId(addressModel.getId());
             order = orderService.save(order);
+            List<Object> productIds = new ArrayList<>();
             for (String productStr : productListStr) {
                 String[] productStrSplit = productStr.split("-");
                 Long productId = Long.parseLong(productStrSplit[0]);
+                productIds.add(productId);
                 Long sizeId = Long.parseLong(productStrSplit[1]);
                 int quantity = Integer.parseInt(productStrSplit[2]);
                 //Find product size and price
@@ -151,6 +162,24 @@ public class CheckoutController extends HttpServlet {
                 orderDetailsModel.setOrderId(order.getId());
                 orderDetailsService.save(orderDetailsModel);
                 deleteCartItem(productId, sizeId, quantity);
+            }
+            String voucherApply = req.getParameter("voucherApply");
+            if (!voucherApply.isBlank()) {
+                VoucherModel voucher = voucherService.findById(Long.parseLong(voucherApply));
+                SubQuery queryProductIds = new SubQuery("id","in",productIds);
+                List<SubQuery> subQueryProduct = new ArrayList<>();
+                subQueryProduct.add(queryProductIds);
+                List<ProductModel> products = productService.findByColumnValues(subQueryProduct,null);
+                VoucherConditionModel voucherConditionModel = new VoucherConditionModel();
+                voucherConditionModel.setVoucherId(voucher.getId());
+                List<VoucherConditionModel> voucherConditions = voucherConditionService.findAllWithFilter(voucherConditionModel,null);
+                if (CheckVoucher.canApplyVoucher(products,voucherConditions,user)) {
+                    VoucherUsageModel voucherUsageModel = new VoucherUsageModel();
+                    voucherUsageModel.setOrderId(order.getId());
+                    voucherUsageModel.setVoucherId(voucher.getId());
+                    voucherUsageService.save(voucherUsageModel);
+                    order.setTotalAmount(order.getTotalAmount()*(1-voucher.getDiscount()/100));
+                }
             }
             order.setTotalAmount(order.getTotalAmount() + 20000);
             String slugEncodedFromId = UrlUtil.encodeNumber(order.getId());

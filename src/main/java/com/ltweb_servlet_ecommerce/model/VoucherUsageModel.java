@@ -11,5 +11,5 @@ import java.sql.Timestamp;
 @ToString
 public class VoucherUsageModel extends AbstractModel<VoucherUsageModel> {
     private Long voucherId;
-    private Long userId;
+    private Long orderId;
 }

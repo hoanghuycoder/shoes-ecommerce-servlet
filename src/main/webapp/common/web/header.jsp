@@ -15,7 +15,7 @@
                     <a class="nav-link" href="/home">Trang chủ</a>
                 </li>
                 <li class="<c:if test="${tab eq 'Shop'}">active</c:if>"><a class="nav-link" href="/shop">Cửa hàng</a></li>
-                <li class="<c:if test="${tab eq 'Services'}">active</c:if>"><a class="nav-link" href="/services">Dich vụ</a></li>
+                <li class="<c:if test="${tab eq 'Services'}">active</c:if>"><a class="nav-link" href="/services">Dịch vụ</a></li>
                 <li class="<c:if test="${tab eq 'Contact us'}">active</c:if>"><a class="nav-link" href="/contact">Liên hệ</a></li>
                 <c:if test="${USER_MODEL.admin}">
                     <li><a class="nav-link" href="/admin">Admin</a></li>

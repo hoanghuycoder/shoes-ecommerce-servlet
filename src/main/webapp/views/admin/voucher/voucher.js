@@ -44,12 +44,12 @@ const conditionValue = {
         id : (value) => `
             <div class="input-group input-group-outline my-3">
                   <label class="form-label">Điều kiện cụ thể</label>
-                  <input type="number" class="form-control" name="id" value="${value}" required/>
+                  <input type="text" class="form-control" name="id" value="${value}" required/>
                 </div>
         `,
         fullName : (value)=> `
         <div class="input-group input-group-outline my-3">
-                  <label class="form-label">Điều kiện cụ thể</label>
+                  <label class="form-label">Điều kiện cụ thể (Có tên giống)</label>
                   <input type="text" class="form-control" name="fullName" value="${value}" required/>
                 </div>
         `,
@@ -75,19 +75,19 @@ const conditionValue = {
         id : (value) => `
             <div class="input-group input-group-outline my-3">
                   <label class="form-label">Điều kiện cụ thể</label>
-                  <input type="number" class="form-control" name="id" value="${value}" required/>
+                  <input type="text" class="form-control" name="id" value="${value}" required/>
             </div>
         `,
         name : (value) =>`
         <div class="input-group input-group-outline my-3">
-                  <label class="form-label">Điều kiện cụ thể</label>
+                  <label class="form-label">Điều kiện cụ thể (Có tên giống)</label>
                   <input type="text" class="form-control" name="name" value="${value}" required/>
                 </div>
         `,
         price : (value) => `
         <div class="input-group input-group-outline my-3">
-                  <label class="form-label">Điều kiện cụ thể</label>
-                  <input type="number" class="form-control" value="${value}" name="price" required/>
+                  <label class="form-label">Điều kiện cụ thể (Lớn hơn giá tiền)</label>
+                  <input type="text" class="form-control" value="${value}" name="price" required/>
                 </div>
         `
     },
@@ -95,7 +95,7 @@ const conditionValue = {
         id : (value) => `
             <div class="input-group input-group-outline my-3">
                   <label class="form-label">Điều kiện cụ thể</label>
-                  <input type="number" class="form-control" name="id" value="${value}" required/>
+                  <input type="text" class="form-control" name="id" value="${value}" required/>
                 </div>
         `,
         name : (value) => `
