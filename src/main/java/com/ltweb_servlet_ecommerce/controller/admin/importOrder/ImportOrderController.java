@@ -49,6 +49,7 @@ public class ImportOrderController extends HttpServlet {
         long start = System.currentTimeMillis();
         //validate
         boolean hasError = validate(request);
+
         // Check if there are no validation errors
         if (!hasError) {
             // Retrieve supplier and importId from the request parameters

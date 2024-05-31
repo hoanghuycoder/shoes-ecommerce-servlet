@@ -11,11 +11,8 @@ import com.ltweb_servlet_ecommerce.utils.JDBCUtil;
 import com.ltweb_servlet_ecommerce.utils.SqlPagebleUtil;
 import org.json.JSONObject;
 
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Alternative;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 //@Dependent
@@ -69,10 +66,15 @@ public class LogDAO extends AbstractDAO<LogModel> implements ILogDAO {
                 String action = rs.getString("action");
                 String resource = rs.getString("resource");
                 String preValueString = rs.getString("preValue");
+
                 JSONObject preValue = null;
                 if (preValueString != null)
                     preValue = new JSONObject(preValueString);
-                JSONObject value = new JSONObject(rs.getString("value"));
+
+                JSONObject value = null;
+                if (rs.getString("value") != null)
+                    value = new JSONObject(rs.getString("value"));
+
                 Timestamp createdAt = rs.getTimestamp("createAt");
                 Timestamp updatedAt = rs.getTimestamp("updateAt");
                 LogModel logModel = LogModel.builder().ip(ip).location(location).level(level).action(action).resource(resource)
