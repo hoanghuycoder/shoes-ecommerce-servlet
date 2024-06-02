@@ -23,4 +23,5 @@ public interface IUserService {
     boolean changePassword(long userId, String password);
 
     List<UserModel> getListAdmin();
+    boolean validateString(String input);
 }

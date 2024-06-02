@@ -30,10 +30,12 @@ public class NewPasswordController extends HttpServlet {
         String pass = request.getParameter("password");
         String repass = request.getParameter("repassword");
 
-        if (!pass.equals(repass)) {
-            response.sendRedirect(request.getContextPath()+"/new-password?message=two_password_diffirent&toast=danger");
-        } else if (pass.length() < 6) {
+        if (pass.length() < 8) {
             response.sendRedirect(request.getContextPath()+"/new-password?message=short_length_password&toast=danger");
+        } else if (!userService.validateString(pass)) {
+            response.sendRedirect(request.getContextPath()+"/new-password?message=password_condition&toast=danger");
+        } else if (!pass.equals(repass)) {
+            response.sendRedirect(request.getContextPath()+"/new-password?message=two_password_diffirent&toast=danger");
         } else {
 
             UserModel userModel = (UserModel) SessionUtil.getInstance().getValue(request, "FORGET_PASS");
