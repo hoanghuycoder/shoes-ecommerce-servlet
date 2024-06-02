@@ -245,7 +245,7 @@
                             icon: "success",
                             button: "Ok!",
                         });
-                        $("#totalPrice").text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalPrice*(1-data.voucher.discount/100)));
+                        $("#totalPrice").tex t(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalPrice*(1-data.voucher.discount/100)));
                         $("#orderVoucherDesc").html(`
                             <p>Giảm giá</p>
                             <p>-`+data.voucher.discount+`%</p>
