@@ -99,5 +99,16 @@ public class ProductSizeDAO extends AbstractDAO<ProductSizeModel> implements IPr
         Map<String, Object> result = queryCustom(sql, params);
         return result.get("available") != null ? ((BigDecimal) result.get("available")).intValue() : 0;
     }
+
+    @Override
+    public void deleteByProductId(Long id) {
+        String sql = "delete from product_sizes where productId=?";
+        List<Object> params = List.of(id);
+        try {
+            delete(sql, params);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
 

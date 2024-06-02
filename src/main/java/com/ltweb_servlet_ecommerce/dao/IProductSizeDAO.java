@@ -24,4 +24,5 @@ public interface IProductSizeDAO {
     int getAvailableProducts(Long productSizeId);
 
 
+    void deleteByProductId(Long id);
 }
