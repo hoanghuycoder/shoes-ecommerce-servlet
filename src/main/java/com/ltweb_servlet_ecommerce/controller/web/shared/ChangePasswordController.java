@@ -40,21 +40,23 @@ public class ChangePasswordController extends HttpServlet {
         } else {
             //check current pass
             UserModel userModel = (UserModel) SessionUtil.getInstance().getValue(request, "USER_MODEL");
-            if (userModel != null) {
-                BCrypt.Hasher hasher = BCrypt.withDefaults();
-                String currentHashedPassword = hasher.hashToString(12, currentPass.toCharArray());
-                if (!currentHashedPassword.equals(userModel.getPassword())) {
-                    response.sendRedirect(request.getContextPath()+"/change-password?message=password_invalid&toast=danger");
-                } else {
-                    String newHashedPassword = hasher.hashToString(12, newpass.toCharArray());
-                    userModel.setPassword(newHashedPassword);
+            if (userModel != null ) {
+                boolean check = BCrypt.verifyer().verify(currentPass.toCharArray(), userModel.getPassword()).verified;
+                if (check) {
                     try {
+                        BCrypt.Hasher hasher = BCrypt.withDefaults();
+                        String newHashedPassword = hasher.hashToString(12, newpass.toCharArray());
+                        userModel.setPassword(newHashedPassword);
                         userService.update(userModel);
-                        response.sendRedirect(request.getContextPath()+"/new-password?message=change_password_success&toast=success");
+                        response.sendRedirect(request.getContextPath()+"/change-password?message=change_password_success&toast=success");
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
                     }
+                } else {
+                    response.sendRedirect(request.getContextPath()+"/change-password?message=password_invalid&toast=danger");
                 }
+
+
             } else {
                 response.sendRedirect(request.getContextPath()+"/change-password?message=not_login_yet&toast=danger");
             }
