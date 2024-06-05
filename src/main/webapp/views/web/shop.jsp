@@ -35,52 +35,136 @@
 <!-- End Hero Section -->
 <div class="untree_co-section product-section before-footer-section">
     <div class="container">
-        <c:if test="${not empty productName}">
-            <div>
-                <p style="font-weight: 600; font-size: 30px">Kết quả cho "${productName}"</p>
+        <div class="row">
+            <div class="col-12 col-md-3">
+                <div class="position-sticky bg-transparent rounded-3 overflow-hidden" style="top: 90px;">
+                    <div class="d-flex gap-3 py-3 bg-white rounded-3" style="margin-bottom: 2px">
+                        <i class="fa-solid fa-bars my-auto ps-2"></i>
+                        <p class="my-0 fw-bold">Bộ lọc</p>
+                    </div>
+                    <div class="bg-white rounded-3 overflow-y-auto" style="overflow-y: auto; max-height: 500px ">
+                        <div class="accordion" id="accordionPanelsStayOpenExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                        Danh mục
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+                                    <div class="accordion-body">
+                                        <div class="form-check">
+                                            <c:forEach var="category_item" items="${LIST_CATEGORY}">
+                                                <div>
+                                                    <input class="form-check-input categoryFilter" type="checkbox" value="${category_item.id}" id="categoryCheck${category_item.id}">
+                                                    <label class="form-check-label" for="categoryCheck${category_item.id}">
+                                                            ${category_item.name}
+                                                    </label>
+                                                </div>
+
+                                            </c:forEach>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                                        Kích thước
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
+                                    <div class="accordion-body">
+                                        <c:forEach var="size_item" items="${LIST_SIZE}">
+                                            <div>
+                                                <input class="form-check-input categoryFilter" type="checkbox" value="${size_item.id}" id="categoryCheck${size_item.id}">
+                                                <label class="form-check-label" for="categoryCheck${size_item.id}">
+                                                        ${size_item.name}
+                                                </label>
+                                            </div>
+                                        </c:forEach>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </c:if>
-        <div class="row" id="listProduct"></div>
+            <div class="col-12 col-md-9">
+                <div>
+                    <div class="d-flex justify-content-between">
+                        <c:if test="${not empty productName}">
+                            <p style="font-weight: 600; font-size: 30px">Kết quả cho "${productName}"</p>
+                        </c:if>
+                        <c:if test="${ empty productName}">
+                            <p style="font-weight: 600; font-size: 30px">Danh sách sản phẩm</p>
+                        </c:if>
+                        <div>
+                            <select class="form-select" id="sortFilter" style="max-width: 150px" aria-label="Default select example">
+                                <option selected value="createAt-DESC">Mới nhất</option>
+                                <option value="totalViewAndSearch-DESC">Được quan tâm nhiều nhất</option>
+                                <option value="price-ACS">Giá từ thấp đến cao</option>
+                                <option value="price-DESC">Giá từ cao đến thấp</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="row" id="listProduct"></div>
+                </div>
+            </div>
+
+
+        </div>
     </div>
 </div>
 <script !src="">
     window.addEventListener("DOMContentLoaded",function (){
         let page = 1;
         let isDone = false;
+        let isLoadProduct = false;
         const productName = "${productName}";
-        const loadMoreProduct = (name) => {
-            let result;
-            $.ajax({
-                url: "/search/product",
-                method: "GET",
-                async: false, // Set to synchronous
-                data: {
-                    page : page,
-                    maxPageItem: 8,
-                    productName: name,
-                    sortBy : "createAt",
-                    sortBy : "desc"
-                },
-                success: function (listProduct) {
-                    page++;
-                    result = listProduct;
-                }
+        let categoiesFilter = [1];
+        let sizesFilter = [1];
+        const loadMoreProduct = async (name,categoies,sizes) => {
+            const sortFilter = $('#sortFilter').val().split('-');
+            const sortName = sortFilter[0]
+            const sortBy = sortFilter[1]
+            console.log('Load')
+            return await new Promise((resolve,reject) => {
+                setTimeout(()=>{
+                    $.ajax({
+                        url: "/search/product",
+                        method: "GET",
+                        async: true,
+                        data: {
+                            page: page,
+                            maxPageItem: 8,
+                            productName: name,
+                            categories : categoies,
+                            sizes : sizes,
+                            sortName : sortName,
+                            sortBy : sortBy
+                        },
+                        success: function (listProduct) {
+                            page++;
+                            resolve(listProduct)
+                        }
+                    });
+                }, 500)
             });
-            return result;
         }
-        function formatCurrency(amount) {
-            // Định dạng số tiền thành chuỗi, thêm dấu phẩy sau mỗi 3 chữ số từ phải sang trái
-            const formattedAmount = amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
-            // Thêm ký tự tiền tệ ở cuối
-            const currencySymbol = " ₫";
-
-            // Kết hợp chuỗi đã định dạng và ký tự tiền tệ
-            return formattedAmount + currencySymbol;
-        }
-        const renderMoreProduct = (name) => {
+        const renderMoreProduct = async (name,categoies,sizes) => {
+            isLoadProduct = true
+            const listProductDOM = $("#listProduct");
+            listProductDOM.append(`
+            <div class="d-flex" id="loadingProduct">
+                <div class="spinner-grow text-success m-auto" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            `)
             let listProductHtml = ``;
-            const listProduct = loadMoreProduct(name);
+            const listProduct = await loadMoreProduct(name,categoies,sizes);
+
             if (listProduct.length>0){
                 for (let i = 0; i < listProduct.length; i++) {
                     const product = listProduct[i];
@@ -97,27 +181,27 @@
                 `
                 }
             } else if (listProduct.length == 0 && productName!="" && page==2) {
-                const notFoundHtml = `<div class="d-flex">
+                listProductHtml = `<div class="d-flex">
                         <p class="mx-auto">Không tìm thấy sản phẩm</p>
-                    </div>`                                  
-                $("#listProduct").append(notFoundHtml);
+                    </div>`
             } else if (listProduct.length==0) {
                 isDone = true;
             }
-            $("#listProduct").append(listProductHtml);
+            isLoadProduct = false;
+            $("#loadingProduct").remove();
+            listProductDOM.append(listProductHtml);
         }
-        $(window).scroll(function() {
-            if (!isDone){
+        $(window).scroll(async function() {
+            if (!isDone && !isLoadProduct){
                 const scrollContainer = $('#listProduct');
                 const scrollPosition = $(window).scrollTop() + $(window).height();
-                const containerPosition = scrollContainer.offset().top + 200; // Adjust as needed
+                const containerPosition = scrollContainer.offset().top + scrollContainer.height() + 150;
                 if (scrollPosition >= containerPosition) {
-                    renderMoreProduct(productName);
+                    await renderMoreProduct(productName,categoiesFilter,sizesFilter);
                 }
             }
-
         });
-        renderMoreProduct(productName);
+        renderMoreProduct(productName,categoiesFilter,sizesFilter);
     })
 </script>
 </body>

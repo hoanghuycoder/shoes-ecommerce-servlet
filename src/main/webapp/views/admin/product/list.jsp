@@ -114,8 +114,9 @@
                   >
                     ${product_item.shortDescription}
                   </p>
-                  <div class="d-flex align-items-center justify-content-between">
-                    <a href="/product-details/${product_item.id}" type="button" class="btn btn-outline-primary btn-sm mb-0 mx-auto">Xem sản phẩm</a>
+                  <div class="d-flex align-items-center ">
+                    <a href="/product-details/${product_item.id}" type="button" class="flex-grow-1 btn btn-outline-primary btn-sm mb-0 me-1">Xem</a>
+                    <a href="<c:url value="/admin/product/update?id=${product_item.id}"/>" type="button" class="flex-grow-1 btn btn-outline-primary btn-sm mb-0  ms-1">Chỉnh sửa</a>
                   </div>
                 </div>
               </div>

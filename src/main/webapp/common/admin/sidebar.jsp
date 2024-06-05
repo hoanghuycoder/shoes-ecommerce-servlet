@@ -102,14 +102,15 @@
                 </a>
             </li>
 
-<%--            <li class="nav-item">--%>
-<%--                <a class="nav-link text-white " href="/admin/stat">--%>
-<%--                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">--%>
+            <li class="nav-item">
+                <a class="nav-link text-white " href="<c:url value="/admin/product/out-of-stock"/> ">
+                    <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
 <%--                        <i class="fa-solid fa-chart-line"></i>--%>
-<%--                    </div>--%>
-<%--                    <span class="nav-link-text ms-1">Thống kê</span>--%>
-<%--                </a>--%>
-<%--            </li>--%>
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <span class="nav-link-text ms-1">Sản phẩm sắp hết hàng</span>
+                </a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link text-white " href="/admin/voucher/list">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
