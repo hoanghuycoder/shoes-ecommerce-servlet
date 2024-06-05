@@ -22,4 +22,5 @@ public interface IProductSizeService {
     int getAvailableProducts(Long productSizeId);
     Map<String,Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException;
     double getTotalProfit();
+    ProductSizeModel findByProductId(Long id) throws SQLException;
 }

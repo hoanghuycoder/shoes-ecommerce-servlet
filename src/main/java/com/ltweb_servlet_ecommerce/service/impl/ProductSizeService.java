@@ -67,6 +67,11 @@ public class ProductSizeService implements IProductSizeService {
     }
 
     @Override
+    public ProductSizeModel findByProductId(Long id) throws SQLException {
+        return productSizeDAO.findByProductId(id);
+    }
+
+    @Override
     public ProductSizeModel update(ProductSizeModel model) throws SQLException {
         ProductSizeModel oldModel = productSizeDAO.findById(model.getId());
         model.setUpdateAt(new Timestamp(System.currentTimeMillis()));

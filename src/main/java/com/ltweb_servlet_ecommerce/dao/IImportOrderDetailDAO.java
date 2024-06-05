@@ -12,6 +12,7 @@ public interface IImportOrderDetailDAO {
 
     List<ImportOrderDetailModel> findByImportId(String importId);
     List<ImportOrderDetailModel> findByProductSizeId();
+    List<ImportOrderDetailModel> findByProductSizeId(String id);
 
     long save(ImportOrderDetailModel newModel);
 }
