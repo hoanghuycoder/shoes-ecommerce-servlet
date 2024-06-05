@@ -6,6 +6,7 @@ import com.ltweb_servlet_ecommerce.dao.IProductDAO;
 import com.ltweb_servlet_ecommerce.dao.IProductSizeDAO;
 import com.ltweb_servlet_ecommerce.model.ProductImageModel;
 import com.ltweb_servlet_ecommerce.model.ProductModel;
+import com.ltweb_servlet_ecommerce.model.ProductOutStock;
 import com.ltweb_servlet_ecommerce.model.ProductSizeModel;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.service.IProductImageService;
@@ -128,81 +129,134 @@ public class ProductService implements IProductService {
     }
 
     private void updateThumbnailAsync(ProductModel productModel, Cloudinary cloudinary, Part thumbnailPart) {
-    // Run the task asynchronously
-    CompletableFuture.supplyAsync(() -> {
-        try {
-            // Upload the thumbnail image to Cloudinary and get the URL
-            String thumbnailProductUrl = uploadToCloudinary(cloudinary, thumbnailPart);
-            // Set the thumbnail URL in the product model
-            productModel.setThumbnail(thumbnailProductUrl);
-            // Update the product model in the database
-            update(productModel);
-        } catch (IOException | SQLException e) {
-            throw new RuntimeException(e);
-        }
-        // Return null as the CompletableFuture result
-        return null;
-    });
-}
+        // Run the task asynchronously
+        CompletableFuture.supplyAsync(() -> {
+            try {
+                // Upload the thumbnail image to Cloudinary and get the URL
+                String thumbnailProductUrl = uploadToCloudinary(cloudinary, thumbnailPart);
+                // Set the thumbnail URL in the product model
+                productModel.setThumbnail(thumbnailProductUrl);
+                // Update the product model in the database
+                update(productModel);
+            } catch (IOException | SQLException e) {
+                throw new RuntimeException(e);
+            }
+            // Return null as the CompletableFuture result
+            return null;
+        });
+    }
 
     @Override
     public boolean updateProduct(ProductModel productModel, Part thumbnailPart, String[] sizesId,
-                             String[] listSizePrice, List<Part> imageProductParts, long[] removeImgs) {
-    // Get the Cloudinary instance for image uploading
-    Cloudinary cloudinary = CloudinarySingleton.getInstance().getCloudinary();
-    try {
-        // Update the product model, return false if the update fails
-        if (update(productModel) == null) {
-            return false;
-        }
-
-        // Update the product sizes
-        updateProductSizes(productModel, sizesId, listSizePrice);
-
-        // If a new thumbnail image is provided, update the thumbnail asynchronously
-        if (thumbnailPart != null && !thumbnailPart.getSubmittedFileName().isEmpty()) {
-            updateThumbnailAsync(productModel, cloudinary, thumbnailPart);
-        }
-
-        // Update the product images, return false if the update fails
-        if (!updateProductImages(productModel, cloudinary, imageProductParts, removeImgs)) {
-            return false;
-        }
-
-        // If all updates are successful, return true
-        return true;
-    } catch (Exception e) {
-        // Print the stack trace if an exception occurs and return false
-        e.printStackTrace();
-        return false;
-    }
-}
-
-
-    private void updateProductSizes(ProductModel productModel, String[] sizesId, String[] listSizePrice) {
-    // Run the task asynchronously
-    CompletableFuture.supplyAsync(() -> {
+                                 String[] listSizePrice, List<Part> imageProductParts, long[] removeImgs) {
+        // Get the Cloudinary instance for image uploading
+        Cloudinary cloudinary = CloudinarySingleton.getInstance().getCloudinary();
         try {
-            // Delete all existing sizes for the given product
-            productSizeService.deleteByProductId(productModel.getId());
-            // Iterate over the sizesId array
-            for (int i = 0; i < sizesId.length; i++) {
-                // Create a new ProductSizeModel object for each size
-                ProductSizeModel productSizeModel = new ProductSizeModel();
-                // Set the product ID, size ID, and price
-                productSizeModel.setProductId(productModel.getId());
-                productSizeModel.setSizeId(Long.parseLong(sizesId[i]));
-                productSizeModel.setPrice(Double.parseDouble(listSizePrice[i]));
-                // Save the new ProductSizeModel object
-                productSizeService.save(productSizeModel);
+            // Update the product model, return false if the update fails
+            if (update(productModel) == null) {
+                return false;
             }
+
+            // Update the product sizes
+            updateProductSizes(productModel, sizesId, listSizePrice);
+
+            // If a new thumbnail image is provided, update the thumbnail asynchronously
+            if (thumbnailPart != null && !thumbnailPart.getSubmittedFileName().isEmpty()) {
+                updateThumbnailAsync(productModel, cloudinary, thumbnailPart);
+            }
+
+            // Update the product images, return false if the update fails
+            if (!updateProductImages(productModel, cloudinary, imageProductParts, removeImgs)) {
+                return false;
+            }
+
+            // If all updates are successful, return true
+            return true;
+        } catch (Exception e) {
+            // Print the stack trace if an exception occurs and return false
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public List<ProductOutStock> findOutOfStock() {
+        List<ProductOutStock> outOfStockProducts = new ArrayList<>();
+
+        // Get all products
+        List<ProductModel> remainingProducts = productDAO.findRemainingProduct();
+
+        for (ProductModel product : remainingProducts) {
+            product = productDAO.getInfoProduct(product);
+            if (product.getQuantity() <= 0) {
+                outOfStockProducts.add(ProductOutStock.builder().product(product).isOutOfStock(true).note("").build());
+                continue;
+            }
+
+            // Calculate average daily sales
+            double averageDailySales = calculateAverageDailySales(product);
+
+            // Subtract average daily sales from current inventory quantity
+            double projectedInventory = product.getQuantity() - (5 * averageDailySales);
+            int estimatedDays = (int) Math.ceil((double) product.getQuantity() / averageDailySales);
+            // Check if product will be out of stock in 5 days
+            if (projectedInventory <= 0) {
+                outOfStockProducts.add(ProductOutStock.builder()
+                        .product(product)
+                        .isOutOfStock(false)
+                        .note(String.format("Số lượng: %d <br> Ước tính còn đủ bán trong %d ngày",
+                                product.getQuantity(), estimatedDays))
+                        .build());
+            }
+        }
+
+        return outOfStockProducts;
+    }
+
+    private double calculateAverageDailySales(ProductModel product) {
+        try {
+            Map<String, Object> map = productDAO.findWithCustomSQL("SELECT SUM(od.quantity) / 30 AS dailyAvgSales " +
+                    "FROM order_details od " +
+                    "INNER JOIN product_sizes p ON p.id = od.productSizeId " +
+                    "WHERE  od.isDeleted = 0 AND p.isDeleted = 0 " +
+                    "AND od.orderId IS NOT NULL " +
+                    "AND od.createAt >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)" +
+                    "AND od.productSizeId = ?", List.of(product.getProductSizeId()));
+            if (map.get("dailyAvgSales") == null) {
+                return 0;
+            }
+            BigDecimal bigDecimal = (BigDecimal) map.get("dailyAvgSales");
+            return bigDecimal.doubleValue();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        // Return null as the CompletableFuture result
-        return null;
-    });
-}
+    }
+
+
+    private void updateProductSizes(ProductModel productModel, String[] sizesId, String[] listSizePrice) {
+        // Run the task asynchronously
+        CompletableFuture.supplyAsync(() -> {
+            try {
+                // Delete all existing sizes for the given product
+                productSizeService.deleteByProductId(productModel.getId());
+                // Iterate over the sizesId array
+                for (int i = 0; i < sizesId.length; i++) {
+                    // Create a new ProductSizeModel object for each size
+                    ProductSizeModel productSizeModel = new ProductSizeModel();
+                    // Set the product ID, size ID, and price
+                    productSizeModel.setProductId(productModel.getId());
+                    productSizeModel.setSizeId(Long.parseLong(sizesId[i]));
+                    productSizeModel.setPrice(Double.parseDouble(listSizePrice[i]));
+                    // Save the new ProductSizeModel object
+                    productSizeService.save(productSizeModel);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            // Return null as the CompletableFuture result
+            return null;
+        });
+    }
 
     private String uploadToCloudinary(Cloudinary cloudinary, Part part) throws IOException {
         InputStream inputStream = part.getInputStream();
