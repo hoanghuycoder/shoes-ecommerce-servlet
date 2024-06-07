@@ -213,4 +213,34 @@ public class UserService implements IUserService {
         Long productId = userDAO.save(model);
         return findById(productId);
     }
+
+    @Override
+    public boolean validateString(String input) {
+        // Check special character
+        boolean hasSpecialChar = input.matches(".*[^a-zA-Z0-9].*");
+
+        // Check number
+        boolean hasDigit = input.matches(".*\\d.*");
+
+        // Check Uppercase
+        boolean hasUpperCase = input.matches(".*[A-Z].*");
+
+        // check all of them
+        return hasSpecialChar && hasDigit && hasUpperCase;
+    }
+
+    @Override
+    public int getUserCount() {
+        IUserDAO u = new UserDAO();
+        int count = 0;
+        try {
+            List<UserModel> list = u.findAll(null);
+            count = list.size();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return count;
+    }
+
 }

@@ -1,10 +1,13 @@
 package com.ltweb_servlet_ecommerce.service;
 
 import com.ltweb_servlet_ecommerce.model.ProductModel;
+import com.ltweb_servlet_ecommerce.model.ProductOutStock;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.subquery.SubQuery;
 
+import javax.servlet.http.Part;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -20,4 +23,7 @@ public interface IProductService {
     ProductModel softDelete(Long id) throws SQLException;
     Map<String,Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException;
     ProductModel updateProductTotalView(Long id) throws SQLException;
+    boolean updateProduct(ProductModel productModel, Part thumbnailPart, String[] sizesId, String[] listSizePrice, List<Part> imageProductParts, long[] removeImgs);
+
+    List<ProductOutStock> findOutOfStock();
 }

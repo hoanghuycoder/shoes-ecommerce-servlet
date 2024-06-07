@@ -1,9 +1,10 @@
 package com.ltweb_servlet_ecommerce.service.impl;
 
 import com.ltweb_servlet_ecommerce.dao.IProductSizeDAO;
-import com.ltweb_servlet_ecommerce.dao.ISizeDAO;
 import com.ltweb_servlet_ecommerce.dao.impl.ProductSizeDAO;
-import com.ltweb_servlet_ecommerce.model.*;
+import com.ltweb_servlet_ecommerce.model.ImportOrderDetailModel;
+import com.ltweb_servlet_ecommerce.model.OrderDetailsModel;
+import com.ltweb_servlet_ecommerce.model.ProductSizeModel;
 import com.ltweb_servlet_ecommerce.paging.PageRequest;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.service.IProductSizeService;
@@ -22,11 +23,11 @@ public class ProductSizeService implements IProductSizeService {
 
     @Override
     public List<ProductSizeModel> findAllWithFilter(ProductSizeModel model, Pageble pageble) throws SQLException {
-        return productSizeDAO.findAllWithFilter(model,pageble);
+        return productSizeDAO.findAllWithFilter(model, pageble);
     }
 
     @Override
-    public ProductSizeModel findWithFilter(ProductSizeModel model)  {
+    public ProductSizeModel findWithFilter(ProductSizeModel model) {
         try {
             return productSizeDAO.findWithFilter(model);
         } catch (SQLException e) {
@@ -36,15 +37,16 @@ public class ProductSizeService implements IProductSizeService {
 
     @Override
     public List<ProductSizeModel> findByColumnValues(List<SubQuery> subQueryList, Pageble pageble) throws SQLException {
-        return productSizeDAO.findByColumnValues(subQueryList,pageble);
-    }
-    @Override
-    public Map<String,Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException {
-        return productSizeDAO.findWithCustomSQL(sql,params);
+        return productSizeDAO.findByColumnValues(subQueryList, pageble);
     }
 
     @Override
-    public double getTotalProfit(){
+    public Map<String, Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException {
+        return productSizeDAO.findWithCustomSQL(sql, params);
+    }
+
+    @Override
+    public double getTotalProfit() {
         OrderDetailsService orderDetailsService = new OrderDetailsService();
         ImportOrderDetailService importOrderDetailService = new ImportOrderDetailService();
         ProductSizeDAO productSizeDAO = new ProductSizeDAO();
@@ -64,6 +66,15 @@ public class ProductSizeService implements IProductSizeService {
             throw new RuntimeException(e);
         }
         return totalProfit;
+    }
+
+    @Override
+    public ProductSizeModel findByProductId(Long id) throws SQLException {
+        return productSizeDAO.findByProductId(id);
+    }
+  
+    public void deleteByProductId(Long id) {
+        productSizeDAO.deleteByProductId(id);
     }
 
     @Override

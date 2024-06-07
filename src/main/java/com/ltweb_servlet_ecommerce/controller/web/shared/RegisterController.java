@@ -34,9 +34,21 @@ public class RegisterController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        String fullname = (String) req.getParameter("fullName");
+        String userName = (String) req.getParameter("userName");
+        String email = (String) req.getParameter("email");
         String password = (String) req.getParameter("password");
-        if (password.length() < 6) {
+        String repassword = (String) req.getParameter("repassword");
+
+        //check any field is blank
+        if (fullname.equals("") || userName.equals("") || email.equals("") || password.equals("") || repassword.equals("")) {
+            resp.sendRedirect(req.getContextPath()+"/sign-up?message=field_is_blank&toast=danger");
+        } else if (password.length() < 8) {
             resp.sendRedirect(req.getContextPath()+"/sign-up?message=short_length_password&toast=danger");
+        } else if (!userService.validateString(password)) {
+            resp.sendRedirect(req.getContextPath()+"/sign-up?message=password_condition&toast=danger");
+        } else if (!password.equals(repassword)) {
+            resp.sendRedirect(req.getContextPath()+"/sign-up?message=two_password_diffirent&toast=danger");
         } else {
 
             try {
@@ -57,11 +69,10 @@ public class RegisterController extends HttpServlet {
                     resp.sendRedirect(req.getContextPath() + "/sign-up?message=exist_user&toast=danger");
                 }
 
-
-
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | SQLException e) {
                 throw new RuntimeException(e);
             }
         }
     }
+
 }

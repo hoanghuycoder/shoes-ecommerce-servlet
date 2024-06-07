@@ -52,6 +52,12 @@ public class ImportOrderDetailDAO extends AbstractDAO<ImportOrderDetailModel> im
 
     }
 
+    @Override
+    public List<ImportOrderDetailModel> findByProductSizeId(String id) {
+        String sql = "SELECT * FROM import_order_details WHERE productSizeId = ? and isDeleted = 0";
+        return query(sql, new ImportOrderDetailMapper(), List.of(id), ImportOrderDetailModel.class);
+    }
+
     public long save(ImportOrderDetailModel newModel) {
         String sql = "INSERT INTO import_order_details(importOrderId, productSizeId,quantityImport,priceImport) VALUES(?,?,?,?)";
         Connection connection = null;

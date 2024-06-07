@@ -20,4 +20,5 @@ public interface ISizeDAO {
     Map<String,Object> findWithCustomSQL(String sql,List<Object> params) throws SQLException;
 
     Map<Long, SizeModel> findSizesByProductSizeIds(List<Long> productSizeIds);
+
 }

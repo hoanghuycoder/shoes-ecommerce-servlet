@@ -24,4 +24,7 @@ public interface IProductDAO {
     void updateThumbnail(long productId, String url);
     void updateProductTotalView(Long id) throws SQLException;
 
+    List<ProductModel> findRemainingProduct();
+
+    ProductModel getInfoProduct(ProductModel product);
 }

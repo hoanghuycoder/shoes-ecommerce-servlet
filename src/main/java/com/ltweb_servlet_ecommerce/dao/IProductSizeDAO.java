@@ -23,5 +23,7 @@ public interface IProductSizeDAO {
 
     int getAvailableProducts(Long productSizeId);
 
+    ProductSizeModel findByProductId(Long productId) throws SQLException;
 
+    void deleteByProductId(Long id);
 }

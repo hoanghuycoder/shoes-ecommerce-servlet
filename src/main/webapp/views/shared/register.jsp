@@ -57,6 +57,12 @@
                                     <label class="form-label" for="password">Mật khẩu</label>
                                 </div>
 
+                                <!-- Re-Password input -->
+                                <div class="form-outline mb-4">
+                                    <input type="password" id="repassword" name="repassword" class="form-control" />
+                                    <label class="form-label" for="password">Nhập Lại Mật khẩu</label>
+                                </div>
+
                                 <!-- Checkbox -->
                                 <div class="form-check d-flex justify-content-center mb-4">
                                     <input class="form-check-input me-2" type="checkbox" value="" name="subcribeNewLetter" id="form2Example33" checked />

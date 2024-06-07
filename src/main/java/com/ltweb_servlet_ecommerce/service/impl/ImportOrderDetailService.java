@@ -82,11 +82,17 @@ public class ImportOrderDetailService implements IImportOrderDetailService {
         return importList;
     }
 
+    @Override
     public List<ImportOrderDetailModel> findByProductSizeId() {
         if (orderDetailDAO == null) {
             orderDetailDAO = new ImportOrderDetailDAO();
         }
         return orderDetailDAO.findByProductSizeId();
+    }
+
+    @Override
+    public List<ImportOrderDetailModel> findByProductSizeId(String productSizeId) {
+        return orderDetailDAO.findByProductSizeId(productSizeId);
     }
 
     // This method processes the category of the imported product
