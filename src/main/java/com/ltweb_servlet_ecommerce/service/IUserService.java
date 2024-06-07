@@ -24,4 +24,5 @@ public interface IUserService {
 
     List<UserModel> getListAdmin();
     boolean validateString(String input);
+    int getUserCount();
 }
