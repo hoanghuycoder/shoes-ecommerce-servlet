@@ -228,4 +228,19 @@ public class UserService implements IUserService {
         // check all of them
         return hasSpecialChar && hasDigit && hasUpperCase;
     }
+
+    @Override
+    public int getUserCount() {
+        IUserDAO u = new UserDAO();
+        int count = 0;
+        try {
+            List<UserModel> list = u.findAll(null);
+            count = list.size();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return count;
+    }
+
 }
