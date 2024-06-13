@@ -78,7 +78,7 @@
         </div>
         <div class="row justify-content-center">
           <c:forEach var="product_item" items="${LIST_MODEL}">
-            <div class="col-xl-3 col-md-4 col-sm-6 col-12 mb-4">
+            <div class="col-xl-3 col-md-4 col-sm-6 col-12 mb-4" id="productItem${product_item.id}">
               <div class="card py-3">
                 <div class="card-header p-0  mx-3 border-radius-lg">
                   <a href="/product-details/${product_item.id}" style="background: rgb(171,172,171);
@@ -115,7 +115,7 @@
                     ${product_item.shortDescription}
                   </p>
                   <div class="d-flex align-items-center ">
-                    <a href="/product-details/${product_item.id}" type="button" class="flex-grow-1 btn btn-outline-primary btn-sm mb-0 me-1">Xem</a>
+                    <a type="button" class="flex-grow-1 btn btn-outline-primary btn-sm mb-0 me-1 deleteProduct" data-product-id="${product_item.id}">Xóa</a>
                     <a href="<c:url value="/admin/product/update?id=${product_item.id}"/>" type="button" class="flex-grow-1 btn btn-outline-primary btn-sm mb-0  ms-1">Chỉnh sửa</a>
                   </div>
                 </div>
@@ -126,6 +126,24 @@
     </div>
     <script>
       window.addEventListener("DOMContentLoaded", function () {
+        // Handle delete product
+        $(".deleteProduct").click(function() {
+          const productId = $(this).data('product-id');
+          $.ajax({
+            url: '/ajax/admin/product',
+            type: 'DELETE',
+            data: {
+              productId: productId
+            },
+            success: (data) => {
+              showToastAdmin("success", "Đã xóa thành công", "Đã xóa thành công sản phẩm với id là " + productId, new Date());
+              $("#productItem" + productId).remove();
+            },
+            error: (data) => {
+              showToastAdmin("error", "Đã xảy ra lỗi", "Lỗi không thể xóa sản phẩm với id là " + productId, new Date());
+            }
+          });
+        })
         // handle change size
         const listSize = [
           <c:forEach items="${LIST_SIZE}" var="item" varStatus="loop">
