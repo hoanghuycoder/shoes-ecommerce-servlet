@@ -54,7 +54,7 @@
                                     <div class="accordion-body">
                                         <div class="form-check">
                                             <c:forEach var="category_item" items="${LIST_CATEGORY}">
-                                                <div>
+                                                <div style="cursor: pointer">
                                                     <input class="form-check-input categoryFilter" type="checkbox" value="${category_item.id}" id="categoryCheck${category_item.id}">
                                                     <label class="form-check-label" for="categoryCheck${category_item.id}">
                                                             ${category_item.name}
@@ -75,9 +75,9 @@
                                 <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
                                     <div class="accordion-body">
                                         <c:forEach var="size_item" items="${LIST_SIZE}">
-                                            <div>
-                                                <input class="form-check-input categoryFilter" type="checkbox" value="${size_item.id}" id="categoryCheck${size_item.id}">
-                                                <label class="form-check-label" for="categoryCheck${size_item.id}">
+                                            <div style="cursor: pointer">
+                                                <input class="form-check-input sizeFilter" type="checkbox" value="${size_item.id}" id="sizeCheck${size_item.id}">
+                                                <label class="form-check-label" for="sizeCheck${size_item.id}">
                                                         ${size_item.name}
                                                 </label>
                                             </div>
@@ -102,7 +102,7 @@
                             <select class="form-select" id="sortFilter" style="max-width: 150px" aria-label="Default select example">
                                 <option selected value="createAt-DESC">Mới nhất</option>
                                 <option value="totalViewAndSearch-DESC">Được quan tâm nhiều nhất</option>
-                                <option value="price-ACS">Giá từ thấp đến cao</option>
+                                <option value="price-ASC">Giá từ thấp đến cao</option>
                                 <option value="price-DESC">Giá từ cao đến thấp</option>
                             </select>
                         </div>
@@ -122,13 +122,16 @@
         let isDone = false;
         let isLoadProduct = false;
         const productName = "${productName}";
-        let categoiesFilter = [1];
-        let sizesFilter = [1];
-        const loadMoreProduct = async (name,categoies,sizes) => {
+        const loadMoreProduct = async (name) => {
             const sortFilter = $('#sortFilter').val().split('-');
             const sortName = sortFilter[0]
             const sortBy = sortFilter[1]
-            console.log('Load')
+            const categories = $(".categoryFilter:checked").map(function() {
+                return $(this).val();
+            }).get();
+            const sizes = $(".sizeFilter:checked").map(function() {
+                return $(this).val();
+            }).get();
             return await new Promise((resolve,reject) => {
                 setTimeout(()=>{
                     $.ajax({
@@ -139,7 +142,7 @@
                             page: page,
                             maxPageItem: 8,
                             productName: name,
-                            categories : categoies,
+                            categories : categories,
                             sizes : sizes,
                             sortName : sortName,
                             sortBy : sortBy
@@ -152,9 +155,13 @@
                 }, 500)
             });
         }
-        const renderMoreProduct = async (name,categoies,sizes) => {
+        const renderMoreProduct = async (name,reRender= false) => {
             isLoadProduct = true
             const listProductDOM = $("#listProduct");
+            if (reRender) {
+                listProductDOM.empty()
+                page =1
+            }
             listProductDOM.append(`
             <div class="d-flex" id="loadingProduct">
                 <div class="spinner-grow text-success m-auto" role="status">
@@ -163,22 +170,29 @@
             </div>
             `)
             let listProductHtml = ``;
-            const listProduct = await loadMoreProduct(name,categoies,sizes);
-
+            let listProduct = await loadMoreProduct(name);
             if (listProduct.length>0){
                 for (let i = 0; i < listProduct.length; i++) {
                     const product = listProduct[i];
-                    listProductHtml+= `
-                     <div class="col-12 col-md-4 col-lg-3 mb-5">
-                        <a class="product-item" href="/product-details/` + product.id + `">
-                            <img loading="lazy" src="` + product.thumbnail + `" class="img-fluid product-thumbnail">
-                            <h3 class="product-title">` + product.name + `</h3>
-                            <strong class="product-price">` + new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price) + `</strong>
-
-                            <span class="icon-cross"><img loading="lazy" src="/template/web/images/cross.svg" class="img-fluid"></span>
-                        </a>
-                    </div>
-                `
+                    const productItemStr = `
+                        <div class="col-12 col-md-4 col-lg-3 mb-5">
+                            <a class="product-item" href="/product-details/` + product.id + `">
+                                <img loading="lazy" src="` + product.thumbnail + `" class="img-fluid product-thumbnail">
+                                <h3 class="product-title"
+                                    style="max-height: 40px; min-height: 40px;display: -webkit-box;
+                                        -webkit-box-orient: vertical;
+                                        -webkit-line-clamp: 2;
+                                        overflow: hidden;
+                                        text-overflow: ellipsis;
+                                        white-space: normal;
+                                    "
+                                    >` + product.name + `</h3>
+                                <strong class="product-price">` + new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price) + `</strong>
+                                <span class="icon-cross"><img loading="lazy" src="/template/web/images/cross.svg" class="img-fluid"></span>
+                            </a>
+                        </div>
+                    `
+                    listProductHtml+=productItemStr;
                 }
             } else if (listProduct.length == 0 && productName!="" && page==2) {
                 listProductHtml = `<div class="d-flex">
@@ -197,11 +211,18 @@
                 const scrollPosition = $(window).scrollTop() + $(window).height();
                 const containerPosition = scrollContainer.offset().top + scrollContainer.height() + 150;
                 if (scrollPosition >= containerPosition) {
-                    await renderMoreProduct(productName,categoiesFilter,sizesFilter);
+                    await renderMoreProduct(productName);
                 }
             }
         });
-        renderMoreProduct(productName,categoiesFilter,sizesFilter);
+        let debounceGetProduct;
+        $('#sortFilter, .categoryFilter, .sizeFilter').change(() => {
+            clearTimeout(debounceGetProduct)
+            debounceGetProduct = setTimeout(()=> {
+                renderMoreProduct(productName, true);
+            },400)
+        });
+        renderMoreProduct(productName);
     })
 </script>
 </body>

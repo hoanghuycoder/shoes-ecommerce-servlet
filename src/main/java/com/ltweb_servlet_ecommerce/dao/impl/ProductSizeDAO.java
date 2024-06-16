@@ -101,6 +101,14 @@ public class ProductSizeDAO extends AbstractDAO<ProductSizeModel> implements IPr
     }
 
     @Override
+    public ProductSizeModel findByProductId(Long productId) throws SQLException {
+        String sql = "select * from product_sizes where productId=?";
+        List<Object> params = new ArrayList<>();
+        params.add(productId);
+        List<ProductSizeModel> result = query(sql, new ProductSizeMapper(), params, ProductSizeModel.class);
+        return result.isEmpty() ? null : result.get(0);
+    }
+  
     public void deleteByProductId(Long id) {
         String sql = "delete from product_sizes where productId=?";
         List<Object> params = List.of(id);

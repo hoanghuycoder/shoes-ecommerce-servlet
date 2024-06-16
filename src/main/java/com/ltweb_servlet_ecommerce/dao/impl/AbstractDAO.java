@@ -96,10 +96,18 @@ public class AbstractDAO<T> implements GenericDAO<T> {
             connection = JDBCUtil.getConnection();
             List<Object> parameters = new ArrayList<>();
             for (SubQuery subQuery : subQueryList) {
-                sqlBuilder.append(" and " + subQuery.getColumnName() + " " + subQuery.getType() + " (" + getInClauseParameters(subQuery.getDatasQuery().size()) + ")");
-                for (Object param : subQuery.getDatasQuery()) {
-                    parameters.add(param);
+                String dataQuery = "";
+//                Nếu subquery có select thì append string, nếu không thì append ? và add vào parameters
+                if (String.valueOf(subQuery.getDatasQuery().get(0)).contains("SELECT")) {
+                    List<Object> datas = subQuery.getDatasQuery();
+                    dataQuery = String.valueOf(datas.get(0));
+                } else {
+                    dataQuery = getInClauseParameters(subQuery.getDatasQuery().size());
+                    for (Object param : subQuery.getDatasQuery()) {
+                        parameters.add(param);
+                    }
                 }
+                sqlBuilder.append(" and " + subQuery.getColumnName() + " " + subQuery.getType() + " (" + dataQuery + ")");
             }
             SqlPagebleUtil.addSQlPageble(sqlBuilder, pageble);
             sql = sqlBuilder.toString();

@@ -69,6 +69,10 @@ public class ProductSizeService implements IProductSizeService {
     }
 
     @Override
+    public ProductSizeModel findByProductId(Long id) throws SQLException {
+        return productSizeDAO.findByProductId(id);
+    }
+  
     public void deleteByProductId(Long id) {
         productSizeDAO.deleteByProductId(id);
     }

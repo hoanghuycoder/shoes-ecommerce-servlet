@@ -118,4 +118,5 @@ public class SizeDAO extends AbstractDAO<SizeModel> implements ISizeDAO {
     }
 
 
+
 }

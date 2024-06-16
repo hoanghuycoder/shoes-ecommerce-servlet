@@ -15,4 +15,7 @@ public interface IImportOrderDetailService {
     List<ImportOrderDetailModel> findByImportId(String importId);
 
     boolean importFileExcel(String importOrderId, Part importFile ,Collection<Part> parts) throws IOException;
+
+    List<ImportOrderDetailModel> findByProductSizeId();
+    List<ImportOrderDetailModel> findByProductSizeId(String productSizeId);
 }
