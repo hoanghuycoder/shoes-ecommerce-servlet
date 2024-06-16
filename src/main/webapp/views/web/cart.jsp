@@ -59,8 +59,11 @@
 
                                 <div class="col-md-2 mb-4 mb-md-0">
                                     <div class="form-outline mb-4" data-mdb-input-init>
-                                        <input type="number" id="quantityProduct${product_item.id}"  class="form-control quantityProduct" value="${product_item.quantity}" data-index="${loop.index}" data-product-id="${product_item.id}" data-size-id="${product_item.sizeId}" min="1" max="${product_item.available}" />
+                                        <input type="number" id="quantityProduct${product_item.id}"  class="form-control quantityProduct"
+                                               value="${product_item.quantity}" data-index="${loop.index}" data-product-id="${product_item.id}"
+                                               data-size-id="${product_item.sizeId}" min="1" max="${product_item.available}" />
                                         <label class="form-label" for="quantityProduct${product_item.id}">Số lượng</label>
+                                        <label class="inStock" style="color: red;font-weight: 600;font-style: italic;"></label>
                                     </div>
 
                                     <h5 class="mb-2">
@@ -171,7 +174,8 @@
                     // Nếu số lượng vượt quá tồn kho, hiển thị số lượng tối đa có sẵn
                     if (value > max){
                         flag = true;
-                        inStockLabel.text('In stock: ' + (max < 0 ? 0 : max));
+                        inStockLabel.text('Còn lại: ' + (max < 0 ? 0 : max));
+                        // console.log('In stock: ' + (max < 0 ? 0 : max))
                     }else
                         inStockLabel.text('');
                 });

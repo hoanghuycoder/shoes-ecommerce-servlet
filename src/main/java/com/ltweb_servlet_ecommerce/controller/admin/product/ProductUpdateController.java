@@ -77,7 +77,7 @@ public class ProductUpdateController extends HttpServlet {
         long[] removeImgs = null;
         try {
             String ids = request.getParameter("removeImgs");
-            removeImgs = ids == null ? null :
+            removeImgs = ids == null || ids.isEmpty() ? null :
                     Arrays.stream(ids.split(",")).mapToLong(Long::parseLong).toArray();
         } catch (Exception e) {
             e.printStackTrace();
