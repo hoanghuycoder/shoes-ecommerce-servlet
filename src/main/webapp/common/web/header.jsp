@@ -128,7 +128,7 @@
 
                             <p class="product-price" style="
                                 font-weight: 600;
-                            ">$`+product.price+`</p>
+                            ">`+formatCurrencyVietnamese(product.price)+`</p>
                         </a>
                     </div>
                 `
@@ -136,6 +136,21 @@
             }
             $("#resultSearch").append(topSearch);
         }
+
+        function formatCurrencyVietnamese(value) {
+            // Convert the value to a string with Vietnamese locale formatting
+            let formattedValue = value.toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            });
+
+            // Return the formatted value
+            return formattedValue;
+        }
+
+
         $("#openSearchModal").click(() => {
             $("#nameProductSearch").on("keyup", function (event) {
                 if (event.keyCode === 13 || event.which === 13) {

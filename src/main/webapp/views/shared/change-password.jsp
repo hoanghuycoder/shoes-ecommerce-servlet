@@ -49,7 +49,7 @@
 <%--                                            To confirm, type the new password again.--%>
 <%--                                        </span>--%>
                 </div>
-                <div class="form-group">
+                <div class="form-group mt-3">
                     <button type="submit" class="btn btn-success btn-lg float-right">Lưu</button>
                 </div>
             </form>

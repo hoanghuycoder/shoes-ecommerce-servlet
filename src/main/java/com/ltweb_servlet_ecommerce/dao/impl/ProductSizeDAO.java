@@ -110,7 +110,7 @@ public class ProductSizeDAO extends AbstractDAO<ProductSizeModel> implements IPr
     }
   
     public void deleteByProductId(Long id) {
-        String sql = "delete from product_sizes where productId=?";
+        String sql = "UPDATE product_sizes set isDeleted = 1 where productId=?";
         List<Object> params = List.of(id);
         try {
             delete(sql, params);
