@@ -21,13 +21,14 @@ public class LogThread extends Task<LogModel> {
         List<LogModel> logs = getItems();
         try {
             if (logs != null && !logs.isEmpty()) {
-//                for (LogModel log : logs) {
+                for (LogModel log : logs) {
 //                    if (log.getLevel().equals(SystemConstant.DANGER_LEVEL)) {
 //                        SendMailUtil.sendMail("21130363@st.hcmuaf.edu.vn",
 //                                "Dangerous system error", SendMailUtil.templateMailDanger(log));
+//                        System.out.println("Sent mail Dangerous");
 //                    }
-//                    logService.save(log);
-//                }
+                    logService.save(log);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
