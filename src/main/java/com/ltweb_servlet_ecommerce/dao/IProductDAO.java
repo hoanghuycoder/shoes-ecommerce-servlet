@@ -17,7 +17,7 @@ public interface IProductDAO {
     List<ProductModel> findByColumnValues(List<SubQuery> subQueryList,Pageble pageble) throws SQLException;
     List<ProductModel> findAllWithFilter(ProductModel model,Pageble pageble) throws SQLException;
     Long save(ProductModel model) throws SQLException;
-    void update(ProductModel model) throws SQLException;
+    int update(ProductModel model) throws SQLException;
     void delete(Long id) throws SQLException;
     Map<String,Object> findWithCustomSQL(String sql,List<Object> params) throws SQLException;
     Map<Long, ProductModel> findProductsByProductSizeIds(List<Long> productSizeIds);

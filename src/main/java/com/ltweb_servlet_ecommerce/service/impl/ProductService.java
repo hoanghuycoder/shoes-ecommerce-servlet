@@ -2,8 +2,10 @@ package com.ltweb_servlet_ecommerce.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.ltweb_servlet_ecommerce.constant.SystemConstant;
 import com.ltweb_servlet_ecommerce.dao.IProductDAO;
 import com.ltweb_servlet_ecommerce.dao.IProductSizeDAO;
+import com.ltweb_servlet_ecommerce.log.LoggerHelper;
 import com.ltweb_servlet_ecommerce.model.ProductImageModel;
 import com.ltweb_servlet_ecommerce.model.ProductModel;
 import com.ltweb_servlet_ecommerce.model.ProductOutStock;
@@ -14,6 +16,9 @@ import com.ltweb_servlet_ecommerce.service.IProductService;
 import com.ltweb_servlet_ecommerce.service.IProductSizeService;
 import com.ltweb_servlet_ecommerce.subquery.SubQuery;
 import com.ltweb_servlet_ecommerce.utils.CloudinarySingleton;
+import com.ltweb_servlet_ecommerce.utils.ObjectComparator;
+import com.ltweb_servlet_ecommerce.utils.RuntimeInfo;
+import org.json.JSONObject;
 
 import javax.inject.Inject;
 import javax.servlet.http.Part;
@@ -23,6 +28,7 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -82,8 +88,21 @@ public class ProductService implements IProductService {
             return null;
         }
         model.setUpdateAt(new Timestamp(System.currentTimeMillis()));
-        productDAO.update(model);
-        return productDAO.findById(model.getId());
+        boolean isUpdated = productDAO.update(model) > 0;
+
+        ProductModel newModel = productDAO.findById(model.getId());
+
+        //logging
+        LinkedHashMap<String, String>[] results = ObjectComparator.compareObjects(oldModel, newModel);
+        JSONObject preValue = new JSONObject().put(SystemConstant.VALUE_LOG, new JSONObject(results[0]));
+        String status = String.format("Updated product with id = %d %s", model.getId(), isUpdated ? "successfully" : "failed");
+        JSONObject value = new JSONObject().put(SystemConstant.STATUS_LOG, status)
+                .put(SystemConstant.VALUE_LOG, new JSONObject(results[1]));
+
+        LoggerHelper.log(isUpdated ? SystemConstant.WARN_LEVEL : SystemConstant.ERROR_LEVEL,
+                "UPDATE", RuntimeInfo.getCallerClassNameAndLineNumber(), preValue, value);
+
+        return newModel;
     }
 
     @Override
@@ -248,7 +267,15 @@ public class ProductService implements IProductService {
                     productSizeModel.setSizeId(Long.parseLong(sizesId[i]));
                     productSizeModel.setPrice(Double.parseDouble(listSizePrice[i]));
                     // Save the new ProductSizeModel object
-                    productSizeService.save(productSizeModel);
+                    boolean isSaved = productSizeService.save(productSizeModel) != null;
+
+                    //logging
+                    String status = String.format("Saved product size %s", isSaved ? "successfully" : "failed");
+                    JSONObject value = new JSONObject().put(SystemConstant.STATUS_LOG, status)
+                            .put(SystemConstant.VALUE_LOG, new JSONObject(productSizeModel));
+
+                    LoggerHelper.log(isSaved ? SystemConstant.WARN_LEVEL : SystemConstant.ERROR_LEVEL,
+                            "INSERT", RuntimeInfo.getCallerClassNameAndLineNumber(), value);
                 }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -279,7 +306,16 @@ public class ProductService implements IProductService {
             futures.add(executor.submit(() -> {
                 String imageProductUrl = uploadToCloudinary(cloudinary, part);
                 // Build a new ProductImageModel with the product ID and image URL, and return it
-                return ProductImageModel.builder().productId(productModel.getId()).imageUrl(imageProductUrl).build();
+                ProductImageModel image =  ProductImageModel.builder().productId(productModel.getId()).imageUrl(imageProductUrl).build();
+                //logging
+                String status = "Uploaded product image to Cloudinary";
+                JSONObject value = new JSONObject().put(SystemConstant.STATUS_LOG, status)
+                        .put(SystemConstant.VALUE_LOG, new JSONObject(image));
+
+                LoggerHelper.log(SystemConstant.WARN_LEVEL,
+                        "INSERT", RuntimeInfo.getCallerClassNameAndLineNumber(), value);
+
+                return image;
             }));
         }
         // Create a list to store the ProductImageModels

@@ -22,9 +22,11 @@ public class LoggerHelper {
         jsonObject.put(SystemConstant.VALUE_LOG, new JSONObject().put("error_message", errorMessage));
         LoggerHelper.log(SystemConstant.DANGER_LEVEL, action, RuntimeInfo.getCallerClassNameAndLineNumber(), jsonObject);
     }
+
     public static void log(String level, String action, String resource, JSONObject value) {
         log(level, action, resource, null, value);
     }
+
     public static void log(String level, String action, String resource, JSONObject preValue, JSONObject value) {
         LogModel log = LogModel.builder()
                 .ip(IPAddressHolder.getIPAddress())

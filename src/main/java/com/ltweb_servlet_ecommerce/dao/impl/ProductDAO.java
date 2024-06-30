@@ -73,12 +73,12 @@ public class ProductDAO extends AbstractDAO<ProductModel> implements IProductDAO
     }
 
     @Override
-    public void update(ProductModel model) throws SQLException {
+    public int update(ProductModel model) throws SQLException {
         StringBuilder sqlStrBuilder = new StringBuilder("UPDATE products SET ");
         MapSQLAndParamsResult sqlAndParams = new ProductMapper().mapSQLAndParams(sqlStrBuilder, model, "update", null);
         String sql = sqlAndParams.getSql();
         List<Object> params = sqlAndParams.getParams();
-        update(sql, params);
+        return update(sql, params);
     }
 
     @Override

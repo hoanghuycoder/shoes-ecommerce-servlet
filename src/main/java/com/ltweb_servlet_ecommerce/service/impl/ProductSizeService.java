@@ -1,7 +1,9 @@
 package com.ltweb_servlet_ecommerce.service.impl;
 
+import com.ltweb_servlet_ecommerce.constant.SystemConstant;
 import com.ltweb_servlet_ecommerce.dao.IProductSizeDAO;
 import com.ltweb_servlet_ecommerce.dao.impl.ProductSizeDAO;
+import com.ltweb_servlet_ecommerce.log.LoggerHelper;
 import com.ltweb_servlet_ecommerce.model.ImportOrderDetailModel;
 import com.ltweb_servlet_ecommerce.model.OrderDetailsModel;
 import com.ltweb_servlet_ecommerce.model.ProductSizeModel;
@@ -10,6 +12,8 @@ import com.ltweb_servlet_ecommerce.paging.Pageble;
 import com.ltweb_servlet_ecommerce.service.IProductSizeService;
 import com.ltweb_servlet_ecommerce.sort.Sorter;
 import com.ltweb_servlet_ecommerce.subquery.SubQuery;
+import com.ltweb_servlet_ecommerce.utils.RuntimeInfo;
+import org.json.JSONObject;
 
 import javax.inject.Inject;
 import java.sql.SQLException;
@@ -72,9 +76,17 @@ public class ProductSizeService implements IProductSizeService {
     public ProductSizeModel findByProductId(Long id) throws SQLException {
         return productSizeDAO.findByProductId(id);
     }
-  
+
     public void deleteByProductId(Long id) {
         productSizeDAO.deleteByProductId(id);
+
+        //logging
+        String status = String.format("Deleted product size items with product id = %d", id);
+        JSONObject value = new JSONObject().put(SystemConstant.STATUS_LOG, status);
+
+        LoggerHelper.log(SystemConstant.WARN_LEVEL,
+                "DELETE", RuntimeInfo.getCallerClassNameAndLineNumber(), value);
+
     }
 
     @Override
