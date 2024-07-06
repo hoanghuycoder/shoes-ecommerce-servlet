@@ -104,11 +104,17 @@
                                 </div>
                                 <input type="hidden" name="productId" value="${MODEL.id}">
                             </div>
+                        <div class="d-flex justify-content-between">
+                            <div id="inOfStock">
+                                <button class="btn btn-warning shadow-0" id="buyNow"> Mua ngay </button>
+                                <button  class="btn btn-primary shadow-0" id="addToCart"> <i class="me-1 fa fa-shopping-basket"></i> Thêm vào giỏ hàng </button>
+                            </div>
+                            <div id="outOfStock" class="hidden">
+                                <button class="btn shadow-0" style="opacity: 0.8; cursor: no-drop;"> Out of stock </button>
+                            </div>
+<%--                            <a href="#" class="btn btn-light border border-secondary py-2 icon-hover px-3"> <i class="me-1 fa fa-heart fa-lg"></i> Lưu </a>--%>
 
-                            <button class="btn btn-warning shadow-0" id="buyNow"> Mua ngay </button>
-                            <button  class="btn btn-primary shadow-0" id="addToCart"> <i class="me-1 fa fa-shopping-basket"></i> Thêm vào giỏ hàng </button>
-                            <a href="#" class="btn btn-light border border-secondary py-2 icon-hover px-3"> <i class="me-1 fa fa-heart fa-lg"></i> Lưu </a>
-
+                        </div>
                     </div>
                 </main>
             </div>

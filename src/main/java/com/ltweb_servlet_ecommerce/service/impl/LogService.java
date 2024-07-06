@@ -98,7 +98,7 @@ public class LogService implements ILogService {
 
     private String getLocationFromApi(String ip) {
         String location = null;
-        String ip2locationURL = "https://api.ip2location.io/?ip=";
+        String ip2locationURL = "https://api.ip2location.io/?key=AB1186A50CFD7285B96E005A17727A20&ip=";
 
             try {
                 String apiUrl = ip2locationURL + ip;
