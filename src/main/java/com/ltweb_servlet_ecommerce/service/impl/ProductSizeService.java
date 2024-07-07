@@ -59,10 +59,12 @@ public class ProductSizeService implements IProductSizeService {
             List<OrderDetailsModel> listOrder = orderDetailsService.findAll(new PageRequest(1, 10, new Sorter("id", "ASC")));
             List<ImportOrderDetailModel> listImport = importOrderDetailService.findByProductSizeId();
             for (OrderDetailsModel o : listOrder) {
-                for (ImportOrderDetailModel i : listImport) {
-                    if (o.getProductSizeId().equals(i.getProductSizeId())) {
-                        double profit = o.getQuantity() * o.getSubTotal() - o.getQuantity() * i.getPriceImport();
-                        totalProfit += profit;
+                if (o.getOrderId() != null) {
+                    for (ImportOrderDetailModel i : listImport) {
+                        if (o.getProductSizeId().equals(i.getProductSizeId())) {
+                            double profit = o.getQuantity() * o.getSubTotal() - o.getQuantity() * i.getPriceImport();
+                            totalProfit += profit;
+                        }
                     }
                 }
             }

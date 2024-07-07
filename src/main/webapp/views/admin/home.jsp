@@ -8,6 +8,8 @@
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="com.ltweb_servlet_ecommerce.service.impl.ProductSizeService" %>
 <%@ page import="com.ltweb_servlet_ecommerce.service.impl.UserService" %>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.util.Locale" %>
 <fmt:setLocale value="vi_VN"/>
 <!doctype html>
 <html lang="en">
@@ -38,8 +40,8 @@
                             Tổng Doanh thu</div>
                         <%  OrderService orderService = new OrderService();
                             double totalOrderPrice = orderService.getTotalPrice();
-                            DecimalFormat decimalFormat1 = new DecimalFormat("#,##0.00 ₫");
-                            String formattedOrderPrice = decimalFormat1.format(totalOrderPrice);
+                            NumberFormat vndFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+                            String formattedOrderPrice = vndFormat.format(totalOrderPrice);
                            %>
                         <div class="h5 mb-0 font-weight-bold text-gray-800"><%=formattedOrderPrice%></div>
                     </div>
@@ -61,8 +63,7 @@
                             Tổng Chi phí nhập hàng</div>
                         <%  ImportOrderService importOrderService = new ImportOrderService();
                             double totalImportPrice = importOrderService.getTotalImportPrice();
-                            DecimalFormat decimalFormat2 = new DecimalFormat("#,##0.00 ₫");
-                            String formattedImportPrice = decimalFormat2.format(totalImportPrice);%>
+                            String formattedImportPrice = vndFormat.format(totalImportPrice);%>
                         <div class="h5 mb-0 font-weight-bold text-gray-800"><%=formattedImportPrice%></div>
                     </div>
                     <div class="col-auto">
@@ -84,7 +85,7 @@
                         <%
                             ProductSizeService productSizeService = new ProductSizeService();
                             double totalProfit = productSizeService.getTotalProfit();
-                            String formattedProfitPrice = decimalFormat2.format(totalProfit);
+                            String formattedProfitPrice = vndFormat.format(totalProfit);
                         %>
                         <div class="h5 mb-0 font-weight-bold text-gray-800"><%=formattedProfitPrice%></div>
                     </div>
