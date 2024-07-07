@@ -144,11 +144,13 @@ public class OrderService implements IOrderService {
         try {
             listOrder = o.findAll(new PageRequest(1, 10, new Sorter("id", "ASC")));
             for (OrderModel i : listOrder) {
-                OrderDetailsService orderDetailsService = new OrderDetailsService();
-                List<OrderDetailsModel> listDetail = orderDetailsService.findAllByOrderId(i.getId());
-                for (OrderDetailsModel j : listDetail) {
-                    double pricePerOrder = j.getSubTotal() * j.getQuantity();
-                    totalPrice += pricePerOrder;
+                if (!i.getStatus().equals("ORDER_CANCEL")) {
+                    OrderDetailsService orderDetailsService = new OrderDetailsService();
+                    List<OrderDetailsModel> listDetail = orderDetailsService.findAllByOrderId(i.getId());
+                    for (OrderDetailsModel j : listDetail) {
+                        double pricePerOrder = j.getSubTotal() * j.getQuantity();
+                        totalPrice += pricePerOrder;
+                    }
                 }
             }
         } catch (SQLException e) {
