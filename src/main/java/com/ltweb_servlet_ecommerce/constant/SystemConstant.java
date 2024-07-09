@@ -18,7 +18,7 @@ public class SystemConstant {
     public static final String WARN_LEVEL = "WARN";
     public static final String VALUE_LOG = "value";
     public static final String STATUS_LOG = "status";
-    public static final String ORDER_PROCESSING = "Đang chuẩn bị";
+    public static final String ORDER_PROCESSING = "ORDER_TRANSPORTING"; //"Đang chuẩn bị";
     public static final String ORDER_TRANSPORTING = "Đang giao";
     public static final String ORDER_DELIVERED = "Đã giao";
     public static final String ORDER_CANCEL = "Đã hủy";
