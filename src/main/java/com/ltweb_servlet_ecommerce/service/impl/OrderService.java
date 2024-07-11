@@ -14,6 +14,7 @@ import com.ltweb_servlet_ecommerce.sort.Sorter;
 import com.ltweb_servlet_ecommerce.subquery.SubQuery;
 import com.ltweb_servlet_ecommerce.utils.ObjectComparator;
 import com.ltweb_servlet_ecommerce.utils.RuntimeInfo;
+import com.ltweb_servlet_ecommerce.utils.StatusMapUtil;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
@@ -84,6 +85,11 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    public List<OrderModel> findByUserId(Long id) {
+        return orderDAO.findByUserId(id);
+    }
+
+    @Override
     public boolean softDelete(Long id) {
         OrderModel model = null;
         try {
@@ -116,7 +122,7 @@ public class OrderService implements IOrderService {
 
     @Override
     public OrderModel save(OrderModel model) throws SQLException {
-        model.setStatus(SystemConstant.ORDER_PROCESSING);
+        model.setStatus(StatusMapUtil.getStatusKey(SystemConstant.ORDER_PROCESSING));
         Long productId = orderDAO.save(model);
         OrderModel result = orderDAO.findById(productId);
 

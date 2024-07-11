@@ -28,6 +28,6 @@ public interface IOrderDAO {
     Map<String, Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException;
 
     Map<String, Object> findIdBySlug(List<Object> params) throws SQLException;
-
+    List<OrderModel> findByUserId(Long id);
     List<OrderModel> findByNoProcessingOverDays(int day, String status);
 }

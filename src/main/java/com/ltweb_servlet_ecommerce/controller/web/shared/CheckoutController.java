@@ -9,6 +9,7 @@ import com.ltweb_servlet_ecommerce.service.*;
 import com.ltweb_servlet_ecommerce.subquery.SubQuery;
 import com.ltweb_servlet_ecommerce.utils.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -146,11 +148,8 @@ public class CheckoutController extends HttpServlet {
                 Long sizeId = Long.parseLong(productStrSplit[1]);
                 int quantity = Integer.parseInt(productStrSplit[2]);
                 //Find product size and price
-                String sqlProductSizeId = " select product_sizes.id as productSizeId, product_sizes.price as priceProduct from product_sizes,products where product_sizes.productId = products.id and product_sizes.productId = ? and product_sizes.sizeId = ?";
-                List<Object> params = new ArrayList<>();
-                params.add(productId);
-                params.add(sizeId);
-                Map<String, Object> resultProductSizeId = productSizeService.findWithCustomSQL(sqlProductSizeId, params);
+                Map<String, Object> resultProductSizeId = productService.findProductWithSql(productId, sizeId);
+//                Map<String, Object> resultProductSizeId = productSizeService.findWithCustomSQL(sqlProductSizeId, params);
                 Long productSizeId = Long.parseLong(resultProductSizeId.get("productSizeId").toString());
                 Double price = Double.parseDouble(resultProductSizeId.get("priceProduct").toString());
                 Double subTotal = price * quantity;
@@ -164,8 +163,13 @@ public class CheckoutController extends HttpServlet {
                 deleteCartItem(productId, sizeId, quantity);
             }
             String voucherApply = req.getParameter("voucherApply");
-            if (!voucherApply.isBlank()) {
+            if (voucherApply !=null &&  !voucherApply.isBlank()) {
                 VoucherModel voucher = voucherService.findById(Long.parseLong(voucherApply));
+                if (!voucher.getEndDate().after(new Timestamp(System.currentTimeMillis()))) {
+                    resp.sendRedirect("/home?message=voucher_expired&toast=danger");
+                    return;
+                }
+
                 SubQuery queryProductIds = new SubQuery("id","in",productIds);
                 List<SubQuery> subQueryProduct = new ArrayList<>();
                 subQueryProduct.add(queryProductIds);

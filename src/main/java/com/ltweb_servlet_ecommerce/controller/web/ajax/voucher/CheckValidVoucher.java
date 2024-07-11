@@ -21,11 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
+import java.sql.Timestamp;
 import java.util.List;
-import java.util.concurrent.locks.Condition;
 
 @WebServlet(urlPatterns = "/ajax/voucher/validate")
 public class CheckValidVoucher extends HttpServlet {
@@ -33,6 +30,7 @@ public class CheckValidVoucher extends HttpServlet {
     IVoucherConditionService voucherConditionService;
     @Inject
     IVoucherService voucherService;
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ObjectMapper mapper = new ObjectMapper();
@@ -51,39 +49,46 @@ public class CheckValidVoucher extends HttpServlet {
             VoucherModel voucher = voucherService.findById(checkModel.idVoucher);
             VoucherConditionModel voucherConditionModel = new VoucherConditionModel();
             voucherConditionModel.setVoucherId(checkModel.idVoucher);
-            List<VoucherConditionModel> voucherConditions = voucherConditionService.findAllWithFilter(voucherConditionModel,null);
+            List<VoucherConditionModel> voucherConditions = voucherConditionService.findAllWithFilter(voucherConditionModel, null);
             UserModel user = (UserModel) SessionUtil.getInstance().getValue(req, "USER_MODEL");
             CheckUseVoucherResp checkResp;
-            if (CheckVoucher.canApplyVoucher(checkModel.getProducts(),voucherConditions,user)) {
-                checkResp= new CheckUseVoucherResp(0,"You can use this voucher",true,voucher);
+            if (voucher.getEndDate().after(new Timestamp(System.currentTimeMillis()))) {
+                if (CheckVoucher.canApplyVoucher(checkModel.getProducts(), voucherConditions, user)) {
+                    checkResp = new CheckUseVoucherResp(0, "You can use this voucher", true, voucher);
+                } else {
+                    checkResp = new CheckUseVoucherResp(1, "You can't use this voucher", false, voucher);
+                }
             } else {
-                checkResp= new CheckUseVoucherResp(1,"You can't use this voucher",false,voucher);
+                checkResp = new CheckUseVoucherResp(1, "voucher expired", false, voucher);
             }
+
             Gson gson = new Gson();
             String jsonResp = gson.toJson(checkResp);
             resp.setContentType("application/json");
             resp.getWriter().write(jsonResp);
         } catch (Exception e) {
-            HttpUtil.returnError500Json(mapper,resp,e.getMessage());
+            HttpUtil.returnError500Json(mapper, resp, e.getMessage());
         }
     }
 
 
-
 }
+
 @Data
 class CheckValidVoucherModel {
     List<ProductModel> products;
     Long idVoucher;
 
 }
+
 @Data
 class CheckUseVoucherResp {
     int err;
     String message;
     boolean canUseVoucher;
     VoucherModel voucher;
-    public CheckUseVoucherResp(int err, String message, boolean canUseVoucher,VoucherModel voucher) {
+
+    public CheckUseVoucherResp(int err, String message, boolean canUseVoucher, VoucherModel voucher) {
         this.err = err;
         this.message = message;
         this.canUseVoucher = canUseVoucher;

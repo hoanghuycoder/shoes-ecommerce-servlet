@@ -112,4 +112,13 @@ public class OrderDAO extends AbstractDAO<OrderModel> implements IOrderDAO {
     public Map<String, Object> findIdBySlug(List<Object> params) throws SQLException {
         return queryCustom("select id from `orders` where slug=?", params);
     }
+
+    @Override
+    public List<OrderModel> findByUserId(Long id) {
+        String sql = "SELECT slug, uo.createAt,STATUS,totalAmount FROM user_orders uo INNER JOIN orders ON uo.orderId = orders.id WHERE uo.userId = ?";
+        List<Object> params = new ArrayList<>();
+        params.add(id);
+        List<OrderModel> result = query(sql, new OrderMapper(), params, OrderModel.class);
+        return result;
+    }
 }
