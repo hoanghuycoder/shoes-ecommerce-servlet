@@ -7,7 +7,7 @@ public class NotifyUtil {
     public static void setUp(HttpServletRequest req) {
         String message = req.getParameter("message");
         String toast = req.getParameter("toast");
-        if (message!=null && toast!=null) {
+        if (message != null && toast != null) {
             ResourceBundle resourceMsg = ResourceBundle.getBundle("message");
             ResourceBundle resourceToast = ResourceBundle.getBundle("toast");
             req.setAttribute("message",resourceMsg.getString(message));

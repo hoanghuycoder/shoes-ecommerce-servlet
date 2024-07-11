@@ -143,7 +143,7 @@
                                         </div>
                                     </c:if>
 
-                                    <p class="m-0 p-0">CRM</p>
+<%--                                    <p class="m-0 p-0">CRM</p>--%>
                                     <div class="d-flex">
                                         <a class="btn btn-link text-dark px-1 mb-0"
                                            href="<c:url value="/admin/orders/detail?id=${order_item.id}"/> "><i
@@ -168,7 +168,10 @@
 <script>
     window.addEventListener("DOMContentLoaded", function () {
         $("table").each(function () {
-            new DataTable(this);
+            new DataTable(this, {
+                //sort column 7 desc
+                order: [[7, 'desc']],
+            });
         })
 
         // Remove order
