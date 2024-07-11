@@ -16,7 +16,7 @@
 <div class="col-12 mt-4">
     <!-- Add new category -->
     <div class="mb-5 ps-3">
-        <a class="btn bg-gradient-dark mb-0" id="toggleAddProduct" data-bs-toggle="collapse" href="#formNewProduct"><i class="material-icons text-sm">add</i>&nbsp;&nbsp;Add New Size</a>
+        <a class="btn bg-gradient-dark mb-0" id="toggleAddProduct" data-bs-toggle="collapse" href="#formNewProduct"><i class="material-icons text-sm">add</i>&nbsp;&nbsp;Thêm thể loại</a>
         <div class="collapse multi-collapse my-3" id="formNewProduct">
             <div class="card py-2 px-4" >
                 <form id="saveNewCategory" method="POST">

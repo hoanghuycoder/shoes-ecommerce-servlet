@@ -26,7 +26,7 @@ public class OrderDAO extends AbstractDAO<OrderModel> implements IOrderDAO {
 
     @Override
     public List<OrderModel> findAll(Pageble pageble) throws SQLException {
-        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM `orders` where isDeleted=0 ");
+        StringBuilder sqlStrBuilder = new StringBuilder("SELECT * FROM `orders` where isDeleted=0");
         SqlPagebleUtil.addSQlPageble(sqlStrBuilder, pageble);
         return query(sqlStrBuilder.toString(), new OrderMapper(), null, OrderModel.class);
     }
@@ -115,7 +115,7 @@ public class OrderDAO extends AbstractDAO<OrderModel> implements IOrderDAO {
 
     @Override
     public List<OrderModel> findByUserId(Long id) {
-        String sql = "SELECT slug, uo.createAt,STATUS,totalAmount FROM user_orders uo INNER JOIN orders ON uo.orderId = orders.id WHERE uo.userId = ?";
+        String sql = "SELECT slug, uo.createAt,STATUS,totalAmount FROM user_orders uo INNER JOIN orders ON uo.orderId = orders.id WHERE uo.userId = ? ORDER BY uo.createAt DESC";
         List<Object> params = new ArrayList<>();
         params.add(id);
         List<OrderModel> result = query(sql, new OrderMapper(), params, OrderModel.class);

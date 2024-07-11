@@ -41,8 +41,10 @@ public class OrderListController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             NotifyUtil.setUp(req);
-            Pageble orderPaging = PagingUtil.setUpPagingAndSort(req);
-            List<OrderModel> listOrder = orderService.findAll(orderPaging);
+//            Pageble orderPaging = PagingUtil.setUpPagingAndSort(req);
+//            orderPaging.getSorter().setSortName("createAt");
+//            orderPaging.getSorter().setSortBy("DESC");
+            List<OrderModel> listOrder = orderService.findAll(null);
             for (int i = 0; i < listOrder.size(); i++) {
                 OrderModel orderModel = listOrder.get(i);
                 AddressModel addressModel = addressService.findById(orderModel.getAddressId());
