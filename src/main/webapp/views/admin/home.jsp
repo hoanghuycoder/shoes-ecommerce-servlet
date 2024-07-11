@@ -8,6 +8,8 @@
 <%@ page import="java.text.DecimalFormat" %>
 <%@ page import="com.ltweb_servlet_ecommerce.service.impl.ProductSizeService" %>
 <%@ page import="com.ltweb_servlet_ecommerce.service.impl.UserService" %>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.util.Locale" %>
 <fmt:setLocale value="vi_VN"/>
 <!doctype html>
 <html lang="en">
@@ -38,8 +40,8 @@
                             Tổng Doanh thu</div>
                         <%  OrderService orderService = new OrderService();
                             double totalOrderPrice = orderService.getTotalPrice();
-                            DecimalFormat decimalFormat1 = new DecimalFormat("#,##0.00 ₫");
-                            String formattedOrderPrice = decimalFormat1.format(totalOrderPrice);
+                            NumberFormat vndFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+                            String formattedOrderPrice = vndFormat.format(totalOrderPrice);
                            %>
                         <div class="h5 mb-0 font-weight-bold text-gray-800"><%=formattedOrderPrice%></div>
                     </div>
@@ -61,8 +63,7 @@
                             Tổng Chi phí nhập hàng</div>
                         <%  ImportOrderService importOrderService = new ImportOrderService();
                             double totalImportPrice = importOrderService.getTotalImportPrice();
-                            DecimalFormat decimalFormat2 = new DecimalFormat("#,##0.00 ₫");
-                            String formattedImportPrice = decimalFormat2.format(totalImportPrice);%>
+                            String formattedImportPrice = vndFormat.format(totalImportPrice);%>
                         <div class="h5 mb-0 font-weight-bold text-gray-800"><%=formattedImportPrice%></div>
                     </div>
                     <div class="col-auto">
@@ -84,7 +85,7 @@
                         <%
                             ProductSizeService productSizeService = new ProductSizeService();
                             double totalProfit = productSizeService.getTotalProfit();
-                            String formattedProfitPrice = decimalFormat2.format(totalProfit);
+                            String formattedProfitPrice = vndFormat.format(totalProfit);
                         %>
                         <div class="h5 mb-0 font-weight-bold text-gray-800"><%=formattedProfitPrice%></div>
                     </div>
@@ -151,9 +152,102 @@
     </div>
 </div>
 
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Thống kê đơn hàng theo tháng</h6>
+
+        <form id="form2">
+            <select id="year2" name="year">
+                <option value="">Năm</option>
+                <option value="2020">2020</option>
+                <option value="2021">2021</option>
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+            </select>
+
+            <select id="month2" name="month">
+                <option value="">Tháng</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+            </select>
+            <button id="staticticsBtn" type="submit">Thống kê</button>
+        </form>
+
+    </div>
+
+    <div class="card-body px-0 pb-2">
+        <div class="table-responsive p-0">
+            <table class="table align-items-center mb-0" id="dataTable">
+                <thead>
+                <tr>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" >STT</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" >ID người dùng</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" >Tên người dùng</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID đơn hàng</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tổng giá tiền đơn hàng</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7" >Thời gian</th>
+
+                </tr>
+                </thead>
+                <tbody>
+<%--                <c:if test="${not empty LIST_MODEL}">--%>
+<%--                    <c:forEach var="item" items="${LIST_MODEL}">--%>
+<%--                        <tr>--%>
+<%--                            <!-- Name -->--%>
+<%--                            <td>--%>
+<%--                                <div class="d-flex px-2 py-1">--%>
+<%--                                    <p class="text-xs font-weight-bold mx-auto mb-0">${item.productName}</p>--%>
+<%--                                </div>--%>
+<%--                            </td>--%>
+<%--                            <!-- End name -->--%>
+<%--                            <!-- Size -->--%>
+<%--                            <td>--%>
+<%--                                <div class="d-flex px-2 py-1">--%>
+<%--                                    <div class="d-flex flex-column justify-content-center">--%>
+<%--                                        <p class="text-xs font-weight-bold mx-auto mb-0">${item.size}</p>--%>
+<%--                                    </div>--%>
+<%--                                </div>--%>
+<%--                            </td>--%>
+<%--                            <!-- end size-->--%>
+<%--                            <!-- quantity-->--%>
+<%--                            <td>--%>
+<%--                                <div class="d-flex px-2 py-1">--%>
+<%--                                    <div class="d-flex flex-column justify-content-center">--%>
+<%--                                        <p class="text-xs font-weight-bold mx-auto mb-0">${item.quantity}</p>--%>
+<%--                                    </div>--%>
+<%--                                </div>--%>
+<%--                            </td>--%>
+<%--                        </tr>--%>
+<%--                    </c:forEach>--%>
+<%--                </c:if>--%>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+
+
 <script>
     var currentYear = new Date().getFullYear();
 </script>
@@ -298,6 +392,53 @@
         });
     }
 
+</script>
+<script>
+    $(document).ready(function () {
+        $('#form2').on('submit', function (e) {
+            e.preventDefault();
+
+            let year = $('#year2').val();
+            let month = $('#month2').val();
+
+            if (!year || !month) {
+                alert("Vui lòng chọn cả năm và tháng!");
+                return;
+            }
+
+            if ($.fn.DataTable.isDataTable('#dataTable')) {
+                $('#dataTable').DataTable().destroy();
+            }
+
+            $('#dataTable').DataTable({
+                "ajax": {
+                    "url": "/admin/dashboard/statictics",
+                    "type": "GET",
+                    "data": {
+                        "year": year,
+                        "month": month
+                    },
+                    "dataSrc": "",
+                },
+                "columns": [
+                    { "data": "stt" },
+                    { "data": "userId" },
+                    { "data": "userFullName" },
+                    { "data": "orderId" },
+                    { "data": "orderPrice" },
+                    { "data": "orderTime" }
+                ],
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Statistics Data',
+                        text: 'Export to Excel'
+                    }
+                ]
+            });
+        });
+    });
 </script>
 </body>
 </html>
