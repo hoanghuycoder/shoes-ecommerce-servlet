@@ -157,32 +157,38 @@
         <h6 class="m-0 font-weight-bold text-primary">Thống kê đơn hàng theo tháng</h6>
 
         <form id="form2">
-            <select id="year2" name="year">
-                <option value="">Năm</option>
-                <option value="2020">2020</option>
-                <option value="2021">2021</option>
-                <option value="2022">2022</option>
-                <option value="2023">2023</option>
-                <option value="2024">2024</option>
-            </select>
+            <div class="">
+                <select class=" form-select-lg mb-3" style="margin-left: 5px; padding: 5px" id="year2" name="year">
+                    <option value="">Năm</option>
+                    <option value="2020">2020</option>
+                    <option value="2021">2021</option>
+                    <option value="2022">2022</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                </select>
 
-            <select id="month2" name="month">
-                <option value="">Tháng</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-            </select>
-            <button id="staticticsBtn" type="submit">Thống kê</button>
+                <select class=" form-select-lg mb-3" style="margin-left: 5px; padding: 5px" id="month2" name="month">
+                    <option value="">Tháng</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                </select>
+                <button class="form-select-lg mb-3" id="staticticsBtn" style="margin-left: 5px; padding: 3px" type="submit">Thống kê</button>
+            </div>
         </form>
+
+
+
+
 
     </div>
 
