@@ -160,7 +160,7 @@ public class CheckoutController extends HttpServlet {
                 orderDetailsModel.setSubTotal(subTotal);
                 orderDetailsModel.setOrderId(order.getId());
                 orderDetailsService.save(orderDetailsModel);
-                deleteCartItem(productId, sizeId, quantity);
+                cartService.deleteByUserId(((UserModel) SessionUtil.getValue(req, SystemConstant.USER_MODEL)).getId());
             }
             String voucherApply = req.getParameter("voucherApply");
             if (voucherApply !=null &&  !voucherApply.isBlank()) {
@@ -204,7 +204,4 @@ public class CheckoutController extends HttpServlet {
 
     }
 
-    public void deleteCartItem(Long productId, Long sizeId, int quantity) {
-
-    }
 }
