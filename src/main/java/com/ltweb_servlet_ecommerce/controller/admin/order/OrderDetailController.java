@@ -10,6 +10,7 @@ import com.ltweb_servlet_ecommerce.model.*;
 import com.ltweb_servlet_ecommerce.service.*;
 import com.ltweb_servlet_ecommerce.utils.CartUtil;
 import com.ltweb_servlet_ecommerce.utils.StatusMapUtil;
+import com.ltweb_servlet_ecommerce.validate.Validator;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(urlPatterns = "/admin/orders/detail", name = "orderAdminServlet")
-public class OrderDatailController extends HttpServlet {
+public class OrderDetailController extends HttpServlet {
     @Inject
     IOrderService orderService;
     @Inject
@@ -40,9 +41,9 @@ public class OrderDatailController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String id = request.getParameter("id");
         try {
-            OrderModel orderModel = orderService.findById(Long.parseLong(id));
+            long id = Long.parseLong(request.getParameter("id"));
+            OrderModel orderModel = orderService.findById(id);
             AddressModel addressModel = addressService.findById(orderModel.getAddressId());
             OrderDetailsModel orderDetailsModel = new OrderDetailsModel();
             orderDetailsModel.setOrderId(orderModel.getId());
@@ -61,8 +62,11 @@ public class OrderDatailController extends HttpServlet {
             orderModel.setListProduct(listProduct);
             request.setAttribute("order", orderModel);
             request.setAttribute("status", StatusMapUtil.getStatusMap());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException | NumberFormatException e) {
+//            throw new RuntimeException(e);
+            e.printStackTrace();
+            response.sendRedirect("/admin/order/list");
+            return;
         }
         request.getRequestDispatcher("/views/admin/order/admin-order-detail.jsp").forward(request, response);
     }
@@ -80,7 +84,10 @@ public class OrderDatailController extends HttpServlet {
         Type listProductType = new TypeToken<List<ProductModel>>() {
         }.getType();
         List<ProductModel> listProduct = gson.fromJson(jsonObject.get("listProduct"), listProductType);
-
+        if (!isValidate(status, orderId, listProduct)) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
         try {
             OrderModel order = validateAndGetOrder(orderId, status);
             updateOrderDetails(order, listProduct);
@@ -90,6 +97,14 @@ public class OrderDatailController extends HttpServlet {
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private boolean isValidate(String status, Long orderId, List<ProductModel> listProduct) {
+        if (!Validator.isNotNullOrEmpty(status) || orderId == null || listProduct == null) {
+            return false;
+        }
+        return true;
+
     }
 
     private void updateOrderStatus(OrderModel order, String status) throws SQLException {
@@ -144,10 +159,14 @@ public class OrderDatailController extends HttpServlet {
             if (jsonTree.isJsonObject()) {
                 long orderId = jsonTree.getAsJsonObject().get("orderId").getAsLong();
                 long productSizeId = jsonTree.getAsJsonObject().get("productSizeId").getAsLong();
-                boolean isDeleted = orderDetailsService.softDelete(orderId, productSizeId);
+                if (orderId == 0 || productSizeId == 0) {
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                } else {
+                    // Soft delete the order details (set isDeleted to true)
+                    boolean isDeleted = orderDetailsService.softDelete(orderId, productSizeId);
 
-                response.setStatus(isDeleted ? HttpServletResponse.SC_NO_CONTENT : HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-
+                    response.setStatus(isDeleted ? HttpServletResponse.SC_NO_CONTENT : HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                }
             }
         } catch (ClassCastException e) {
             e.printStackTrace();
