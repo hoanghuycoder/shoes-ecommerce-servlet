@@ -24,6 +24,7 @@ import java.util.Random;
 public class RegisterController extends HttpServlet {
     @Inject
     IUserService userService;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         NotifyUtil.setUp(req);
@@ -33,22 +34,21 @@ public class RegisterController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        String fullname = (String) req.getParameter("fullName");
-        String userName = (String) req.getParameter("userName");
-        String email = (String) req.getParameter("email");
-        String password = (String) req.getParameter("password");
-        String repassword = (String) req.getParameter("repassword");
+        String fullname = req.getParameter("fullName");
+        String userName = req.getParameter("userName");
+        String email = req.getParameter("email");
+        String password = req.getParameter("password");
+        String rePassword = req.getParameter("repassword");
 
         //check any field is blank
-        if (fullname.equals("") || userName.equals("") || email.equals("") || password.equals("") || repassword.equals("")) {
-            resp.sendRedirect(req.getContextPath()+"/sign-up?message=field_is_blank&toast=danger");
+        if (fullname.equals("") || userName.equals("") || email.equals("") || password.equals("") || rePassword.equals("")) {
+            resp.sendRedirect(req.getContextPath() + "/sign-up?message=field_is_blank&toast=danger");
         } else if (password.length() < 8) {
-            resp.sendRedirect(req.getContextPath()+"/sign-up?message=short_length_password&toast=danger");
+            resp.sendRedirect(req.getContextPath() + "/sign-up?message=short_length_password&toast=danger");
         } else if (!userService.validateString(password)) {
-            resp.sendRedirect(req.getContextPath()+"/sign-up?message=password_condition&toast=danger");
-        } else if (!password.equals(repassword)) {
-            resp.sendRedirect(req.getContextPath()+"/sign-up?message=two_password_diffirent&toast=danger");
+            resp.sendRedirect(req.getContextPath() + "/sign-up?message=password_condition&toast=danger");
+        } else if (!password.equals(rePassword)) {
+            resp.sendRedirect(req.getContextPath() + "/sign-up?message=two_password_diffirent&toast=danger");
         } else {
 
             try {

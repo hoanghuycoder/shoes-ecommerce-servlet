@@ -2,7 +2,6 @@ package com.ltweb_servlet_ecommerce.validate;
 
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.commons.validator.routines.RegexValidator;
-import org.apache.commons.validator.routines.UrlValidator;
 
 public class Validator {
 
@@ -27,6 +26,9 @@ public class Validator {
     // Validate if string length is within a specified range
     public static boolean isLengthValid(String value, int minLength, int maxLength) {
         return value != null && value.length() >= minLength && value.length() <= maxLength;
+    }
+    public static boolean isMaxLengthValid(String value, int maxLength) {
+        return value != null && value.length() <= maxLength;
     }
 
     public static boolean isValidPhoneNumber(String phoneNumber) {

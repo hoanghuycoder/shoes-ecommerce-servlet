@@ -43,6 +43,11 @@ public class CartSevice implements ICartService {
     }
 
     @Override
+    public void deleteByUserId(Long id) {
+        cartDAO.deleteByUserId(id);
+    }
+
+    @Override
     public CartModel update(CartModel model) throws SQLException {
         CartModel oldModel = cartDAO.findById(model.getId());
         model.setUpdateAt(new Timestamp(System.currentTimeMillis()));
