@@ -23,7 +23,15 @@ public class UserModel extends AbstractModel<UserModel> {
     private Boolean user;
     private  Long roleId;
     private RoleModel role;
+    private String phone;
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
     public String getUserName() {
         return userName;
