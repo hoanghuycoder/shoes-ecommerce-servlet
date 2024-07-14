@@ -50,6 +50,15 @@ public class VoucherAjaxAdmin extends HttpServlet {
                 return;
             }
             List<VoucherConditionModel> voucherConditions = voucher.getConditions();
+            for (VoucherConditionModel voucherCondition : voucherConditions) {
+                if (!Validator.isNotNullOrEmpty(voucherCondition.getTableName())
+                || !Validator.isNotNullOrEmpty(voucherCondition.getColumnName())
+                || !Validator.isNotNullOrEmpty(voucherCondition.getConditionValue())) {
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    resp.getWriter().write("{\"status\":\"error\",\"message\":\"Điều kiện voucher bị thiếu. Vui lòng điền đầy đủ thông tin\"}");
+                    return;
+                }
+            }
             voucher.setConditions(null);
             voucher = voucherService.save(voucher);
             for (VoucherConditionModel voucherCondition : voucherConditions) {
