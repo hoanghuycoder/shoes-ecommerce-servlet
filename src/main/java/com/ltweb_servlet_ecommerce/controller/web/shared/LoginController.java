@@ -35,7 +35,9 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getRequestURI().startsWith("/sign-out")) {
+            UserModel user = (UserModel) SessionUtil.getInstance().getValue(req, SystemConstant.USER_MODEL);
             SessionUtil.getInstance().removeValue(req, "USER_MODEL");
+            SessionManager.removeSession(user.getId());
             resp.sendRedirect(req.getContextPath() + "/home?message=logout_success&toast=success");
         } else {
             NotifyUtil.setUp(req);
@@ -54,6 +56,7 @@ public class LoginController extends HttpServlet {
                 tmpUser = userService.findWithFilter(tmpUser);
                 if (tmpUser != null && BCrypt.verifyer().verify(userModel.getPassword().toCharArray(), tmpUser.getPassword()).verified) {
                     SessionUtil.getInstance().putValue(req, SystemConstant.USER_MODEL, tmpUser);
+                    SessionManager.addSession(tmpUser.getId(), req.getSession());
                     CartUtil.setCartFromSessionForUser(SessionUtil.getInstance(), req, orderDetailsService, cartService, tmpUser.getId());
                     UserModel updateUserLogged = new UserModel();
                     updateUserLogged.setLastLogged(new Timestamp(System.currentTimeMillis()));

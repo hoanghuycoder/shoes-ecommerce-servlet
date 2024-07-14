@@ -2,6 +2,7 @@ package com.ltweb_servlet_ecommerce.controller.admin.ajax.voucher;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ltweb_servlet_ecommerce.constant.SystemConstant;
 import com.ltweb_servlet_ecommerce.model.VoucherConditionModel;
 import com.ltweb_servlet_ecommerce.model.VoucherModel;
 import com.ltweb_servlet_ecommerce.service.IVoucherConditionService;
@@ -32,7 +33,7 @@ public class VoucherAjaxAdmin extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        AuthRole.checkPermissionAjax(resp,req,objectMapper,"admin");
+        AuthRole.checkPermissionAjax(resp,req,objectMapper, SystemConstant.ADMIN_ROLE);
         try {
             String jsonData = HttpUtil.of(req.getReader()).getJson();
             VoucherModel voucher = objectMapper.readValue(jsonData, VoucherModel.class);

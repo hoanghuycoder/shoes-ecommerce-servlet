@@ -87,16 +87,16 @@
                         <div class="row">
                             <div class="form-group">
                                 <label class="text-black" for="fullName">Họ và tên</label>
-                                <input type="text" class="form-control" id="fullName" name="fullName">
+                                <input type="text" class="form-control" id="fullName" required name="fullName">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="text-black" for="email">Địa chỉ email</label>
-                            <input type="email" class="form-control" id="email" name="email">
+                            <input type="email" class="form-control" id="email" required name="email">
                         </div>
                         <div class="form-group mb-5">
                             <label class="text-black" for="message">Tin nhắn</label>
-                            <textarea name="message" class="form-control" id="message" cols="30" rows="5"></textarea>
+                            <textarea name="message" class="form-control" id="message" required cols="30" rows="5"></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary-hover-outline">Gửi tin nhắn</button>
                     </form>

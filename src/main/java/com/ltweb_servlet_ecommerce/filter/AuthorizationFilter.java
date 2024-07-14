@@ -1,5 +1,6 @@
 package com.ltweb_servlet_ecommerce.filter;
 
+import com.ltweb_servlet_ecommerce.constant.SystemConstant;
 import com.ltweb_servlet_ecommerce.model.UserModel;
 import com.ltweb_servlet_ecommerce.utils.AuthRole;
 import com.ltweb_servlet_ecommerce.utils.SessionUtil;
@@ -24,7 +25,7 @@ public class AuthorizationFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         String url = req.getRequestURI();
         if (url.startsWith("/admin")) {
-            boolean isSuccess = AuthRole.checkPermission(resp,req,"admin","moderator");
+            boolean isSuccess = AuthRole.checkPermission(resp,req, SystemConstant.ADMIN_ROLE,SystemConstant.MODERATOR_ROLE);
             if (isSuccess)
                 filterChain.doFilter(servletRequest,servletResponse);
         } else {
