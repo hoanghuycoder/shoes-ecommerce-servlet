@@ -128,6 +128,15 @@ public class CheckoutController extends HttpServlet {
             addressModel.setHamlet(hamlet2 + req.getParameter("hamlet1"));
             AddressModel tmpAddress = addressService.findWithFilter(addressModel);
             if (tmpAddress == null) {
+                if (addressModel.getFullName() == null ||
+                        addressModel.getPhoneNumber() == null ||
+                        addressModel.getProvince() == null ||
+                        addressModel.getDistrict() == null ||
+                        addressModel.getCommune() == null ||
+                        addressModel.getHamlet() == null) {
+                    resp.sendRedirect("/home?message=field_is_blank&toast=danger");
+                    return;
+                }
                 addressModel = addressService.save(addressModel);
             } else {
                 addressModel = tmpAddress;
@@ -164,7 +173,7 @@ public class CheckoutController extends HttpServlet {
                 deleteCartItem(productId, sizeId, quantity);
             }
             String voucherApply = req.getParameter("voucherApply");
-            if (!voucherApply.isBlank()) {
+            if (voucherApply!=null && !voucherApply.isBlank()) {
                 VoucherModel voucher = voucherService.findById(Long.parseLong(voucherApply));
                 SubQuery queryProductIds = new SubQuery("id","in",productIds);
                 List<SubQuery> subQueryProduct = new ArrayList<>();
