@@ -10,6 +10,7 @@ import com.ltweb_servlet_ecommerce.utils.AuthRole;
 import com.ltweb_servlet_ecommerce.utils.FormUtil;
 import com.ltweb_servlet_ecommerce.utils.HttpUtil;
 import com.ltweb_servlet_ecommerce.utils.UrlUtil;
+import com.ltweb_servlet_ecommerce.validate.Validator;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -35,6 +36,19 @@ public class VoucherAjaxAdmin extends HttpServlet {
         try {
             String jsonData = HttpUtil.of(req.getReader()).getJson();
             VoucherModel voucher = objectMapper.readValue(jsonData, VoucherModel.class);
+            if (!Validator.isNotNullOrEmpty(voucher.getName()) || !Validator.isNotNullOrEmpty(voucher.getCode())
+                || !Validator.isNotNullOrEmpty(voucher.getContent()) || !Validator.isNotNullOrEmpty(voucher.getShortDescription())
+                    || voucher.getDiscount()==null || voucher.getDiscount()==0)
+            {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().write("{\"status\":\"error\",\"message\":\"Vui lòng nhập đủ thông tin\"}");
+                return;
+            }
+            if (voucher.getStartDate().after(voucher.getEndDate())) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().write("{\"status\":\"error\",\"message\":\"Ngày bắt đầu không thể sau ngày kết thúc\"}");
+                return;
+            }
             List<VoucherConditionModel> voucherConditions = voucher.getConditions();
             voucher.setConditions(null);
             voucher = voucherService.save(voucher);
