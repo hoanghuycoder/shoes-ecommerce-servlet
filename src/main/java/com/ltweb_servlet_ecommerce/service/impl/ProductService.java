@@ -199,6 +199,19 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public Map<String, Object> findProductWithSql(Long productId, Long sizeId) {
+        try {
+            String sqlProductSizeId = "select product_sizes.id as productSizeId, product_sizes.price as priceProduct from product_sizes,products where product_sizes.productId = products.id and product_sizes.productId = ? and product_sizes.sizeId = ?";
+            List<Object> params = new ArrayList<>();
+            params.add(productId);
+            params.add(sizeId);
+            return findWithCustomSQL(sqlProductSizeId, params);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public List<ProductOutStock> findOutOfStock() {
         List<ProductOutStock> outOfStockProducts = new ArrayList<>();
 

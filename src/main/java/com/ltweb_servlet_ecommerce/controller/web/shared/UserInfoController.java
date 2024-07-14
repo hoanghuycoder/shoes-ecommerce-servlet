@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 @WebServlet(urlPatterns = {"/user-info"})
 public class UserInfoController extends HttpServlet {
@@ -50,10 +51,27 @@ public class UserInfoController extends HttpServlet {
         email = checkEmpty(userModel, "email", email);
         birthday = checkEmpty(userModel, "birthday", birthday);
 
+        try {
+            List<UserModel> listUser = userService.findAll(null);
+
+            for (UserModel user : listUser) {
+                if (!userModel.getEmail().equals(user.getEmail())) {
+                    if (user.getEmail().equals(email)) {
+                        resp.sendRedirect(req.getContextPath() + "/user-info?message=email_is_exist&toast=danger");
+                        return; // Exit the doPost method after redirect
+                    }
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
         //setter
         userModel.setFullName(fullName);
         userModel.setEmail(email);
         userModel.setBirthDay(birthday);
+        userModel.setPhone(phone);
 
         //update in database
         try {

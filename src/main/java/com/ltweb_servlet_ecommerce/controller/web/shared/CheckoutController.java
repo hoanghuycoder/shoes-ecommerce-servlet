@@ -1,13 +1,13 @@
 package com.ltweb_servlet_ecommerce.controller.web.shared;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import com.ltweb_servlet_ecommerce.constant.SystemConstant;
 import com.ltweb_servlet_ecommerce.log.LoggerHelper;
 import com.ltweb_servlet_ecommerce.model.*;
 import com.ltweb_servlet_ecommerce.service.*;
 import com.ltweb_servlet_ecommerce.subquery.SubQuery;
 import com.ltweb_servlet_ecommerce.utils.*;
+import com.ltweb_servlet_ecommerce.validate.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
@@ -19,7 +19,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,9 +45,12 @@ public class CheckoutController extends HttpServlet {
     IOrderDetailsService orderDetailsService;
     @Inject
     ISizeService sizeService;
-    @Inject IVoucherService voucherService;
-    @Inject IVoucherConditionService voucherConditionService;
-    @Inject IVoucherUsageService voucherUsageService;
+    @Inject
+    IVoucherService voucherService;
+    @Inject
+    IVoucherConditionService voucherConditionService;
+    @Inject
+    IVoucherUsageService voucherUsageService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -81,7 +87,7 @@ public class CheckoutController extends HttpServlet {
             req.setAttribute("LIST_PRODUCT_OF_CART", productModelList);
             ObjectMapper objectMapper = new ObjectMapper();
             String jsonProduct = objectMapper.writeValueAsString(productModelList);
-            req.setAttribute("JSON_LIST_PRODUCT_OF_CART",jsonProduct);
+            req.setAttribute("JSON_LIST_PRODUCT_OF_CART", jsonProduct);
             if (productModelList.isEmpty()) {
                 resp.sendRedirect("/home?message=cart_empty&toast=danger");
                 return;
@@ -93,7 +99,7 @@ public class CheckoutController extends HttpServlet {
             RequestDispatcher rd = req.getRequestDispatcher("/views/web/checkout.jsp");
 
             //logging
-            JSONObject value = new JSONObject().put(SystemConstant.STATUS_LOG, "Access the path "+req.getRequestURL().toString());
+            JSONObject value = new JSONObject().put(SystemConstant.STATUS_LOG, "Access the path " + req.getRequestURL().toString());
             LoggerHelper.log(SystemConstant.INFO_LEVEL, "SELECT", RuntimeInfo.getCallerClassNameAndLineNumber(), value);
 
             rd.forward(req, resp);
@@ -117,9 +123,26 @@ public class CheckoutController extends HttpServlet {
         productModelList.add(productModel);
     }
 
+    private boolean isValidateForm(HttpServletRequest req) throws UnsupportedEncodingException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        AddressModel addressModel = FormUtil.toModel(AddressModel.class, req);
+        // use Validator.java to check if the address is valid
+        if (!Validator.isValidPhoneNumber(addressModel.getPhoneNumber())
+                || !Validator.isNotNullOrEmpty(addressModel.getFullName())
+                || !Validator.isMaxLengthValid(req.getParameter("hamlet1"), 100)
+        )
+            return false;
+
+        return true;
+    }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
+            if (!isValidateForm(req)) {
+                resp.sendRedirect("/checkout?message=error&toast=danger");
+                return;
+            }
+
             // Fetching necessary data from request
             String[] productListStr = req.getParameterValues("product[]");
             UserModel user = (UserModel) SessionUtil.getInstance().getValue(req, "USER_MODEL");
@@ -128,15 +151,6 @@ public class CheckoutController extends HttpServlet {
             addressModel.setHamlet(hamlet2 + req.getParameter("hamlet1"));
             AddressModel tmpAddress = addressService.findWithFilter(addressModel);
             if (tmpAddress == null) {
-                if (addressModel.getFullName() == null ||
-                        addressModel.getPhoneNumber() == null ||
-                        addressModel.getProvince() == null ||
-                        addressModel.getDistrict() == null ||
-                        addressModel.getCommune() == null ||
-                        addressModel.getHamlet() == null) {
-                    resp.sendRedirect("/home?message=field_is_blank&toast=danger");
-                    return;
-                }
                 addressModel = addressService.save(addressModel);
             } else {
                 addressModel = tmpAddress;
@@ -155,11 +169,8 @@ public class CheckoutController extends HttpServlet {
                 Long sizeId = Long.parseLong(productStrSplit[1]);
                 int quantity = Integer.parseInt(productStrSplit[2]);
                 //Find product size and price
-                String sqlProductSizeId = " select product_sizes.id as productSizeId, product_sizes.price as priceProduct from product_sizes,products where product_sizes.productId = products.id and product_sizes.productId = ? and product_sizes.sizeId = ?";
-                List<Object> params = new ArrayList<>();
-                params.add(productId);
-                params.add(sizeId);
-                Map<String, Object> resultProductSizeId = productSizeService.findWithCustomSQL(sqlProductSizeId, params);
+                Map<String, Object> resultProductSizeId = productService.findProductWithSql(productId, sizeId);
+//                Map<String, Object> resultProductSizeId = productSizeService.findWithCustomSQL(sqlProductSizeId, params);
                 Long productSizeId = Long.parseLong(resultProductSizeId.get("productSizeId").toString());
                 Double price = Double.parseDouble(resultProductSizeId.get("priceProduct").toString());
                 Double subTotal = price * quantity;
@@ -170,24 +181,29 @@ public class CheckoutController extends HttpServlet {
                 orderDetailsModel.setSubTotal(subTotal);
                 orderDetailsModel.setOrderId(order.getId());
                 orderDetailsService.save(orderDetailsModel);
-                deleteCartItem(productId, sizeId, quantity);
+                cartService.deleteByUserId(((UserModel) SessionUtil.getValue(req, SystemConstant.USER_MODEL)).getId());
             }
             String voucherApply = req.getParameter("voucherApply");
-            if (voucherApply!=null && !voucherApply.isBlank()) {
+            if (!voucherApply.isBlank()) {
                 VoucherModel voucher = voucherService.findById(Long.parseLong(voucherApply));
-                SubQuery queryProductIds = new SubQuery("id","in",productIds);
+                if (!voucher.getEndDate().after(new Timestamp(System.currentTimeMillis()))) {
+                    resp.sendRedirect("/home?message=voucher_expired&toast=danger");
+                    return;
+                }
+
+                SubQuery queryProductIds = new SubQuery("id", "in", productIds);
                 List<SubQuery> subQueryProduct = new ArrayList<>();
                 subQueryProduct.add(queryProductIds);
-                List<ProductModel> products = productService.findByColumnValues(subQueryProduct,null);
+                List<ProductModel> products = productService.findByColumnValues(subQueryProduct, null);
                 VoucherConditionModel voucherConditionModel = new VoucherConditionModel();
                 voucherConditionModel.setVoucherId(voucher.getId());
-                List<VoucherConditionModel> voucherConditions = voucherConditionService.findAllWithFilter(voucherConditionModel,null);
-                if (CheckVoucher.canApplyVoucher(products,voucherConditions,user)) {
+                List<VoucherConditionModel> voucherConditions = voucherConditionService.findAllWithFilter(voucherConditionModel, null);
+                if (CheckVoucher.canApplyVoucher(products, voucherConditions, user)) {
                     VoucherUsageModel voucherUsageModel = new VoucherUsageModel();
                     voucherUsageModel.setOrderId(order.getId());
                     voucherUsageModel.setVoucherId(voucher.getId());
                     voucherUsageService.save(voucherUsageModel);
-                    order.setTotalAmount(order.getTotalAmount()*(1-voucher.getDiscount()/100));
+                    order.setTotalAmount(order.getTotalAmount() * (1 - voucher.getDiscount() / 100));
                 }
             }
             order.setTotalAmount(order.getTotalAmount() + 20000);
@@ -209,7 +225,4 @@ public class CheckoutController extends HttpServlet {
 
     }
 
-    public void deleteCartItem(Long productId, Long sizeId, int quantity) {
-
-    }
 }

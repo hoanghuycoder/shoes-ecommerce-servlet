@@ -37,7 +37,7 @@
                     <div class="form-group">
                         <label for="infophone" class="form-label">Số điện thoại</label>
                         <input class="form-control" type="text" name="phone" id="infophone"
-                               value="">
+                               value="<%=userModel.getPhone()%>">
                     </div>
                     <div class="form-group">
                         <label for="infoemail" class="form-label">Email</label>

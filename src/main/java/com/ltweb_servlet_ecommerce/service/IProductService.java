@@ -24,6 +24,6 @@ public interface IProductService {
     Map<String,Object> findWithCustomSQL(String sql, List<Object> params) throws SQLException;
     ProductModel updateProductTotalView(Long id) throws SQLException;
     boolean updateProduct(ProductModel productModel, Part thumbnailPart, String[] sizesId, String[] listSizePrice, List<Part> imageProductParts, long[] removeImgs);
-
+    Map<String,Object> findProductWithSql(Long productId, Long sizeId);
     List<ProductOutStock> findOutOfStock();
 }
