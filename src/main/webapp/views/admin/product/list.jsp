@@ -131,7 +131,7 @@
           const productId = $(this).data('product-id');
           $.ajax({
             url: '/ajax/admin/product',
-            type: 'DELETE',
+            type: 'DELETE'
             data: {
               productId: productId
             },

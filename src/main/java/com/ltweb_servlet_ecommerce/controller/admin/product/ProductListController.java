@@ -13,6 +13,7 @@ import com.ltweb_servlet_ecommerce.model.ProductSizeModel;
 import com.ltweb_servlet_ecommerce.service.*;
 import com.ltweb_servlet_ecommerce.utils.FormUtil;
 import com.ltweb_servlet_ecommerce.utils.NotifyUtil;
+import com.ltweb_servlet_ecommerce.validate.Validator;
 import org.apache.commons.io.IOUtils;
 
 import java.io.FileInputStream;
@@ -65,6 +66,18 @@ public class ProductListController  extends HttpServlet {
         String base64Url = "data:" + filePart.getContentType() + ";base64," + encoded;
         return base64Url;
     }
+    private boolean validateAddProduct(ProductModel product,String... others) {
+        if (!Validator.isNotNullOrEmpty(product.getName())
+        || !Validator.isNotNullOrEmpty(product.getContent())
+        || !Validator.isNotNullOrEmpty(product.getShortDescription())
+        || product.getPrice()==null || product.getPrice() == 0
+        || product.getCategoryId()==null || product.getCategoryId() == 0
+        ) return false;
+        for (String other : others) {
+            if (!Validator.isNotNullOrEmpty(other)) return false;
+        }
+        return true;
+    }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
@@ -78,6 +91,10 @@ public class ProductListController  extends HttpServlet {
             ProductModel productModel = FormUtil.toModel(ProductModel.class,req);
             Part thumbnailPart = req.getPart("thumbnailProduct");
             String thumbnailProduct = encodeFileToBase64(thumbnailPart);
+            if (validateAddProduct(productModel,thumbnailProduct)) {
+                resp.sendRedirect("/admin/product/list?message=field_is_blank&toast=danger");
+                return;
+            }
             Map<String, Object> uploadThumbnail = cloudinary.uploader().upload(thumbnailProduct, ObjectUtils.emptyMap());
             String thumbnailProductUrl = (String) uploadThumbnail.get("url");
             productModel.setThumbnail(thumbnailProductUrl);

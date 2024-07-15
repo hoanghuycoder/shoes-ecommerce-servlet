@@ -184,7 +184,7 @@ public class CheckoutController extends HttpServlet {
                 cartService.deleteByUserId(((UserModel) SessionUtil.getValue(req, SystemConstant.USER_MODEL)).getId());
             }
             String voucherApply = req.getParameter("voucherApply");
-            if (voucherApply != null && !voucherApply.isBlank()) {
+            if (!voucherApply.isBlank()) {
                 VoucherModel voucher = voucherService.findById(Long.parseLong(voucherApply));
                 if (!voucher.getEndDate().after(new Timestamp(System.currentTimeMillis()))) {
                     resp.sendRedirect("/home?message=voucher_expired&toast=danger");

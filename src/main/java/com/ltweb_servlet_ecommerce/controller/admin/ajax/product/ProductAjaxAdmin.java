@@ -1,6 +1,7 @@
 package com.ltweb_servlet_ecommerce.controller.admin.ajax.product;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ltweb_servlet_ecommerce.constant.SystemConstant;
 import com.ltweb_servlet_ecommerce.model.ProductModel;
 import com.ltweb_servlet_ecommerce.service.IProductService;
 import com.ltweb_servlet_ecommerce.utils.AuthRole;
@@ -21,7 +22,7 @@ public class ProductAjaxAdmin extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        AuthRole.checkPermissionAjax(resp,req,objectMapper,"admin");
+        AuthRole.checkPermissionAjax(resp,req,objectMapper, SystemConstant.ADMIN_ROLE);
         try {
             String productIdStr = req.getParameter("productId");
             Long productId = Long.parseLong(productIdStr);

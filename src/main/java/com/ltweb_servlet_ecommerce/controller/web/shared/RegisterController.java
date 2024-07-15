@@ -43,7 +43,7 @@ public class RegisterController extends HttpServlet {
         //check any field is blank
         if (fullname.equals("") || userName.equals("") || email.equals("") || password.equals("") || rePassword.equals("")) {
             resp.sendRedirect(req.getContextPath() + "/sign-up?message=field_is_blank&toast=danger");
-        } else if (password.length() < 8) {
+        } else if (password.length() < 6) {
             resp.sendRedirect(req.getContextPath() + "/sign-up?message=short_length_password&toast=danger");
         } else if (!userService.validateString(password)) {
             resp.sendRedirect(req.getContextPath() + "/sign-up?message=password_condition&toast=danger");
