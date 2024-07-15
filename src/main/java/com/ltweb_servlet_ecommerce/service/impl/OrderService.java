@@ -81,6 +81,10 @@ public class OrderService implements IOrderService {
 
     @Override
     public List<OrderModel> findAll(Pageble pageble) throws SQLException {
+        if (orderDAO == null) {
+            orderDAO = new OrderDAO();
+        }
+
         return orderDAO.findAll(pageble);
     }
 
@@ -144,19 +148,21 @@ public class OrderService implements IOrderService {
 
     @Override
     public double getTotalPrice() {
-        IOrderDAO o = new OrderDAO();
+        OrderDAO o = new OrderDAO();
         double totalPrice = 0;
         List<OrderModel> listOrder = null;
         try {
-            listOrder = o.findAll(new PageRequest(1, 100, new Sorter("id", "ASC")));
+            listOrder = o.findAll(null);
             for (OrderModel i : listOrder) {
                 if (!i.getStatus().equals("ORDER_CANCEL")) {
-                    OrderDetailsService orderDetailsService = new OrderDetailsService();
-                    List<OrderDetailsModel> listDetail = orderDetailsService.findAllByOrderId(i.getId());
-                    for (OrderDetailsModel j : listDetail) {
-                        double pricePerOrder = j.getSubTotal() * j.getQuantity();
-                        totalPrice += pricePerOrder;
-                    }
+//                    OrderDetailsService orderDetailsService = new OrderDetailsService();
+//                    List<OrderDetailsModel> listDetail = orderDetailsService.findAllByOrderId(i.getId());
+//                    for (OrderDetailsModel j : listDetail) {
+//                        double pricePerOrder = j.getSubTotal() * j.getQuantity();
+//                        totalPrice += pricePerOrder;
+//                    }
+                    double pricePerOrder = i.getTotalAmount();
+                    totalPrice += pricePerOrder;
                 }
             }
         } catch (SQLException e) {
