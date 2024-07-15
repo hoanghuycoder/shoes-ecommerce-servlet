@@ -53,7 +53,7 @@ public class ImportOrderService implements IImportOrderService {
     @Override
     public double getTotalImportPrice() {
         double totalImportPrice = 0;
-        List<ImportOrderModel> listImportOrder = this.findAll(new PageRequest(1, 10, new Sorter("id", "ASC")));
+        List<ImportOrderModel> listImportOrder = this.findAll(null);
         for (ImportOrderModel i : listImportOrder) {
             ImportOrderDetailService importOrderDetailService = new ImportOrderDetailService();
             double pricePerImport = importOrderDetailService.getTotalPriceByImportId(i.getId());

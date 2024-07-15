@@ -151,7 +151,7 @@
                     <li>Chúng tôi cũng cam kết mang đến cho bạn dịch vụ mua sắm trực tuyến dễ dàng và tiện lợi nhất. Từ quy trình đặt hàng đơn giản đến dịch vụ hỗ trợ khách hàng thân thiện, chúng tôi luôn sẵn lòng đồng hành và hỗ trợ bạn trong mọi thời điểm.</li>
                     <li>Hãy để chúng tôi là người bạn đồng hành đáng tin cậy trên hành trình tìm kiếm đôi giày hoàn hảo cho bạn, với sứ mệnh không chỉ là về giày, mà còn là về phong cách và sự tự tin mỗi ngày.</li>
                 </ul>
-                <p><a herf="#" class="btn">Khám phá ngay</a></p>
+                <p><a herf="/shop" class="btn">Khám phá ngay</a></p>
             </div>
         </div>
     </div>

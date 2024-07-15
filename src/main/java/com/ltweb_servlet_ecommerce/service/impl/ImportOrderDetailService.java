@@ -92,6 +92,9 @@ public class ImportOrderDetailService implements IImportOrderDetailService {
 
     @Override
     public List<ImportOrderDetailModel> findByProductSizeId(String productSizeId) {
+        if (orderDetailDAO == null) {
+            orderDetailDAO = new ImportOrderDetailDAO();
+        }
         return orderDetailDAO.findByProductSizeId(productSizeId);
     }
 

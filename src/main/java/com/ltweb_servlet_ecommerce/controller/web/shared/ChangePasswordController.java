@@ -33,7 +33,9 @@ public class ChangePasswordController extends HttpServlet {
         String newpass = request.getParameter("newpassword");
         String repass = request.getParameter("repassword");
 
-        if (newpass.length() < 8) {
+        if (currentPass.equals("") || repass.equals("") || newpass.equals("")) {
+            response.sendRedirect(request.getContextPath() + "/change-password?message=field_is_blank&toast=danger");
+        } else if (newpass.length() < 8) {
             response.sendRedirect(request.getContextPath()+"/change-password?message=short_length_password&toast=danger");
         } else if (!userService.validateString(newpass)) {
             response.sendRedirect(request.getContextPath()+"/change-password?message=password_condition&toast=danger");
