@@ -88,6 +88,7 @@ public class CheckoutController extends HttpServlet {
             ObjectMapper objectMapper = new ObjectMapper();
             String jsonProduct = objectMapper.writeValueAsString(productModelList);
             req.setAttribute("JSON_LIST_PRODUCT_OF_CART", jsonProduct);
+
             if (productModelList.isEmpty()) {
                 resp.sendRedirect("/home?message=cart_empty&toast=danger");
                 return;
@@ -95,6 +96,8 @@ public class CheckoutController extends HttpServlet {
 //            Get voucher
             List<VoucherModel> vouchers = voucherService.findAll(null);
             req.setAttribute("LIST_VOUCHER", vouchers);
+            String jsonVoucher = objectMapper.writeValueAsString(vouchers);
+            req.setAttribute("JSON_LIST_VOUCHER", jsonVoucher);
             //Render View
             RequestDispatcher rd = req.getRequestDispatcher("/views/web/checkout.jsp");
 
