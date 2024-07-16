@@ -51,11 +51,13 @@ public class MonitorLog implements ServletContextListener {
     }
 
     private void monitorLogs() {
+        System.out.println("Monitor logs");
         List<LogModel> list = logDAO.checkAccessCount();
         if (!list.isEmpty()) {
             List<UserModel> listAdmin = userService.getListAdmin();
 
             for (LogModel log : list) {
+                System.out.println("Block IP: " + log.getIp());
                 ipCache.blockIP(log.getIp());
             }
 

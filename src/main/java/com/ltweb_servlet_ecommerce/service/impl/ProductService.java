@@ -230,9 +230,14 @@ public class ProductService implements IProductService {
 
             // Subtract average daily sales from current inventory quantity
             double projectedInventory = product.getQuantity() - (5 * averageDailySales);
-            int estimatedDays = (int) Math.ceil((double) product.getQuantity() / averageDailySales);
+            int estimatedDays;
+            if (averageDailySales != 0) {
+                estimatedDays = (int) Math.ceil((double) product.getQuantity() / averageDailySales);
+            } else {
+                estimatedDays = 2; // Product will not run out of stock based on current sales data
+            }
             // Check if product will be out of stock in 5 days
-            if (projectedInventory <= 0) {
+            if (projectedInventory <= 2) {
                 outOfStockProducts.add(ProductOutStock.builder()
                         .product(product)
                         .isOutOfStock(false)
