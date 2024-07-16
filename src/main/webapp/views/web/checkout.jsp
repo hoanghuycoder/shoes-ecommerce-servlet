@@ -159,7 +159,7 @@
                                                 <p >Mã giảm giá : <strong>${voucher_item.code}</strong></p>
                                                 <fmt:parseDate var="endDate" value="${voucher_item.endDate}" pattern="yyyy-MM-dd HH:mm:ss.S" />
                                                 <fmt:formatDate value="${endDate}" pattern="H:m d/M/yyyy" var="formattedEndDate" />
-                                                <p class="p-0">HSD : ${formattedEndDate} <span><a href="/voucher/detail/${voucher_item.id}" style="color: #0c63e4">Điều kiện</a></span></p>
+                                                <p class="p-0">HSD : ${formattedEndDate} <span><a class="openModalConditionContent" data-bs-toggle="modal" href="#modalConditionContent" data-voucher-id="${voucher_item.id}" role="button" style="color: #0c63e4">Điều kiện</a></span></p>
                                             </div>
                                         </div>
                                         <%--End Voucher item--%>
@@ -196,7 +196,7 @@
 <%--                    <p class="text-warning mb-4">FREE SHIPPING ON ORDERS OVER €100 AND FREE RETURNS</p>--%>
 <%--                    <p class="text-muted mb-0">In accordance with our <a class="#!">Privacy Notice</a>, if you are signed in to your store account, we will share personal data from your account with company for order checkout and payment purposes.</p>--%>
                         <p class="text-muted mb-4">Chính sách đổi trả của chúng tôi miễn phí và dễ dàng. Nếu có điều gì không hoàn hảo, bạn có 14 ngày để gửi lại sản phẩm cho chúng tôi. Đọc thêm trong <a class="#!">chính sách đổi trả và hoàn tiền</a> của chúng tôi.</p>
-                        <p class="text-warning mb-4">MIỄN PHÍ VẬN CHUYỂN CHO ĐƠN HÀNG TRÊN 1.000.000đ VÀ ĐỔI TRẢ MIỄN PHÍ</p>
+
                         <p class="text-muted mb-0">Theo đúng <a class="#!">Thông báo về Quyền riêng tư</a> của chúng tôi, nếu bạn đã đăng nhập vào tài khoản của cửa hàng, chúng tôi sẽ chia sẻ dữ liệu cá nhân từ tài khoản của bạn với công ty để thanh toán và thanh toán đơn hàng.</p>
 
                 </div>
@@ -204,7 +204,22 @@
         </div>
     </section>
     <!--Section: Design Block-->
+    <div class="modal fade" id="modalConditionContent" tabindex="-1" aria-labelledby="modalConditionContent" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="conditionContentLabel">Chi tiết mã giảm giá</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="conditionContentBody">
 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <!-- Container for demo purpose -->
 <script !src="">
@@ -212,9 +227,19 @@
     const reviver = (key, value) => {
         return value;
     };
+    const listVoucher = JSON.parse('${JSON_LIST_VOUCHER}',reviver);
+    console.log(listVoucher)
     const listProduct = JSON.parse(`${JSON_LIST_PRODUCT_OF_CART}`,reviver)
     console.table(listProduct)
     window.addEventListener("DOMContentLoaded",function () {
+        $(".openModalConditionContent").on("click", function (event) {
+            event.stopPropagation();
+            const idVoucher = $(this).attr("data-voucher-id");
+            const voucherInfo = listVoucher.find((voucher) => voucher.id == idVoucher);
+            const contentVoucher = '<div>' + voucherInfo.content + '</div>';
+            $("#conditionContentBody").html(contentVoucher);
+            $("#conditionContentLabel").text("Chi tiết mã giảm giá "+voucherInfo.name);
+        });
         $('.voucher-item').click(function () {
             const idVoucher = $(this).attr("data-id-voucher")
             $.ajax({
@@ -265,7 +290,7 @@
                         if ($("#voucherApply")) $("#voucherApply").empty();
                         swal({
                             title: "Lỗi",
-                            text: "Bạn chưa thỏa mãn các điều kiện để sử dụng voucher này. Vui lòng đọc lại điều kiện sử dụng voucher",
+                            text: "Bạn chưa thỏa mãn các điều kiện để sử dụng voucher này hoặc điều kiện về thời gian voucher. Vui lòng đọc lại điều kiện sử dụng voucher",
                             icon: "error",
                             button: "Thoát",
                         });

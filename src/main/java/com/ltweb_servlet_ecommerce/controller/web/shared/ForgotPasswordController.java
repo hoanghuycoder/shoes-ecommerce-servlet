@@ -21,16 +21,22 @@ public class ForgotPasswordController extends HttpServlet {
     IUserService userService;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        NotifyUtil.setUp(request);
-//        RequestDispatcher rd = request.getRequestDispatcher("/views/shared/forgot-pass.jsp");
-//        rd.forward(request, response);
-        response.sendRedirect("/views/shared/forgot-pass.jsp");
+        NotifyUtil.setUp(request);
+        RequestDispatcher rd = request.getRequestDispatcher("/views/shared/forgot-pass.jsp");
+        rd.forward(request, response);
+//        response.sendRedirect("/views/shared/forgot-pass.jsp");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             String email = (String) request.getParameter("email");
+
+            if (email.equals("") || email == null) {
+                response.sendRedirect(request.getContextPath() + "/forgot-password?message=enter_your_email&toast=danger");
+                return;
+            }
+
             UserModel tmpUser = new UserModel();
             tmpUser.setEmail(email);
             tmpUser = userService.findWithFilter(tmpUser);

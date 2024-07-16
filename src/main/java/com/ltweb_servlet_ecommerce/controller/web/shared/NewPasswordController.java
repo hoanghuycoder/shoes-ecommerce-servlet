@@ -30,7 +30,9 @@ public class NewPasswordController extends HttpServlet {
         String pass = request.getParameter("password");
         String repass = request.getParameter("repassword");
 
-        if (pass.length() < 8) {
+        if (pass.equals("") || repass.equals("")) {
+            response.sendRedirect(request.getContextPath() + "/new-password?message=field_is_blank&toast=danger");
+        } else if (pass.length() < 8) {
             response.sendRedirect(request.getContextPath()+"/new-password?message=short_length_password&toast=danger");
         } else if (!userService.validateString(pass)) {
             response.sendRedirect(request.getContextPath()+"/new-password?message=password_condition&toast=danger");
@@ -49,7 +51,7 @@ public class NewPasswordController extends HttpServlet {
                 userService.update(userModel);
 //                request.setAttribute("error", "Đổi mật khẩu thành công!");
 //                request.getRequestDispatcher("/views/shared/change-password.jsp").forward(request, response);
-                response.sendRedirect(request.getContextPath()+"/new-password?message=change_password_success&toast=success");
+                response.sendRedirect(request.getContextPath()+"/sign-in?message=change_password_success&toast=success");
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

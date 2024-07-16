@@ -6,6 +6,7 @@ import com.ltweb_servlet_ecommerce.dao.impl.ProductSizeDAO;
 import com.ltweb_servlet_ecommerce.log.LoggerHelper;
 import com.ltweb_servlet_ecommerce.model.ImportOrderDetailModel;
 import com.ltweb_servlet_ecommerce.model.OrderDetailsModel;
+import com.ltweb_servlet_ecommerce.model.OrderModel;
 import com.ltweb_servlet_ecommerce.model.ProductSizeModel;
 import com.ltweb_servlet_ecommerce.paging.PageRequest;
 import com.ltweb_servlet_ecommerce.paging.Pageble;
@@ -51,23 +52,34 @@ public class ProductSizeService implements IProductSizeService {
 
     @Override
     public double getTotalProfit() {
+        OrderService orderService = new OrderService();
         OrderDetailsService orderDetailsService = new OrderDetailsService();
         ImportOrderDetailService importOrderDetailService = new ImportOrderDetailService();
         ProductSizeDAO productSizeDAO = new ProductSizeDAO();
         double totalProfit = 0;
         try {
-            List<OrderDetailsModel> listOrder = orderDetailsService.findAll(new PageRequest(1, 10, new Sorter("id", "ASC")));
-            List<ImportOrderDetailModel> listImport = importOrderDetailService.findByProductSizeId();
-            for (OrderDetailsModel o : listOrder) {
-                if (o.getOrderId() != null) {
-                    for (ImportOrderDetailModel i : listImport) {
-                        if (o.getProductSizeId().equals(i.getProductSizeId())) {
-                            double profit = o.getQuantity() * o.getSubTotal() - o.getQuantity() * i.getPriceImport();
-                            totalProfit += profit;
+            List<OrderModel> listOrder = orderService.findAll(null);
+            for (OrderModel orderModel : listOrder) {
+                if (!orderModel.getStatus().equals("ORDER_CANCEL")) {
+                    double total = orderModel.getTotalAmount();
+                    List<OrderDetailsModel> listOrderDetail = orderDetailsService.findAllByOrderId(orderModel.getId());
+                    for (OrderDetailsModel orderDetailsModel : listOrderDetail) {
+                        List<ImportOrderDetailModel> listImport = importOrderDetailService.findByProductSizeId(String.valueOf(orderDetailsModel.getProductSizeId()));
+                        double averageImport = 0;
+                        int importCount = 0;
+                        for (ImportOrderDetailModel importOrderDetailModel : listImport) {
+                            averageImport += importOrderDetailModel.getPriceImport();
+                            importCount++;
                         }
+                        averageImport /= importCount;
+                        total = total - (orderDetailsModel.getQuantity() * averageImport);
                     }
+                    totalProfit += total;
                 }
             }
+
+
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

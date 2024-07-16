@@ -53,10 +53,14 @@ public class CheckValidVoucher extends HttpServlet {
             UserModel user = (UserModel) SessionUtil.getInstance().getValue(req, "USER_MODEL");
             CheckUseVoucherResp checkResp;
             if (voucher.getEndDate().after(new Timestamp(System.currentTimeMillis()))) {
-                if (CheckVoucher.canApplyVoucher(checkModel.getProducts(), voucherConditions, user)) {
-                    checkResp = new CheckUseVoucherResp(0, "You can use this voucher", true, voucher);
+                if (voucher.getStartDate().before(new Timestamp(System.currentTimeMillis()))) {
+                    if (CheckVoucher.canApplyVoucher(checkModel.getProducts(), voucherConditions, user)) {
+                        checkResp = new CheckUseVoucherResp(0, "You can use this voucher", true, voucher);
+                    } else {
+                        checkResp = new CheckUseVoucherResp(1, "You can't use this voucher", false, voucher);
+                    }
                 } else {
-                    checkResp = new CheckUseVoucherResp(1, "You can't use this voucher", false, voucher);
+                    checkResp = new CheckUseVoucherResp(1, "Voucher has not been applied yet", false, voucher);
                 }
             } else {
                 checkResp = new CheckUseVoucherResp(1, "voucher expired", false, voucher);
